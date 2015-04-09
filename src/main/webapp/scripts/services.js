@@ -2,6 +2,27 @@
 
 /* Services */
 
+ozayApp.factory('DirectoryService', function ($http, $resource) {
+
+       var list = $http.get('app/rest/directory/members');
+       return {
+                   get: function() {
+                        return list;
+                   }
+               };
+    });
+
+ozayApp.factory('NotificationService', function ($http, $resource) {
+
+       var list = $http.get('app/rest/notifications/get');
+       return {
+                   get: function() {
+                   console.log(list);
+                        return list;
+                   }
+               };
+    });
+
 ozayApp.factory('LanguageService', function ($http, $translate, LANGUAGES) {
         return {
             getBy: function(language) {
@@ -138,7 +159,7 @@ ozayApp.factory('Session', function () {
         return this;
     });
 
-ozayApp.factory('AuthenticationSharedService', function ($rootScope, $http, authService, Session, Account, Base64Service, AccessToken) {
+ozayApp.factory('AuthenticationSharedService', function ($rootScope, $http, authService, Session, Account, Base64Service, AccessToken, $location) {
         return {
             login: function (param) {
                 var data = "username=" + param.username + "&password=" + param.password + "&grant_type=password&scope=read%20write&client_secret=mySecretOAuthSecret&client_id=ozayapp";
@@ -158,6 +179,7 @@ ozayApp.factory('AuthenticationSharedService', function ($rootScope, $http, auth
                         $rootScope.account = Session;
                         authService.loginConfirmed(data);
                     });
+                   // document.location.href = "/admin.html";
                 }).error(function (data, status, headers, config) {
                     $rootScope.authenticated = false;
                     $rootScope.authenticationError = true;
@@ -165,7 +187,7 @@ ozayApp.factory('AuthenticationSharedService', function ($rootScope, $http, auth
                     AccessToken.remove();
                     delete httpHeaders.common['Authorization'];
                     $rootScope.$broadcast('event:auth-loginRequired', data);
-                    
+
                 });
             },
             valid: function (authorizedRoles) {
@@ -203,6 +225,7 @@ ozayApp.factory('AuthenticationSharedService', function ($rootScope, $http, auth
                     if (!$rootScope.isAuthorized(authorizedRoles)) {
                         $rootScope.$broadcast('event:auth-loginRequired', data);
                     }
+                    $location.url('/login');
                 });
             },
             isAuthorized: function (authorizedRoles) {
@@ -239,3 +262,7 @@ ozayApp.factory('AuthenticationSharedService', function ($rootScope, $http, auth
             }
         };
     });
+
+
+
+

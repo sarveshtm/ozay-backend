@@ -3,14 +3,14 @@ server:
 
 spring:
     profiles: prod
-    
+
     datasource:
         dataSourceClassName: org.postgresql.ds.PGSimpleDataSource
-        url: 
-        databaseName: ozay
-        serverName: localhost
-        username: ozay
-        password: 
+        url:  jdbc:postgresql://ec2-54-197-249-212.compute-1.amazonaws.com:5432/deortfahodiqbr?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory
+        databaseName: deortfahodiqbr
+        serverName: ec2-54-197-249-212.compute-1.amazonaws.com
+        username: nietiirqtwhpsj
+        password: 2wUyNF0nAFJD5mTdJyN_OQVP5f
 
     jpa:
         database-platform: org.hibernate.dialect.PostgreSQLDialect
@@ -25,8 +25,8 @@ spring:
             hibernate.cache.use_second_level_cache: false
             hibernate.cache.use_query_cache: false
             hibernate.generate_statistics: false
-            
-            
+
+
 
     mail:
         baseUrl: http://localhost:8080

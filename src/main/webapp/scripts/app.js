@@ -4,10 +4,11 @@
 var httpHeaders;
 
 var ozayApp = angular.module('ozayApp', ['http-auth-interceptor', 'tmh.dynamicLocale',
-    'ngResource', 'ngRoute', 'ngCookies', 'ozayAppUtils', 'pascalprecht.translate', 'truncate']);
+    'ngResource', 'ngRoute', 'ngCookies', 'ozayAppUtils', 'pascalprecht.translate', 'truncate', 'ui.router']);
 
 ozayApp
-    .config(function ($routeProvider, $httpProvider, $translateProvider, tmhDynamicLocaleProvider, USER_ROLES) {
+    .config(function ($routeProvider, $httpProvider, $translateProvider, tmhDynamicLocaleProvider, $stateProvider, USER_ROLES) {
+
             $routeProvider
                 .when('/register', {
                     templateUrl: 'views/register.html',
@@ -120,19 +121,65 @@ ozayApp
                         authorizedRoles: [USER_ROLES.admin]
                     }
                 })
+                .when('/notification_create', {
+                    controller: 'NotificationController',
+                    templateUrl: 'views/main2.html',
+                    access: {
+                        authorizedRoles: [USER_ROLES.all]
+                    }
+                })
+                .when('/notification_archives', {
+                 controller: 'NotificationController',
+                    templateUrl: 'views/main2.html',
+                    access: {
+                        authorizedRoles: [USER_ROLES.all]
+                    }
+                })
+                .when('/directory', {
+                        templateUrl: 'views/main2.html',
+                        controller: 'DirectoryController',
+                        access: {
+                            authorizedRoles: [USER_ROLES.all]
+                        }
+                })
+                .when('/dashboard', {
+                                        templateUrl: 'views/main2.html',
+                                        controller: 'DirectoryController',
+                                        access: {
+                                            authorizedRoles: [USER_ROLES.all]
+                                        }
+                                })
+                .when('/directory/:memberId', {
+                                        templateUrl: 'views/main2.html',
+                                        controller: 'DirectoryDetailController',
+                                        access: {
+                                            authorizedRoles: [USER_ROLES.all]
+                                        }
+                                })
+                .when('/collaborate_create', {
+                                        templateUrl: 'views/main2.html',
+                                        controller: 'CollaborateCreateController',
+                                        access: {
+                                            authorizedRoles: [USER_ROLES.all]
+                                        }
+                                })
                 .otherwise({
-                    templateUrl: 'views/main.html',
+                    templateUrl: 'views/main2.html',
                     controller: 'MainController',
                     access: {
                         authorizedRoles: [USER_ROLES.all]
                     }
                 });
 
+
+
+
             // Initialize angular-translate
             $translateProvider.useStaticFilesLoader({
                 prefix: 'i18n/',
                 suffix: '.json'
             });
+
 
             $translateProvider.preferredLanguage('en');
 
@@ -166,11 +213,13 @@ ozayApp
                 // Call when the 401 response is returned by the server
                 $rootScope.$on('event:auth-loginRequired', function(rejection) {
                     Session.invalidate();
+                    //document.location.href = "/login.html";
                     $rootScope.authenticated = false;
                     if ($location.path() !== "/" && $location.path() !== "" && $location.path() !== "/register" &&
                             $location.path() !== "/activate" && $location.path() !== "/login") {
                         var redirect = $location.path();
                         $location.path('/login').search('redirect', redirect).replace();
+
                     }
                 });
 

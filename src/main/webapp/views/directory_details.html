@@ -1,0 +1,89 @@
+
+    <div class="row" ng-controller="DirectoryDetailController">
+        <div class="col-lg-12">
+            <div class="page_content">
+                <div class="page_content_title">
+                    DIRECTORY Details
+                </div>
+                <div class="clear"></div>
+                <div id="directory_detail_page" class="page_content_item">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <div class="col-lg-12">
+                                <label class="control-label">Name</label>
+                                <input class="form-control" type="text" value="Sandeep Varma">
+                            </div>
+                        </div>
+
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                <label class="control-label">Apt #:</label>
+                                <input class="form-control" type="text" value="4E">
+                            </div>
+                        </div>
+
+
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                <label class="control-label"># Parking:</label>
+                                <input class="form-control" type="text" value="58">
+                            </div>
+
+                        </div>
+                        <div class="clear"></div>
+                        <div class="form-group">
+                            <div class="col-lg-12">
+                                <label class="control-label">% Ownership</label>
+                                <input class="form-control" type="text" value="1.667">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-lg-12">
+                                <label class="control-label">Email</label>
+                                <input class="form-control" type="text" value="www.wwwwww@gmail.com">
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <div class="col-lg-12">
+                                <label class="control-label">Phone#</label>
+                                <input class="form-control" type="text" value="6236-12172">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-lg-12">
+                                <label class="control-label">Role</label>
+                                <ul class="ozay-checkbox_ul block_4">
+                                    <li ng-class="{'active': obj.isChecked,'inactive': !obj.isChecked}" ng-repeat="obj in roleList"><a ng-click="obj.isChecked = !obj.isChecked"><input ng-model="obj.isChecked"  type="checkbox" value='1' name="{{obj.name}}">{{obj.label}}</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-lg-12">
+                                <label class="control-label">Renter</label>
+                                <ul class="ozay-checkbox_ul block_4">
+                                    <li ng-class="{'active': model.radioBox == obj.value, 'inactive': model.radioBox != obj.value}" ng-repeat="obj in renterList"><a ng-click="model.radioBox = obj.value">{{obj.label}}</a><input ng-model="model.radioBox" type="radio" name="model.name" value="{{obj.value}}" ng-value="{{obj.name}}"></li>
+                                </ul>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <div class="col-lg-12">
+                                <label class="control-label">Expiration date</label>
+                                <input class="form-control" type="text" value="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="clear"></div>
+            </div>
+        </div>
+    </div>
+    <div class="clear"></div>
+    <!-- /.row -->

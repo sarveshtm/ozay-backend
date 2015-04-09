@@ -1,0 +1,43 @@
+body {
+    background-color:#ffc600;
+}
+#login_background{
+    margin-top:15%;
+}
+
+
+
+img.displayed {
+    display: block;
+    margin-left: auto;
+    margin-right: auto
+}
+
+#logo{
+    width:340px;
+}
+
+.form-group label{
+    display: table-cell;
+    vertical-align: bottom;
+    height:20px;
+}
+
+.form-group > .col-lg-5{
+    text-align:right;
+}
+
+.form-group label{
+    margin-top:10px;
+}
+
+#footer{
+    position:fixed;
+    bottom:0;
+    height:50px;
+    background-image: url("../images/people.png");
+    width:100%;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+

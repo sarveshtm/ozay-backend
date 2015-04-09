@@ -2,7 +2,31 @@
 
 /* Controllers */
 
-ozayApp.controller('MainController', function ($scope) {
+ozayApp.controller('MainController', function ($scope, $location) {
+var url = $location.url();
+
+        $scope.currentUrl = function ()
+        {
+            var url = $location.url();
+            if (url.indexOf("/directory/") > -1){
+                url = "/directory_details";
+            }
+            return url;
+        }
+
+$scope.$on('$viewContentLoaded', function() {
+    var url = $location.url();
+    if(url != '/' && url != '' ){
+                 var url_sub = url.substring(1);
+                 var pieces = url_sub.split('/');
+                 url_sub = pieces[0];
+                 var pieces = url_sub.split('_');
+                 var myEl = angular.element( document.querySelector( 'ul#' + pieces[0] ) );
+                 myEl.addClass('in');
+                 url_sub.replace("/", "");
+                 $( "a#" + url_sub ).focus();
+                }
+        });
     });
 
 ozayApp.controller('AdminController', function ($scope) {
@@ -303,4 +327,167 @@ ozayApp.controller('AuditsController', function ($scope, $translate, $filter, Au
         AuditsService.findByDates($scope.fromDate, $scope.toDate).then(function(data){
             $scope.audits = data;
         });
+    });
+
+ozayApp.controller('DirectoryController', function ($scope, DirectoryService) {
+        DirectoryService.get().then(function (directories) {
+            console.log(directories.data);
+
+            var index = 0;
+            var group = "";
+            directories.data.forEach(function (item) {
+                if(group == item.group){
+                    item.group = "";
+                } else {
+                    group = item.group;
+                }
+            })
+
+            $scope.directories = directories.data;
+
+        });
+    });
+
+    ozayApp.controller('DirectoryDetailController', function ($scope,$routeParams) {
+            $scope.roleList = [{
+                   name: 'management',
+                   label:'Management'
+               },{
+                   name: 'staff',
+                   label:'Staff'
+               },{
+                   name: 'board',
+                   label:'Board'
+               },{
+                   name: 'resident',
+                   label:'Resident'
+               }];
+            $scope.renterList = [
+                           {
+                               value:1,
+                               label : 'Yes'
+                           },{
+                               value:0,
+                               label : 'No'
+                           }];
+
+            var id  = $routeParams.memberId;
+
+            $scope.model = {
+                name: 'renter',
+                radioBox:undefined
+            };
+
+            $scope.changeRadio = function(obj){
+                $scope.model = obj;
+            };
+
+        });
+
+ozayApp.controller('NotificationController', function ($scope, NotificationService) {
+
+         NotificationService.get().then(function (notifications) {
+
+         notifications.data.forEach(function (item) {
+                        var date = new Date(item.notifiedDate);
+
+                        var formattedDate = date.getMonth() + 1 + "/" + date.getDate() + "/" + date.getFullYear();
+                         console.log(date.getMonth());
+                        item.notifiedDate = formattedDate;
+                    })
+        $scope.notifications = notifications.data;
+        });
+    });
+
+ozayApp.controller('CollaborateCreateController', function ($scope) {
+    $scope.sendTo = {
+                    name: 'sendTo',
+                    sendToRadio:undefined
+                };
+    $scope.response = {
+                        name: 'response',
+                        responseRadio:undefined
+                    };
+    $scope.sendToList = [
+                           {
+                               value:'management',
+                               label : 'MANAGEMENT'
+                           },{
+                                value:'board',
+                                label : 'BOARD'
+                           },
+                           {
+                               value:'resident',
+                               label : 'RESIDENT'
+                           }];
+    $scope.responseList = [{
+                           value:'rsvp',
+                           label : 'RSVP'
+                       },
+                       {
+                           value:'calendar',
+                           label : 'CALENDAR'
+                       }];
+
+    $scope.issueDates = [{}];
+
+    $scope.addItem = function (index) {
+
+            $scope.issueDates.push({
+
+            });
+        }
+    $scope.deleteItem = function (index) {
+            issueDates.splice(index, 1);
+        }
+    });
+
+    ozayApp.controller('CollaborateTrackController', function ($scope) {
+
+           $scope.model =
+                           {
+                               management : [{
+                                       date :"11/10/2014",
+                                       subject:'rsvp',
+                                       completed : 3,
+                                       total : 7,
+                                       percentage:(7/7*100).toFixed(2)
+                                   },
+                                   {
+                                       date :"11/10/2014",
+                                       subject:'rsvp',
+                                       completed : 3,
+                                       total : 7,
+                                       percentage:(3/7*100).toFixed(2)
+                                   }],
+                                   board : [{
+                                               date :"11/10/2014",
+                                              subject:'rsvp',
+                                              completed : 3,
+                                              total : 7,
+                                              percentage:(3/7*100).toFixed(2)
+                                                           },
+                                                           {
+                                               date :"11/10/2014",
+                                              subject:'rsvp',
+                                              completed : 3,
+                                              total : 7,
+                                              percentage:(3/7*100).toFixed(2)
+                                                           }],
+                               resident : [{
+                                               date :"11/10/2014",
+                                              subject:'rsvp',
+                                              completed : 3,
+                                              total : 7,
+                                              percentage: (3/7*100).toFixed(2)
+                                           },
+                                           {
+                                            date :"11/10/2014",
+                                           subject:'rsvp',
+                                           completed : 3,
+                                           total : 7,
+                                           percentage:(3/7*100).toFixed(2)
+                                           }]
+
+                           };
     });

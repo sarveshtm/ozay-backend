@@ -1,0 +1,116 @@
+<div id="wrapper">
+
+    <!-- Navigation -->
+    <nav id="top_header" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a id="logo_wrap" href="index.html" class="navbar-brand"><img id="people_logo" alt="" class="logo" src="../images/OZAY_LOGIN.png" width="70px;"></a>
+        </div>
+
+        <!-- Top Menu Items -->
+
+        <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
+        <div id="navbar-collapse" class="collapse navbar-collapse navbar-ex1-collapse">
+
+            <ul class="nav navbar-nav side-nav">
+                <li class="nav-profile">
+                    <select id="building_list">
+                        <option>EAST RIVER TOWER</option>
+
+                    </select>
+                    <div style="padding-top:10px;">
+                    <div class="image">
+                        <a href="javascript:;"><img alt="" src="images/user-13.jpg"></a>
+                    </div>
+                    <div class="info">
+                        <p class="small">
+                            Welcome,
+                        </p>
+                        <h4>
+                            {{account.firstName}}{{account.lastName}}
+                        </h4>
+                    </div>
+                    </div>
+                    <div style="clear:both;"></div>
+                </li>
+                <li>
+                    <a href="#/dashboard">DASHBOARD</a>
+                </li>
+                <li>
+                    <a href="#/events">EVENTS</a>
+                </li>
+                <li>
+                    <a href="javascript:;" class="{{notifiaction_class}}" data-toggle="collapse" data-target="#notification">NOTIFICATIONS <img class="arrow"/></a>
+                    <ul id="notification" class="collapse">
+                        <li>
+                            <a id="notification_create" href="#/notification_create">CREATE</a>
+                        </li>
+                        <li>
+                            <a id="notification_archive" href="#/notification_archive">ARCHIVES</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="javascript:;" data-toggle="collapse" data-target="#collaborate">COLLABORATE <img class="arrow"/></a>
+                    <ul id="collaborate" class="collapse">
+                        <li>
+                            <a href="#/collaborate_create">CREATE</a>
+                        </li>
+                        <li>
+                            <a href="#/collaborate_track">TRACK</a>
+                        </li>
+                        <li>
+                            <a href="#/collaborate_archive">ARCHIVES</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a id="directory" href="#/directory">DIRECTORY</a>
+                </li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </nav>
+    <div class="page_title">
+        <span>MANAGEMENT | EAST RIVER TOWER</span>
+    </div>
+    <div id="page-wrapper" >
+        <div class="container-fluid" >
+
+            <div ng-switch on="currentUrl()">
+                <div ng-switch-when="/notification_archive">
+                    <div ng-include="'/views/notification_archive.html'"></div>
+                </div>
+                <div ng-switch-when="/notification_create">
+                    <div ng-include="'/views/notification_create.html'"></div>
+                </div>
+                <div ng-switch-when="/directory">
+                    <div ng-include="'/views/directory.html'"></div>
+                </div>
+                <div ng-switch-when="/directory_details">
+                    <div ng-include="'/views/directory_details.html'"></div>
+                </div>
+                <div ng-switch-when="/dashboard">
+                    <div ng-include="'/views/dashboard.html'"></div>
+                </div>
+                <div ng-switch-when="/collaborate_create">
+                    <div ng-include="'/views/collaborate_create.html'"></div>
+                </div>
+                <div ng-switch-when="/collaborate_track">
+                    <div ng-include="'/views/collaborate_track.html'"></div>
+                </div>
+                <div ng-switch-default>
+                    <div ng-include="'/views/main.html'"></div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

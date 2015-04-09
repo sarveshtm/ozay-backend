@@ -1,0 +1,86 @@
+<!-- Page Heading -->
+<div class="row" ng-controller="CollaborateTrackController">
+    <div class="col-lg-12">
+        <div class="page_content">
+            <div class="page_content_title">
+                COLLABORATE | TRACK
+            </div>
+            <div class="clear"></div>
+            <div class="page_content_item">
+                    <table id="" class="dataTable">
+                        <thead ng-if="model.management.length > 0">
+                        <tr>
+                            <th>MANAGEMENT</th>
+                            <th>Date</th>
+                            <th>Subject</th>
+                            <th>Board Summary</th>
+                            <th style="min-width:250px;"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="m in model.management">
+                            <td></td>
+                            <td>{{m.date}}</td>
+                            <td>{{m.subject}}</td>
+                            <td>{{m.completed}} of {{m.total}}</td>
+                            <td>
+                                <div>
+                                    <div style="position:relative;width:{{m.percentage}}%; background-color:blue;">&nbsp;</div>
+                                </div>
+
+                            </td>
+                        </tr>
+
+                        <thead ng-if="model.board.length > 0">
+                        <tr>
+                            <th>BOARD</th>
+                            <th>Date</th>
+                            <th>Subject</th>
+                            <th>Board Summary</th>
+                            <th style="min-width:250px;"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="b in model.board">
+                            <td></td>
+                            <td>{{b.date}}</td>
+                            <td>{{b.subject}}</td>
+                            <td>{{b.completed}} of {{b.total}}</td>
+                            <td>
+                                <div>
+                                    <div style="position:relative;width:{{b.percentage}}%; background-color:blue;">&nbsp;</div>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <thead ng-if="model.resident.length > 0">
+                        <tr>
+                            <th>RESIDENTS</th>
+                            <th>Date</th>
+                            <th>Subject</th>
+                            <th>Board Summary</th>
+                            <th style="min-width:250px;"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="r in model.resident">
+                            <td></td>
+                            <td>{{r.date}}</td>
+                            <td>{{r.subject}}</td>
+                            <td>{{r.completed}} of {{r.total}}</td>
+                            <td>
+                                <div>
+                                    <div style="position:relative;width:{{r.percentage}}%; background-color:blue;">&nbsp;</div>
+                                </div>
+                            </td>
+                        </tr>
+
+                        </tbody>
+                    </table>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- /.row -->

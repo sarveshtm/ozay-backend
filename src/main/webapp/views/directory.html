@@ -1,0 +1,43 @@
+<!-- Page Heading -->
+    <div class="row" ng-controller="DirectoryController">
+        <div class="col-lg-12">
+            <div class="page_content">
+                <div class="page_content_title">
+                    DIRECTORY
+                </div>
+                <div class="clear"></div>
+                <div class="page_content_item">
+                    <table id="directory_table" class="dataTable">
+                        <thead>
+                            <tr>
+                                <th>&nbsp;</th>
+                                <th>Name</th>
+                                <th>Unit</th>
+                                <th>Parking #</th>
+                                <th>% Ownership</th>
+                                <th>Renter</th>
+                                <th>Phone</th>
+                                <th>Email</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            <tr ng-repeat="directory in directories">
+
+                                <td>{{directory.group}}</td>
+                                <td><a href="#directory/1">{{directory.firstName}}&nbsp;{{directory.lastName}}</a></td>
+                                <td>{{directory.unit}}</td>
+                                <td></td>
+                                <td>{{directory.ownership}}</td>
+                                <td><span ng-if="directory.renter == true">Yes</span><span ng-else>No</span></td>
+                                <td>{{directory.phone}}</td>
+                                <td>{{directory.email}}</td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /.row -->
