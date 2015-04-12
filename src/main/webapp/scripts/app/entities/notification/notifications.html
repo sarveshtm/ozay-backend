@@ -1,0 +1,136 @@
+<div>
+
+    <h2 translate="ozayApp.notification.home.title">Notification</h2>
+
+    <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#saveNotificationModal" ng-click="clear()">
+        <span class="glyphicon glyphicon-flash"></span> <span translate="ozayApp.notification.home.createLabel">Create a new Notification</span>
+    </button>
+    <div class="modal fade" id="saveNotificationModal" tabindex="-1" role="dialog" aria-labelledby="myNotificationLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form name="editForm" role="form" novalidate
+                      class="ng-scope ng-invalid ng-invalid-required ng-dirty ng-valid-minlength"
+                      ng-submit="create()">
+
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                                ng-click="clear()">&times;</button>
+                        <h4 class="modal-title" id="myNotificationLabel" translate="ozayApp.notification.home.createOrEditLabel">Create or edit a Notification</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>ID</label>
+                            <input type="text" class="form-control" name="id"
+                                   ng-model="notification.id" readonly>
+                        </div>
+
+                        <div class="form-group">
+                            <label translate="ozayApp.notification.buildingId">BuildingId</label>
+                            <input type="number" class="form-control" name="buildingId"
+                                   ng-model="notification.buildingId">
+                        </div>
+                        <div class="form-group">
+                            <label translate="ozayApp.notification.notice">Notice</label>
+                            <input type="text" class="form-control" name="notice"
+                                   ng-model="notification.notice">
+                        </div>
+                        <div class="form-group">
+                            <label translate="ozayApp.notification.issueDate">IssueDate</label>
+                            <input type="datetime-local" class="form-control" name="issueDate"
+                                   ng-model="notification.issueDate" ng-model-options="{timezone: 'UTC'}">
+                        </div>
+                        <div class="form-group">
+                            <label translate="ozayApp.notification.createdBy">CreatedBy</label>
+                            <input type="text" class="form-control" name="createdBy"
+                                   ng-model="notification.createdBy">
+                        </div>
+                        <div class="form-group">
+                            <label translate="ozayApp.notification.createdDate">CreatedDate</label>
+                            <input type="datetime-local" class="form-control" name="createdDate"
+                                   ng-model="notification.createdDate" ng-model-options="{timezone: 'UTC'}">
+                        </div>
+
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="clear()">
+                            <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span translate="entity.action.cancel">Cancel</span>
+                        </button>
+                        <button type="submit" ng-disabled="editForm.$invalid" class="btn btn-primary">
+                            <span class="glyphicon glyphicon-save"></span>&nbsp;<span translate="entity.action.save">Save</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="deleteNotificationConfirmation">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form name="deleteForm" ng-submit="confirmDelete(notification.id)">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                                ng-click="clear()">&times;</button>
+                        <h4 class="modal-title" translate="entity.delete.title">Confirm delete operation</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p translate="ozayApp.notification.delete.question" translate-values="{id: '{{notification.id}}'}">Are you sure you want to delete this Notification?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="clear()">
+                            <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span translate="entity.action.cancel">Cancel</span>
+                        </button>
+                        <button type="submit" ng-disabled="deleteForm.$invalid" class="btn btn-danger">
+                            <span class="glyphicon glyphicon-remove-circle"></span>&nbsp;<span translate="entity.action.delete">Delete</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th translate="ozayApp.notification.buildingId">BuildingId</th>
+                    <th translate="ozayApp.notification.notice">Notice</th>
+                    <th translate="ozayApp.notification.issueDate">IssueDate</th>
+                    <th translate="ozayApp.notification.createdBy">CreatedBy</th>
+                    <th translate="ozayApp.notification.createdDate">CreatedDate</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="notification in notifications">
+                    <td><a ui-sref="notificationDetail({id:notification.id})">{{notification.id}}</a></td>
+                    <td>{{notification.buildingId}}</td>
+                    <td>{{notification.notice}}</td>
+                    <td>{{notification.issueDate}}</td>
+                    <td>{{notification.createdBy}}</td>
+                    <td>{{notification.createdDate}}</td>
+                    <td>
+                        <button type="submit"
+                                ui-sref="notificationDetail({id:notification.id})"
+                                class="btn btn-info">
+                            <span class="glyphicon glyphicon-eye-open"></span>&nbsp;<span translate="entity.action.view"> View</span>
+                        </button>
+                        <button type="submit"
+                                ng-click="update(notification.id)"
+                                class="btn btn-primary">
+                            <span class="glyphicon glyphicon-pencil"></span>&nbsp;<span translate="entity.action.edit"> Edit</span>
+                        </button>
+                        <button type="submit"
+                                ng-click="delete(notification.id)"
+                                class="btn btn-danger">
+                            <span class="glyphicon glyphicon-remove-circle"></span>&nbsp;<span translate="entity.action.delete"> Delete</span>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

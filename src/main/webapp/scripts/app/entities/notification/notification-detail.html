@@ -1,0 +1,62 @@
+
+<div>
+    <h2><span translate="ozayApp.notification.detail.title">Notification</span> {{notification.id}}</h2>
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th translate="entity.detail.field">Field</th>
+                    <th translate="entity.detail.value">Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <span translate="ozayApp.notification.buildingId">BuildingId</span>
+                    </td>
+                    <td>
+                        <input type="text" class="input-sm form-control" value="{{notification.buildingId}}" readonly>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span translate="ozayApp.notification.notice">Notice</span>
+                    </td>
+                    <td>
+                        <input type="text" class="input-sm form-control" value="{{notification.notice}}" readonly>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span translate="ozayApp.notification.issueDate">IssueDate</span>
+                    </td>
+                    <td>
+                        <input type="text" class="input-sm form-control" value="{{notification.issueDate}}" readonly>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span translate="ozayApp.notification.createdBy">CreatedBy</span>
+                    </td>
+                    <td>
+                        <input type="text" class="input-sm form-control" value="{{notification.createdBy}}" readonly>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span translate="ozayApp.notification.createdDate">CreatedDate</span>
+                    </td>
+                    <td>
+                        <input type="text" class="input-sm form-control" value="{{notification.createdDate}}" readonly>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <button type="submit"
+            ui-sref="notification"
+            class="btn btn-info">
+        <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span translate="entity.action.back"> Back</span>
+    </button>
+</div>

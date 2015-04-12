@@ -1,68 +1,90 @@
 package com.ozay.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
+import com.ozay.domain.Notification;
 import com.ozay.domain.User;
-import com.ozay.security.AuthoritiesConstants;
-import com.ozay.web.rest.dto.MemberDTO;
-import com.ozay.web.rest.dto.NotificationDTO;
+import com.ozay.repository.NotificationRepository;
+import com.ozay.repository.UserRepository;
+import com.ozay.security.SecurityUtils;
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.security.RolesAllowed;
-import java.util.ArrayList;
-import java.util.Date;
+import javax.inject.Inject;
 import java.util.List;
 import java.util.Optional;
 
 /**
- * REST controller for managing the current user's account.
+ * REST controller for managing Notification.
  */
 @RestController
-@RequestMapping("/app")
+@RequestMapping("/api")
 public class NotificationResource {
 
     private final Logger log = LoggerFactory.getLogger(NotificationResource.class);
 
+    @Inject
+    private NotificationRepository notificationRepository;
+
+    @Inject
+    private UserRepository userRepository;
     /**
-     * GET  /rest/directory/members -> get directory info
+     * POST  /notifications -> Create a new notification.
      */
-    @RequestMapping(value = "/rest/notifications/get",
-        method = RequestMethod.GET,
-        produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/notifications",
+            method = RequestMethod.POST,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public List<NotificationDTO> getSubjects() {
-        List<NotificationDTO> list = new ArrayList<NotificationDTO>();
-        for (int i = 0; i < 10; i++) {
-            list.add(createNotifications());
-        }
-        return list;
+    public void create(@RequestBody Notification notification) {
+        User currentUser = userRepository.findOne(SecurityUtils.getCurrentLogin());
+        notification.setCreatedBy(currentUser.getLogin());
+        notification.setCreatedDate(new DateTime());
+        notification.setBuildingId(1);
+        log.debug("REST request to save Notification : {}", notification);
+        notificationRepository.save(notification);
     }
 
     /**
-     * POST  /rest/users/:login -> get the "login" user.
+     * GET  /notifications -> get all the notifications.
      */
-    @RequestMapping(value = "/rest/notifications/create",
-        method = RequestMethod.POST,
-        produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/notifications",
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    @RolesAllowed(AuthoritiesConstants.ADMIN)
-    boolean createNotification() {
-        return true;
+    public List<Notification> getAll() {
+        log.debug("REST request to get all Notifications");
+        return notificationRepository.findAll();
     }
 
-    private NotificationDTO createNotifications() {
-        NotificationDTO m = new NotificationDTO();
-        m.setNotifiedDate(new Date());
-        m.setSubject("test Subject");
-
-        return m;
+    /**
+     * GET  /notifications/:id -> get the "id" notification.
+     */
+    @RequestMapping(value = "/notifications/{id}",
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    public ResponseEntity<Notification> get(@PathVariable Long id) {
+        log.debug("REST request to get Notification : {}", id);
+        return Optional.ofNullable(notificationRepository.findOne(id))
+            .map(notification -> new ResponseEntity<>(
+                notification,
+                HttpStatus.OK))
+            .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
+    /**
+     * DELETE  /notifications/:id -> delete the "id" notification.
+     */
+    @RequestMapping(value = "/notifications/{id}",
+            method = RequestMethod.DELETE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    public void delete(@PathVariable Long id) {
+        log.debug("REST request to delete Notification : {}", id);
+        notificationRepository.delete(id);
+    }
 }

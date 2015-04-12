@@ -4,30 +4,33 @@
     <div class="row" ng-controller="NotificationController">
         <div class="col-lg-12">
             <div class="page_content">
-                <div class="page_content_title">
-                    NOTIFICATIONS | CREATE
-                    <div class="button_group">
-                        <button class="btn btn-default">Submit</button>
-                        <button class="btn btn-default">Cancel</button>
-                    </div>
-                </div>
-                <div class="clear"></div>
-                <div class="page_content_item form_type_1">
-
-                    <div class="form-group">
-                        <label class="control-label col-xs-12 col-sm-3 col-lg-3">Notice</label>
-                        <div class=" col-xs-12 col-sm-9 col-lg-9">
-                            <textarea placeholder="[Type text here]" class="form-control" rows="5"></textarea>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label col-xs-12 col-sm-3 col-lg-3">Issue Date?</label>
-                        <div class="col-xs-12 col-sm-9 col-lg-9">
-                            <input placeholder="Default today's date" class="form-control" type="text">
+                <form class="simple-form">
+                    <div class="page_content_title">
+                        NOTIFICATIONS | CREATE
+                        <div class="button_group">
+                            <button class="btn btn-default" ng-click="create(notification)">Submit</button>
+                            <button class="btn btn-default">Cancel</button>
                         </div>
                     </div>
                     <div class="clear"></div>
-                </div>
+                    <div class="page_content_item form_type_1">
+
+                        <div class="form-group">
+                            <label class="control-label col-xs-12 col-sm-3 col-lg-3">Notice</label>
+                            <div class=" col-xs-12 col-sm-9 col-lg-9">
+                                <textarea ng-model="notification.notice" placeholder="[Type text here]" class="form-control" rows="5" ng-required="true"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-xs-12 col-sm-3 col-lg-3">Issue Date?</label>
+                            <div class="col-xs-12 col-sm-9 col-lg-9">
+                                <input ng-model="notification.issueDate" placeholder="Default today's date" class="form-control" type="date" ng-required="true">
+                            </div>
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+                </form>
+
             </div>
         </div>
     </div>

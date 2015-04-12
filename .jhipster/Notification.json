@@ -1,0 +1,48 @@
+{
+    "relationships": [],
+    "fields": [
+        {
+            "fieldId": 1,
+            "fieldName": "buildingId",
+            "fieldType": "Integer",
+            "fieldNameCapitalized": "BuildingId",
+            "fieldNameUnderscored": "building_id"
+        },
+        {
+            "fieldId": 2,
+            "fieldName": "notice",
+            "fieldType": "String",
+            "fieldNameCapitalized": "Notice",
+            "fieldNameUnderscored": "notice"
+        },
+        {
+            "fieldId": 3,
+            "fieldName": "issueDate",
+            "fieldType": "DateTime",
+            "fieldNameCapitalized": "IssueDate",
+            "fieldNameUnderscored": "issue_date"
+        },
+        {
+            "fieldId": 4,
+            "fieldName": "createdBy",
+            "fieldType": "String",
+            "fieldNameCapitalized": "CreatedBy",
+            "fieldNameUnderscored": "created_by"
+        },
+        {
+            "fieldId": 5,
+            "fieldName": "createdDate",
+            "fieldType": "DateTime",
+            "fieldNameCapitalized": "CreatedDate",
+            "fieldNameUnderscored": "created_date"
+        }
+    ],
+    "fieldsContainOwnerManyToMany": false,
+    "fieldsContainOneToMany": false,
+    "fieldsContainLocalDate": false,
+    "fieldsContainCustomTime": true,
+    "fieldsContainBigDecimal": false,
+    "fieldsContainDateTime": true,
+    "fieldsContainDate": false,
+    "changelogDate": "20150409221229"
+}

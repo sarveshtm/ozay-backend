@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <property name="now" value="now()" dbms="mysql,h2"/>
+    <property name="now" value="current_timestamp" dbms="postgresql"/>
+
+    <!--
+        Added the entity Notification.
+    -->
+    <changeSet id="20150409221229" author="jhipster">
+        <createTable tableName="T_NOTIFICATION">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="building_id" type="integer"/>
+            <column name="notice" type="varchar(255)"/>
+            <column name="issue_date" type="timestamp">
+                <constraints nullable="false" />
+            </column>
+            <column name="created_by" type="varchar(255)"/>
+            <column name="created_date" type="timestamp">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+        <dropDefaultValue tableName="T_NOTIFICATION" columnName="issue_date" columnDataType="datetime"/>
+
+        <dropDefaultValue tableName="T_NOTIFICATION" columnName="created_date" columnDataType="datetime"/>
+
+        
+    </changeSet>
+</databaseChangeLog>

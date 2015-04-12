@@ -21,8 +21,8 @@
                         <tbody>
                             <tr ng-repeat="notification in notifications">
                                 <td></td>
-                                <td>{{notification.notifiedDate}}</td>
-                                <td>{{notification.subject}}</td>
+                                <td>{{notification.createdDate | date: "MM/dd/yyyy"}}</td>
+                                <td>{{notification.notice}}</td>
                             </tr>
 
                         </tbody>
