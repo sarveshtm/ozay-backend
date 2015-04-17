@@ -15,6 +15,8 @@ import javax.inject.Inject;
 import javax.mail.internet.MimeMessage;
 import java.util.Locale;
 
+import com.sendgrid.*;
+
 /**
  * Service for sending e-mails.
  * <p/>
@@ -44,6 +46,27 @@ public class MailService {
     @PostConstruct
     public void init() {
         this.from = env.getProperty("spring.mail.from");
+    }
+
+    public void sendGrid(String subject, String text){
+        SendGrid sendgrid = new SendGrid("OzayOrg", "OzayOrg1124");
+
+        SendGrid.Email email = new SendGrid.Email();
+        email.addTo("sandeep.varma@gmail.com");
+        email.addTo("yosuke.kawai@gmail.com");
+        email.addTo("clmmns@gmail.com");
+        email.setFrom("noreply@metropolisrealtyny.com");
+        email.setSubject(subject);
+        email.setText(text);
+
+        try {
+            SendGrid.Response response = sendgrid.send(email);
+            log.debug("Send email with sendgrid ");
+            System.out.println(response.getMessage());
+        }
+        catch (SendGridException e) {
+            System.err.println(e);
+        }
     }
 
     @Async

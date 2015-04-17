@@ -6,6 +6,8 @@ import com.ozay.domain.User;
 import com.ozay.repository.NotificationRepository;
 import com.ozay.repository.UserRepository;
 import com.ozay.security.SecurityUtils;
+import com.ozay.service.MailService;
+import com.sendgrid.Mail;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,6 +34,9 @@ public class NotificationResource {
 
     @Inject
     private UserRepository userRepository;
+
+    @Inject
+    private MailService mailService;
     /**
      * POST  /notifications -> Create a new notification.
      */
@@ -44,6 +49,7 @@ public class NotificationResource {
         notification.setCreatedBy(currentUser.getLogin());
         notification.setCreatedDate(new DateTime());
         notification.setBuildingId(1);
+        mailService.sendGrid("Notification", notification.getNotice());
         log.debug("REST request to save Notification : {}", notification);
         notificationRepository.save(notification);
     }
