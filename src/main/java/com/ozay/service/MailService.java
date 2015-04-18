@@ -52,9 +52,9 @@ public class MailService {
         SendGrid sendgrid = new SendGrid("OzayOrg", "OzayOrg1124");
 
         SendGrid.Email email = new SendGrid.Email();
-        email.addTo("sandeep.varma@gmail.com");
-        email.addTo("yosuke.kawai@gmail.com");
-        email.addTo("clmmns@gmail.com");
+        email.addSmtpApiTo("sandeep.varma@gmail.com");
+        email.addSmtpApiTo("yosuke.kawai@gmail.com");
+        email.addSmtpApiTo("clmmns@gmail.com");
         email.setFrom("noreply@metropolisrealtyny.com");
         email.setSubject(subject);
         email.setText(text);
