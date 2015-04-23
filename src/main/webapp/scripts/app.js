@@ -7,7 +7,7 @@ var ozayApp = angular.module('ozayApp', ['http-auth-interceptor', 'tmh.dynamicLo
     'ngResource', 'ngRoute', 'ngCookies', 'ozayAppUtils', 'pascalprecht.translate', 'truncate']);
 
 ozayApp
-    .config(function ($routeProvider, $httpProvider, $translateProvider, tmhDynamicLocaleProvider, $stateProvider, USER_ROLES) {
+    .config(function ($routeProvider, $httpProvider, $translateProvider, tmhDynamicLocaleProvider, USER_ROLES) {
 
             $routeProvider
                 .when('/register', {
