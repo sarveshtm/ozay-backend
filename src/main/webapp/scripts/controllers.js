@@ -384,20 +384,6 @@ ozayApp.controller('DirectoryController', function ($scope, DirectoryService) {
 
         });
 
-ozayApp.controller('NotificationController', function ($scope, NotificationService) {
-
-         NotificationService.get().then(function (notifications) {
-
-         notifications.data.forEach(function (item) {
-                        var date = new Date(item.notifiedDate);
-
-                        var formattedDate = date.getMonth() + 1 + "/" + date.getDate() + "/" + date.getFullYear();
-                         console.log(date.getMonth());
-                        item.notifiedDate = formattedDate;
-                    })
-        $scope.notifications = notifications.data;
-        });
-    });
 
 ozayApp.controller('CollaborateCreateController', function ($scope) {
     $scope.sendTo = {

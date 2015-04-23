@@ -12,16 +12,6 @@ ozayApp.factory('DirectoryService', function ($http, $resource) {
                };
     });
 
-ozayApp.factory('NotificationService', function ($http, $resource) {
-
-       var list = $http.get('app/rest/notifications/get');
-       return {
-                   get: function() {
-                   console.log(list);
-                        return list;
-                   }
-               };
-    });
 
 ozayApp.factory('LanguageService', function ($http, $translate, LANGUAGES) {
         return {
