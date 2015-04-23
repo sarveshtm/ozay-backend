@@ -2,28 +2,24 @@
 <div id="login_wrapper">
     <div id="login_background">
         <img id="logo" class="displayed" src="../images/OZAY_LOGIN_bg.png" />
-        <div class="row">
-            <div class="col-lg-12">
+        <div class="col-sm-6 col-sm-offset-3">
                 <form class="form" role="form">
                     <div class="alert alert-danger" ng-show="authenticationError" translate="login.messages.error.authentication">
                         <strong>Authentication failed!</strong> Please check your credentials and try again.
                     </div>
                     <div class="form-group">
-                        <label id="username" for="username" translate="global.form.username" class="control-label col-sm-5 col-lg-5">Login:</label>
-                        <div class="col-sm-4 col-lg-4">
+                        <label id="username" for="username" translate="global.form.username">Login:</label>
                             <input ng-model="username" placeholder="Email Address" class="form-control" type="text">
-                        </div>
                     </div>
-                    <div style="clear:both; height:20px;"></div>
                     <div class="form-group">
-                        <label class="control-label col-sm-5 col-lg-5">Password:</label>
-                        <div class="col-sm-4 col-lg-4">
+                        <label class="control-label">Password:</label>
                             <input type="password" class="form-control" id="password" placeholder="Password" type="text" ng-model="password">
-                        </div>
                     </div>
-                    <button type="submit" class="btn btn-primary" ng-click="login()" translate="login.form.button">Authenticate</button>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary" ng-click="login()" translate="login.form.button">Authenticate</button>
+                    </div>
                 </form>
-            </div>
+
         </div>
     </div>
 </div>
