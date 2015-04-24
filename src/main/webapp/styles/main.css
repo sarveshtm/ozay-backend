@@ -243,6 +243,7 @@ body{
 
 .side-nav{
     background-color:#E4E5E0;
+    border-right: 2px solid white;
 }
 
 .navbar-inverse .navbar-nav > li > a:hover, .navbar-inverse .navbar-nav > li > a:focus {
@@ -251,7 +252,6 @@ body{
 
 #page-wrapper{
     background-color:#F3F5F4;
-    border-left:2px solid white;
 }
 #user_area{
     width: 225px;
@@ -345,7 +345,6 @@ body{
     width:100%;
     background-color:#E4E5E0;
     min-height:90px;
-    border-left: 2px solid white;
 }
 .page_title span{
     font-size:20px;
@@ -724,6 +723,8 @@ a.collapsed img.arrow{
     content:url("../images/down.png");
 }
 
-
+ul.nav{
+    margin-bottom:0;
+}
 
 

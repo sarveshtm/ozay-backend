@@ -47,7 +47,7 @@
                     <a href="#/events">EVENTS</a>
                 </li>
                 <li>
-                    <a href="javascript:;" class="{{notifiaction_class}}" data-toggle="collapse" data-target="#notification">NOTIFICATIONS <img class="arrow"/></a>
+                    <a href="javascript:;" class="{{notifiaction_class}}" data-toggle="collapse" data-target="#notification">NOTIFICATIONS <img class="arrow"></a>
                     <ul id="notification" class="collapse">
                         <li>
                             <a id="notification_create" href="#/notification_create">CREATE</a>
@@ -58,7 +58,7 @@
                     </ul>
                 </li>
                 <li>
-                    <a href="javascript:;" data-toggle="collapse" data-target="#collaborate">COLLABORATE <img class="arrow"/></a>
+                    <a href="javascript:;" data-toggle="collapse" data-target="#collaborate">COLLABORATE <img class="arrow"></a>
                     <ul id="collaborate" class="collapse">
                         <li>
                             <a href="#/collaborate_create">CREATE</a>
@@ -83,34 +83,7 @@
     </div>
     <div id="page-wrapper" >
         <div class="container-fluid" >
-
-            <div ng-switch on="currentUrl()">
-                <div ng-switch-when="/notification_archive">
-                    <div ng-include="'/views/notification_archive.html'"></div>
-                </div>
-                <div ng-switch-when="/notification_create">
-                    <div ng-include="'/views/notification_create.html'"></div>
-                </div>
-                <div ng-switch-when="/directory">
-                    <div ng-include="'/views/directory.html'"></div>
-                </div>
-                <div ng-switch-when="/directory_details">
-                    <div ng-include="'/views/directory_details.html'"></div>
-                </div>
-                <div ng-switch-when="/dashboard">
-                    <div ng-include="'/views/dashboard.html'"></div>
-                </div>
-                <div ng-switch-when="/collaborate_create">
-                    <div ng-include="'/views/collaborate_create.html'"></div>
-                </div>
-                <div ng-switch-when="/collaborate_track">
-                    <div ng-include="'/views/collaborate_track.html'"></div>
-                </div>
-                <div ng-switch-default>
-                    <div ng-include="'/views/main.html'"></div>
-                </div>
-
-            </div>
+            <div ui-view></div>
         </div>
     </div>
 </div>

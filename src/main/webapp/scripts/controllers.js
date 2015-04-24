@@ -3,30 +3,7 @@
 /* Controllers */
 
 ozayApp.controller('MainController', function ($scope, $location) {
-var url = $location.url();
 
-        $scope.currentUrl = function ()
-        {
-            var url = $location.url();
-            if (url.indexOf("/directory/") > -1){
-                url = "/directory_details";
-            }
-            return url;
-        }
-
-$scope.$on('$viewContentLoaded', function() {
-    var url = $location.url();
-    if(url != '/' && url != '' ){
-                 var url_sub = url.substring(1);
-                 var pieces = url_sub.split('/');
-                 url_sub = pieces[0];
-                 var pieces = url_sub.split('_');
-                 var myEl = angular.element( document.querySelector( 'ul#' + pieces[0] ) );
-                 myEl.addClass('in');
-                 url_sub.replace("/", "");
-                 $( "a#" + url_sub ).focus();
-                }
-        });
     });
 
 ozayApp.controller('AdminController', function ($scope) {
