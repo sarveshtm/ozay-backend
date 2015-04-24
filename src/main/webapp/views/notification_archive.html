@@ -19,7 +19,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr ng-repeat="notification in notifications">
+                            <tr ng-repeat="notification in notifications | orderBy:'-createdDate'">
                                 <td></td>
                                 <td>{{notification.createdDate | date: "MM/dd/yyyy"}}</td>
                                 <td>{{notification.notice}}</td>
