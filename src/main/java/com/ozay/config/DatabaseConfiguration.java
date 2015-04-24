@@ -64,7 +64,7 @@ public class DatabaseConfiguration implements EnvironmentAware {
         }
         config.addDataSourceProperty("user", propertyResolver.getProperty("username"));
         config.addDataSourceProperty("password", propertyResolver.getProperty("password"));
-        config.setConnectionTimeout(30000);
+        config.setConnectionTimeout(10001);
         config.setMetricRegistry(metricRegistry);
         return new HikariDataSource(config);
     }

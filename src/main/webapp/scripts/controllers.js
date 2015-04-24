@@ -428,54 +428,6 @@ ozayApp.controller('CollaborateCreateController', function ($scope) {
         }
     });
 
- ozayApp.controller('NotificationController', function ($scope, $filter, NotificationService) {
-            $scope.notifications = [];
-            $scope.loadAll = function() {
-                NotificationService.query(function(result) {
-                   $scope.notifications = result;
-                });
-            };
-            $scope.loadAll();
-            $scope.showSuccessAlert = false;
-            $scope.create = function () {
-                NotificationService.save($scope.notification,
-                    function () {
-                          $scope.showSuccessAlert = true;
-                          $scope.successTextAlert = "Notice is successfully scheduled.";
-                    });
-            };
-
-            $scope.update = function (id) {
-                NotificationService.get({id: id}, function(result) {
-                    $scope.notification = result;
-                    $('#saveNotificationModal').modal('show');
-                });
-            };
-
-            $scope.delete = function (id) {
-                NotificationService.get({id: id}, function(result) {
-                    $scope.notification = result;
-                    $('#deleteNotificationConfirmation').modal('show');
-                });
-            };
-
-            $scope.confirmDelete = function (id) {
-                NotificationService.delete({id: id},
-                    function () {
-                        $scope.loadAll();
-                        $('#deleteNotificationConfirmation').modal('hide');
-                        $scope.clear();
-                    });
-            };
-
-            $scope.clear = function () {
-                $scope.notification = {buildingId: null, notice: null, issueDate: null, createdBy: null, createdDate: null, id: null};
-            };
-            $scope.notification = {};
-
-            $scope.notification.issueDate = $filter("date")(Date.now(), 'yyyy-MM-dd');
-            $scope.minDate = $filter("date")(Date.now(), 'yyyy-MM-dd');
-        });
 
 
     ozayApp.controller('CollaborateTrackController', function ($scope) {
