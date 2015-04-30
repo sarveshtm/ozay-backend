@@ -2,6 +2,7 @@
 
 angular.module('ozayApp')
     .controller('NotificationController', function ($scope, $filter, Notification) {
+        $scope.button = true;
         $scope.notifications = [];
         $scope.loadAll = function() {
             Notification.query(function(result) {
@@ -11,10 +12,12 @@ angular.module('ozayApp')
         $scope.loadAll();
         $scope.showSuccessAlert = false;
         $scope.create = function () {
+        $scope.button = false;
             Notification.save($scope.notification,
                 function () {
                       $scope.showSuccessAlert = true;
                       $scope.successTextAlert = "Notice is successfully scheduled.";
+                      $scope.button = true;
                 });
         };
 
