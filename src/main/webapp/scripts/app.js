@@ -192,7 +192,7 @@ $stateProvider
     })
     .state('/logout', {
         url: "/logout",
-        templateUrl: 'views/main.html',
+        templateUrl: "views/login.html",
         controller: 'LogoutController',
         access: {
             authorizedRoles: [USER_ROLES.all]
