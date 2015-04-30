@@ -309,6 +309,33 @@ $stateProvider
             tmhDynamicLocaleProvider.useCookieStorage('NG_TRANSLATE_LANG_KEY');
             httpHeaders = $httpProvider.defaults.headers;
         })
+        .factory('authInterceptor', function ($rootScope, $injector, $q, $location, localStorageService) {
+        return {
+        // Add authorization token to headers
+        request: function (config) {
+        config.headers = config.headers || {};
+        var token = localStorageService.get('token');
+        if (token && token.expires_at && token.expires_at > new Date().getTime()) {
+        config.headers.Authorization = 'Bearer ' + token.access_token;
+        }
+
+                    return config;
+                },
+                 responseError: function(response) {
+                            if (response.status == 401){
+                                var Auth = $injector.get('Auth');
+                                var $state = $injector.get('$state');
+                                var to = $rootScope.toState;
+                                var params = $rootScope.toStateParams;
+                                Auth.logout();
+                                $rootScope.returnToState = to;
+                                $rootScope.returnToStateParams = params;
+                                $state.go('login');
+                            }
+                            return $q.reject(response);
+                        }
+            };
+        })
         .run(function($rootScope, $location, $http, AuthenticationSharedService, Session, USER_ROLES) {
                 $rootScope.authenticated = false;
                 $rootScope.$on('$routeChangeStart', function (event, next) {
