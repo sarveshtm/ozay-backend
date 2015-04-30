@@ -51,6 +51,18 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @Column(name = "activation_key", length = 20)
     private String activationKey;
 
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    @Size(min = 0, max = 100)
+    @Column(name = "phone", length = 20)
+    private String phone;
+
     @JsonIgnore
     @ManyToMany
     @JoinTable(
@@ -134,7 +146,7 @@ public class User extends AbstractAuditingEntity implements Serializable {
     public void setAuthorities(Set<Authority> authorities) {
         this.authorities = authorities;
     }
-    
+
     public Set<PersistentToken> getPersistentTokens() {
         return persistentTokens;
     }

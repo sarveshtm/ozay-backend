@@ -17,6 +17,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
@@ -42,6 +43,11 @@ public class DatabaseConfiguration implements EnvironmentAware {
         this.propertyResolver = new RelaxedPropertyResolver(environment, "spring.datasource.");
     }
 
+    @Bean
+    public JdbcTemplate jdbcTemplate(DataSource ds) {
+        return new JdbcTemplate(ds);
+    }
+
     @Bean(destroyMethod = "shutdown")
     @ConditionalOnMissingClass(name = "com.ozay.config.HerokuDatabaseConfiguration")
     @Profile("!cloud")
@@ -64,7 +70,7 @@ public class DatabaseConfiguration implements EnvironmentAware {
         }
         config.addDataSourceProperty("user", propertyResolver.getProperty("username"));
         config.addDataSourceProperty("password", propertyResolver.getProperty("password"));
-        config.setConnectionTimeout(10001);
+        config.setConnectionTimeout(10008);
         config.setMetricRegistry(metricRegistry);
         return new HikariDataSource(config);
     }

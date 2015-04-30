@@ -52,7 +52,7 @@ public class Application {
         // Check if the selected profile has been set as argument.
         // if not the development profile will be added
         addDefaultProfile(app, source);
-        addLiquibaseScanPackages();
+       // addLiquibaseScanPackages();
         app.run(args);
     }
 

@@ -39,6 +39,7 @@ ozayApp.controller('LoginController', function ($scope, $location, Authenticatio
 
 ozayApp.controller('LogoutController', function ($location, AuthenticationSharedService) {
         AuthenticationSharedService.logout();
+        $location.path('/login').replace();
     });
 
 ozayApp.controller('SettingsController', function ($scope, Account) {
