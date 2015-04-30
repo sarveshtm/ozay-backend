@@ -18,6 +18,7 @@ angular.module('ozayApp')
                       $scope.showSuccessAlert = true;
                       $scope.successTextAlert = "Notice is successfully scheduled.";
                       $scope.button = true;
+                      $scope.notification.notice = "";
                 });
         };
 
