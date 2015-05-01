@@ -1,5 +1,7 @@
 package com.ozay.service;
 
+import com.ozay.model.UserDetail;
+import com.ozay.repository.UserDetailRepository;
 import org.apache.commons.lang.CharEncoding;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.mail.internet.MimeMessage;
+import java.util.List;
 import java.util.Locale;
 
 import com.sendgrid.*;
@@ -38,6 +41,9 @@ public class MailService {
     @Inject
     private MessageSource messageSource;
 
+    @Inject
+    private UserDetailRepository userDetailRepository;
+
     /**
      * System default email address that sends the e-mails.
      */
@@ -48,13 +54,19 @@ public class MailService {
         this.from = env.getProperty("spring.mail.from");
     }
 
-    public void sendGrid(String subject, String text){
+    public void sendGrid(String subject, String text, int buildingId){
         SendGrid sendgrid = new SendGrid("OzayOrg", "OzayOrg1124");
 
         SendGrid.Email email = new SendGrid.Email();
+        List<UserDetail> userList = userDetailRepository.getAllUsersByBuilding(buildingId);
+        for(UserDetail userDetail : userList){
+            String userEmail = userDetail.getUser().getEmail();
+            if(email != null){
+                email.addSmtpApiTo(userEmail);
+                }
+            }
 
 
-        email.addSmtpApiTo("clmmns@gmail.com");
         email.setFrom("noreply@metropolisrealtyny.com");
         email.setSubject(subject);
         email.setText(text);

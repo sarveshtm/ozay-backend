@@ -49,7 +49,7 @@ public class NotificationResource {
         notification.setCreatedBy(currentUser.getLogin());
         notification.setCreatedDate(new DateTime());
         notification.setBuildingId(1);
-        mailService.sendGrid("Notification", notification.getNotice());
+        mailService.sendGrid("Notification", notification.getNotice(), 1);
         log.debug("REST request to save Notification : {}", notification);
         notificationRepository.save(notification);
     }

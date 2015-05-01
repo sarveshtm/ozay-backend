@@ -277,7 +277,7 @@ $stateProvider
     .state('home.directory', {
             url: "/directory",
             templateUrl: 'views/directory.html',
-            controller: 'DirectoryController',
+
             access: {
                 authorizedRoles: [USER_ROLES.admin]
             }
@@ -362,12 +362,13 @@ $stateProvider
                     Session.invalidate();
                     //document.location.href = "/login.html";
                     $rootScope.authenticated = false;
-                    if ($location.path() !== "/" && $location.path() !== "" && $location.path() !== "/register" &&
-                            $location.path() !== "/activate" && $location.path() !== "/login") {
-                        var redirect = $location.path();
-                        $location.path('/login').search('redirect', redirect).replace();
-
-                    }
+                     $location.path('/login').replace();
+//                    if ($location.path() !== "/" && $location.path() !== "" && $location.path() !== "/register" &&
+//                            $location.path() !== "/activate" && $location.path() !== "/login") {
+//                        var redirect = $location.path();
+//                        $location.path('/login').search('redirect', redirect).replace();
+//
+//                    }
                 });
 
                 // Call when the 403 response is returned by the server

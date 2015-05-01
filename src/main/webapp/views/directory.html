@@ -1,5 +1,5 @@
 <!-- Page Heading -->
-    <div class="row" ng-controller="DirectoryController">
+    <div class="row" ng-controller="UserDetailController">
         <div class="col-lg-12">
             <div class="page_content">
                 <div class="page_content_title">
@@ -25,13 +25,13 @@
                             <tr ng-repeat="directory in directories">
 
                                 <td>{{directory.group}}</td>
-                                <td><a href="#directory/1">{{directory.firstName}}&nbsp;{{directory.lastName}}</a></td>
+                                <td><a href="#directory/1">{{directory.user.firstName}} {{directory.user.lastName}} &nbsp;{{directory.lastName}}</a></td>
                                 <td>{{directory.unit}}</td>
-                                <td></td>
+                                <td>{{directory.parking}}</td>
                                 <td>{{directory.ownership}}</td>
-                                <td><span ng-if="directory.renter == true">Yes</span><span ng-else>No</span></td>
-                                <td>{{directory.phone}}</td>
-                                <td>{{directory.email}}</td>
+                                <td><span ng-if="isResident(directory.renter)">Yes</span><span ng-if="!isResident(directory.renter)">No</span></td>
+                                <td>{{directory.user.phone}}</td>
+                                <td>{{directory.user.email}}</td>
                             </tr>
 
                         </tbody>
