@@ -215,7 +215,10 @@ ozayApp.factory('AuthenticationSharedService', function ($rootScope, $http, auth
                     if (!$rootScope.isAuthorized(authorizedRoles)) {
                         $rootScope.$broadcast('event:auth-loginRequired', data);
                     }
-                    $location.url('/login');
+                    if($location.path() != '/register'){
+                         $location.url('/login');
+                    }
+
                 });
             },
             isAuthorized: function (authorizedRoles) {

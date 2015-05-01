@@ -362,7 +362,7 @@ $stateProvider
                     Session.invalidate();
                     //document.location.href = "/login.html";
                     $rootScope.authenticated = false;
-                     $location.path('/login').replace();
+//                     $location.path('/login').replace();
 //                    if ($location.path() !== "/" && $location.path() !== "" && $location.path() !== "/register" &&
 //                            $location.path() !== "/activate" && $location.path() !== "/login") {
 //                        var redirect = $location.path();
