@@ -54,7 +54,7 @@ public class MailService {
         this.from = env.getProperty("spring.mail.from");
     }
 
-    public void sendGrid(String subject, String text, int buildingId){
+    public int sendGrid(String subject, String text, int buildingId){
         SendGrid sendgrid = new SendGrid("OzayOrg", "OzayOrg1124");
 
         SendGrid.Email email = new SendGrid.Email();
@@ -79,6 +79,7 @@ public class MailService {
         catch (SendGridException e) {
             System.err.println(e);
         }
+        return userList.size();
     }
 
     @Async

@@ -7,10 +7,13 @@ import com.ozay.repository.NotificationRepository;
 import com.ozay.repository.UserRepository;
 import com.ozay.security.SecurityUtils;
 import com.ozay.service.MailService;
+import com.ozay.web.rest.dto.JsonResponse;
+import com.ozay.web.rest.dto.UserDTO;
 import com.sendgrid.Mail;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -42,16 +45,22 @@ public class NotificationResource {
      */
     @RequestMapping(value = "/notifications",
             method = RequestMethod.POST,
+            consumes = "application/json",
             produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public void create(@RequestBody Notification notification) {
+    public ResponseEntity<JsonResponse> create(@RequestBody Notification notification) {
         User currentUser = userRepository.findOne(SecurityUtils.getCurrentLogin());
         notification.setCreatedBy(currentUser.getLogin());
         notification.setCreatedDate(new DateTime());
         notification.setBuildingId(1);
-        mailService.sendGrid("Notification", notification.getNotice(), 1);
+        int emailCount = mailService.sendGrid("Notification", notification.getNotice(), 1);
         log.debug("REST request to save Notification : {}", notification);
         notificationRepository.save(notification);
+        JsonResponse json = new JsonResponse();
+
+        String message = "Notice is successfully scheduled to " + emailCount + " recipients";
+        json.setMessage(message);
+        return new ResponseEntity<JsonResponse>(json,  new HttpHeaders(), HttpStatus.OK);
     }
 
     /**
