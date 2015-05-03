@@ -170,13 +170,13 @@ ozayApp
 //                        authorizedRoles: [USER_ROLES.all]
 //                    }
 //                });
-
-$routeProvider
-.otherwise({
-        access: {
-            authorizedRoles: [USER_ROLES.all]
-        }
-    });
+//
+//$routeProvider
+//.otherwise({
+//        access: {
+//            authorizedRoles: [USER_ROLES.user]
+//        }
+//    });
 
 
 $urlRouterProvider.when('', '/');
@@ -227,42 +227,42 @@ $stateProvider
       templateUrl: 'views/main2.html',
       controller: 'MainController',
       access: {
-          authorizedRoles: [USER_ROLES.all]
+          authorizedRoles: [USER_ROLES.user]
       }
     })
     .state('home.home', {
           url: '/',
           templateUrl: "/views/main.html",
           access: {
-              authorizedRoles: [USER_ROLES.all]
+              authorizedRoles: [USER_ROLES.user]
           }
         })
     .state('home.dashboard', {
              url: "/dashboard",
              templateUrl: "/views/main.html",
             access: {
-                authorizedRoles: [USER_ROLES.all]
+                authorizedRoles: [USER_ROLES.user]
             }
     })
     .state('home.notification_create', {
       url: "/notification_create",
       templateUrl: "/views/notification_create.html",
       access: {
-                authorizedRoles: [USER_ROLES.admin]
+                authorizedRoles: [USER_ROLES.user]
             }
     })
     .state('home.notification_archive', {
           url: "/notification_archive",
           templateUrl: "/views/notification_archive.html",
           access: {
-                    authorizedRoles: [USER_ROLES.admin]
+                    authorizedRoles: [USER_ROLES.user]
                 }
         })
     .state('home.collaborate_create', {
           url: "/collaborate_create",
           templateUrl: "/views/collaborate_create.html",
           access: {
-                    authorizedRoles: [USER_ROLES.admin]
+                    authorizedRoles: [USER_ROLES.user]
                 }
         })
 
@@ -270,7 +270,7 @@ $stateProvider
           url: "/collaborate_track",
           templateUrl: "/views/collaborate_track.html",
           access: {
-                    authorizedRoles: [USER_ROLES.admin]
+                    authorizedRoles: [USER_ROLES.user]
                 }
         })
 
@@ -279,7 +279,7 @@ $stateProvider
             templateUrl: 'views/directory.html',
 
             access: {
-                authorizedRoles: [USER_ROLES.admin]
+                authorizedRoles: [USER_ROLES.user]
             }
     })
     .state('home.director_details', {
@@ -287,7 +287,7 @@ $stateProvider
                 templateUrl: 'views/directory_details.html',
                 controller: 'DirectoryDetailController',
                 access: {
-                    authorizedRoles: [USER_ROLES.admin]
+                    authorizedRoles: [USER_ROLES.user]
                 }
         })
 
@@ -323,7 +323,6 @@ $stateProvider
                     return config;
                 },
                  responseError: function(response) {
-
                             if (response.status == 401){
                                 var Auth = $injector.get('Auth');
                                 var $state = $injector.get('$state');
@@ -341,7 +340,7 @@ $stateProvider
         })
         .run(function($rootScope, $location, $http, AuthenticationSharedService, Session, USER_ROLES) {
                 $rootScope.authenticated = false;
-                $rootScope.$on('$routeChangeStart', function (event, next) {
+                $rootScope.$on('$stateChangeStart', function (event, next) {
                     $rootScope.isAuthorized = AuthenticationSharedService.isAuthorized;
                     $rootScope.userRoles = USER_ROLES;
                     AuthenticationSharedService.valid(next.access.authorizedRoles);
@@ -364,7 +363,7 @@ $stateProvider
                 $rootScope.$on('event:auth-loginRequired', function(rejection) {
                     Session.invalidate();
                     $rootScope.authenticated = false;
-                    if ($location.path() !== "/" && $location.path() !== "" && $location.path() !== "/register" &&
+                    if ($location.path() !== "/register" &&
                         $location.path() !== "/activate" && $location.path() !== "/login") {
                         var redirect = $location.path();
                         $location.path('/login').search('redirect', redirect).replace();
