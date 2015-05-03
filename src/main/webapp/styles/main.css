@@ -252,6 +252,7 @@ body{
 
 #page-wrapper{
     background-color:#F3F5F4;
+    margin-top:90px;
 }
 #user_area{
     width: 225px;
@@ -345,6 +346,9 @@ body{
     width:100%;
     background-color:#E4E5E0;
     min-height:90px;
+    top: 50px;
+    z-index: 1000;
+    position:fixed;
 }
 .page_title span{
     font-size:20px;
@@ -600,14 +604,16 @@ body{
     background-color:#FFC600;
 }
 .ng-scope, #navbar-collapse ul{
-    height:93.7%;
+    height:100%;
 }
 .ng-scope{
-    height:100%;
+
 }
 
 #wrapper{
 background-color:#F3F5F4;
+position:fixed;
+width:100%;
 }
 
 body, html {
