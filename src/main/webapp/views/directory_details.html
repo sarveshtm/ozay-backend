@@ -1,5 +1,5 @@
 
-    <div class="row" ng-controller="DirectoryDetailController">
+    <div class="row">
         <div class="col-lg-12">
             <div class="page_content">
                 <div class="page_content_title">
@@ -10,15 +10,15 @@
                     <div class="col-lg-6">
                         <div class="form-group">
                             <div class="col-lg-12">
-                                <label class="control-label">Name</label>
-                                <input class="form-control" type="text" value="Sandeep Varma">
+                                <label class="control-label">First Name</label>
+                                <input class="form-control" type="text" value="{{UserDetail.user.firstName}}">
                             </div>
                         </div>
 
                             <div class="col-lg-6">
                                 <div class="form-group">
                                 <label class="control-label">Apt #:</label>
-                                <input class="form-control" type="text" value="4E">
+                                <input class="form-control" type="text" value="{{UserDetail.unit}}">
                             </div>
                         </div>
 
@@ -26,7 +26,7 @@
                             <div class="col-lg-6">
                                 <div class="form-group">
                                 <label class="control-label"># Parking:</label>
-                                <input class="form-control" type="text" value="58">
+                                <input class="form-control" type="text" value="{{UserDetail.parking}}">
                             </div>
 
                         </div>
@@ -34,25 +34,24 @@
                         <div class="form-group">
                             <div class="col-lg-12">
                                 <label class="control-label">% Ownership</label>
-                                <input class="form-control" type="text" value="1.667">
+                                <input class="form-control" type="text" value="{{UserDetail.ownership}}">
                             </div>
                         </div>
 
                         <div class="form-group">
                             <div class="col-lg-12">
                                 <label class="control-label">Email</label>
-                                <input class="form-control" type="text" value="www.wwwwww@gmail.com">
+                                <input class="form-control" type="text" value="{{UserDetail.user.email}}">
                             </div>
                         </div>
                     </div>
-
 
 
                     <div class="col-lg-6">
                         <div class="form-group">
                             <div class="col-lg-12">
                                 <label class="control-label">Phone#</label>
-                                <input class="form-control" type="text" value="6236-12172">
+                                <input class="form-control" type="text" value="{{UserDetail.user.phone}}">
                             </div>
                         </div>
                         <div class="form-group">

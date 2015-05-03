@@ -311,17 +311,19 @@ $stateProvider
         })
         .factory('authInterceptor', function ($rootScope, $injector, $q, $location, localStorageService) {
         return {
+
         // Add authorization token to headers
         request: function (config) {
         config.headers = config.headers || {};
         var token = localStorageService.get('token');
         if (token && token.expires_at && token.expires_at > new Date().getTime()) {
-        config.headers.Authorization = 'Bearer ' + token.access_token;
+            config.headers.Authorization = 'Bearer ' + token.access_token;
         }
 
                     return config;
                 },
                  responseError: function(response) {
+
                             if (response.status == 401){
                                 var Auth = $injector.get('Auth');
                                 var $state = $injector.get('$state');
@@ -331,6 +333,7 @@ $stateProvider
                                 $rootScope.returnToState = to;
                                 $rootScope.returnToStateParams = params;
                                 $state.go('login');
+
                             }
                             return $q.reject(response);
                         }
@@ -360,15 +363,12 @@ $stateProvider
                 // Call when the 401 response is returned by the server
                 $rootScope.$on('event:auth-loginRequired', function(rejection) {
                     Session.invalidate();
-                    //document.location.href = "/login.html";
                     $rootScope.authenticated = false;
-//                     $location.path('/login').replace();
-//                    if ($location.path() !== "/" && $location.path() !== "" && $location.path() !== "/register" &&
-//                            $location.path() !== "/activate" && $location.path() !== "/login") {
-//                        var redirect = $location.path();
-//                        $location.path('/login').search('redirect', redirect).replace();
-//
-//                    }
+                    if ($location.path() !== "/" && $location.path() !== "" && $location.path() !== "/register" &&
+                        $location.path() !== "/activate" && $location.path() !== "/login") {
+                        var redirect = $location.path();
+                        $location.path('/login').search('redirect', redirect).replace();
+                    }
                 });
 
                 // Call when the 403 response is returned by the server

@@ -25,5 +25,10 @@ public class UserDetailRepository {
         });
     }
 
+    public UserDetail getAllUserByBuilding(String username, int buildingId){
+        return (UserDetail)jdbcTemplate.queryForObject("Select * FROM user_building ub INNER JOIN t_user u ON ub.login = u.login INNER JOIN user_detail ud ON ud.login = u.login WHERE ub.building_id = ? AND u.login = ?",
+            new Object[]{buildingId, username}, new UserDetailRowMapper(){
+            });
+    }
 
 }

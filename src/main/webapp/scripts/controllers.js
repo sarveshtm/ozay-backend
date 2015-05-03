@@ -326,41 +326,7 @@ ozayApp.controller('DirectoryController', function ($scope, DirectoryService) {
         });
     });
 
-    ozayApp.controller('DirectoryDetailController', function ($scope,$routeParams) {
-            $scope.roleList = [{
-                   name: 'management',
-                   label:'Management'
-               },{
-                   name: 'staff',
-                   label:'Staff'
-               },{
-                   name: 'board',
-                   label:'Board'
-               },{
-                   name: 'resident',
-                   label:'Resident'
-               }];
-            $scope.renterList = [
-                           {
-                               value:1,
-                               label : 'Yes'
-                           },{
-                               value:0,
-                               label : 'No'
-                           }];
 
-            var id  = $routeParams.memberId;
-
-            $scope.model = {
-                name: 'renter',
-                radioBox:undefined
-            };
-
-            $scope.changeRadio = function(obj){
-                $scope.model = obj;
-            };
-
-        });
 
 
 ozayApp.controller('CollaborateCreateController', function ($scope) {

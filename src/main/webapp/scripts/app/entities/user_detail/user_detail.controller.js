@@ -17,4 +17,50 @@ angular.module('ozayApp')
             }
         }
 
-    });
+    })
+    .controller('DirectoryDetailController', function ($scope,$routeParams,  $stateParams, UserDetail) {
+                $scope.roleList = [{
+                       name: 'management',
+                       label:'Management'
+                   },{
+                       name: 'staff',
+                       label:'Staff'
+                   },{
+                       name: 'board',
+                       label:'Board'
+                   },{
+                       name: 'resident',
+                       label:'Resident'
+                   }];
+
+                $scope.renterList = [
+                               {
+                                   value:1,
+                                   label : 'Yes'
+                               },{
+                                   value:0,
+                                   label : 'No'
+                               }];
+
+                console.log($stateParams.memberId);
+                $scope.getUser = function(method, id, login){
+                    UserDetail.getUser({method:method, id: id, login:login}, function(result) {
+                    console.log(result);
+                                            $scope.UserDetail = result;
+                    });
+                }
+                $scope.getUser('building', 1, $stateParams.memberId);
+
+                $scope.model = {
+                    name: 'renter',
+                    radioBox:undefined
+                };
+
+                $scope.changeRadio = function(obj){
+                    $scope.model = obj;
+                };
+
+            });
+
+
+    ;

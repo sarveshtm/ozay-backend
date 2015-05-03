@@ -25,7 +25,7 @@
                             <tr ng-repeat="directory in directories">
 
                                 <td>{{directory.group}}</td>
-                                <td><a href="#directory/1">{{directory.user.firstName}} {{directory.user.lastName}} &nbsp;{{directory.lastName}}</a></td>
+                                <td><a href="#directory/{{directory.login}}">{{directory.user.firstName}} {{directory.user.lastName}} &nbsp;{{directory.lastName}}</a></td>
                                 <td>{{directory.unit}}</td>
                                 <td>{{directory.parking}}</td>
                                 <td>{{directory.ownership}}</td>

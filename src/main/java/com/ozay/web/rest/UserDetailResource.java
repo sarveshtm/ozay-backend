@@ -48,6 +48,21 @@ public class UserDetailResource {
         return userDetailRepository.getAllUsersByBuilding(buildingId);
     }
 
+    /**
+     * GET  /rest/userdetails/:login -> get the "Building" ID
+     */
+    @RequestMapping(value = "/userdetails/building/{buildingId}/{login}",
+        method = RequestMethod.GET,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    public ResponseEntity<UserDetail> getUserDetail(@PathVariable int buildingId, @PathVariable String login) {
+        log.debug("REST request to get Building ID : {}", buildingId);
+        log.debug("REST request to get Building login: {}", login);
+        return Optional.ofNullable(userDetailRepository.getAllUserByBuilding(login, buildingId))
+            .map(user -> new ResponseEntity<>(user, HttpStatus.OK))
+            .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
 
     /**
      * GET  /rest/userdetails/:login -> get the "Building" ID
