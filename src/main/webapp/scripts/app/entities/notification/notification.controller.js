@@ -12,7 +12,6 @@ angular.module('ozayApp')
         $scope.loadAll();
         $scope.showSuccessAlert = false;
 
-
         $scope.startProcess = function (method, id) {
             UserDetail.count({method:method, id: id}, function(result) {
             console.log(result);
@@ -68,6 +67,7 @@ angular.module('ozayApp')
         };
         $scope.notification = {};
 
-        $scope.notification.issueDate = $filter("date")(Date.now(), 'yyyy-MM-dd');
-        $scope.minDate = $filter("date")(Date.now(), 'yyyy-MM-dd');
+        $scope.notification.issueDate = new Date();
+
+        $scope.minDate = new Date();
     });
