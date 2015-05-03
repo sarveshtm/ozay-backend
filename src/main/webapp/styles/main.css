@@ -612,9 +612,6 @@ body{
 .ng-scope, #navbar-collapse ul{
     height:100%;
 }
-.ng-scope{
-
-}
 
 #wrapper{
 background-color:#F3F5F4;
@@ -638,6 +635,7 @@ textarea{
 .page_content{
     margin-top:18px;
     margin-left:5px;
+    margin-bottom:70px;
 }
 
 
