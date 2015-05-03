@@ -7,6 +7,9 @@ angular.module('ozayApp')
             'get': {
                 method: 'GET',
                 isArray: true
-            }
+            },
+            'count': {
+                            method: 'GET',
+                        }
         });
     });

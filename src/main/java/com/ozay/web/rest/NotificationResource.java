@@ -11,6 +11,8 @@ import com.ozay.web.rest.dto.JsonResponse;
 import com.ozay.web.rest.dto.UserDTO;
 import com.sendgrid.Mail;
 import org.joda.time.DateTime;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -48,7 +50,7 @@ public class NotificationResource {
             consumes = "application/json",
             produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public ResponseEntity<JsonResponse> create(@RequestBody Notification notification) {
+    public ResponseEntity<JSONObject> create(@RequestBody Notification notification) {
         User currentUser = userRepository.findOne(SecurityUtils.getCurrentLogin());
         notification.setCreatedBy(currentUser.getLogin());
         notification.setCreatedDate(new DateTime());
@@ -59,8 +61,15 @@ public class NotificationResource {
         JsonResponse json = new JsonResponse();
 
         String message = "Notice is successfully scheduled to " + emailCount + " recipients";
-        json.setMessage(message);
-        return new ResponseEntity<JsonResponse>(json,  new HttpHeaders(), HttpStatus.OK);
+        json.setResponse(message);
+
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("message", message);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<JSONObject>(jsonObject,  new HttpHeaders(), HttpStatus.OK);
     }
 
     /**

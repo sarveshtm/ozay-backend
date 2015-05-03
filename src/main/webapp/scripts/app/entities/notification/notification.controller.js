@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('ozayApp')
-    .controller('NotificationController', function ($scope, $filter, Notification) {
+    .controller('NotificationController', function ($scope, $filter, Notification, UserDetail) {
         $scope.button = true;
         $scope.notifications = [];
         $scope.loadAll = function() {
@@ -11,15 +11,33 @@ angular.module('ozayApp')
         };
         $scope.loadAll();
         $scope.showSuccessAlert = false;
+
+
+        $scope.startProcess = function (method, id) {
+            UserDetail.count({method:method, id: id}, function(result) {
+            console.log(result);
+                var result = result.response;
+                var message = "Do you want to send to " + result + " recipients";
+                 if(confirm(message)){
+                                Notification.save($scope.notification,
+                                    function (data) {
+                                          $scope.showSuccessAlert = true;
+                                          $scope.successTextAlert = data.response;
+
+                                          $scope.notification.notice = "";
+                                    }, function (error){
+                                        $scope.showErrorAlert = true;
+                                        $scope.errorTextAlert = "Error! Please try later.";
+                                        $scope.button = true;
+                                    });
+                                }
+                                $scope.button = true;
+            });
+         };
+
         $scope.create = function () {
-        $scope.button = false;
-            Notification.save($scope.notification,
-                function () {
-                      $scope.showSuccessAlert = true;
-                      $scope.successTextAlert = "Notice is successfully scheduled.";
-                      $scope.button = true;
-                      $scope.notification.notice = "";
-                });
+            $scope.button = false;
+            $scope.startProcess('building_user_count', 1);
         };
 
         $scope.update = function (id) {

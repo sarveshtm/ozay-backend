@@ -66,7 +66,6 @@ public class MailService {
                 }
             }
 
-
         email.setFrom("noreply@metropolisrealtyny.com");
         email.setSubject(subject);
         email.setText(text);
@@ -75,6 +74,7 @@ public class MailService {
             SendGrid.Response response = sendgrid.send(email);
             log.debug("Send email with sendgrid ");
             System.out.println(response.getMessage());
+            return userList.size();
         }
         catch (SendGridException e) {
             System.err.println(e);

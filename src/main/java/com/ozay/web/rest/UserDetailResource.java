@@ -7,8 +7,10 @@ import com.ozay.model.UserDetail;
 import com.ozay.repository.UserDetailRepository;
 import com.ozay.repository.UserRepository;
 import com.ozay.security.AuthoritiesConstants;
+import com.ozay.web.rest.dto.JsonResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -45,4 +47,21 @@ public class UserDetailResource {
         log.debug("REST request to get all Notifications");
         return userDetailRepository.getAllUsersByBuilding(buildingId);
     }
+
+
+    /**
+     * GET  /rest/userdetails/:login -> get the "Building" ID
+     */
+    @RequestMapping(value = "/userdetails/building_user_count/{buildingId}",
+        method = RequestMethod.GET,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    public ResponseEntity<JsonResponse> getNumberOfResidents(@PathVariable int buildingId) {
+        JsonResponse jsonResponse = new JsonResponse();
+        log.debug("REST request to get all Notifications");
+        Integer num = userDetailRepository.getAllUsersByBuilding(buildingId).size();
+        jsonResponse.setResponse(num.toString());
+        return new ResponseEntity<JsonResponse>(jsonResponse,  new HttpHeaders(), HttpStatus.OK);
+    }
+
 }
