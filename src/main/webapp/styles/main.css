@@ -549,6 +549,12 @@ input, textarea{
     left:50%;
 }
 
+@media (max-width: 767px) {
+    #logo_wrap{
+        left:43%;
+    }
+ }
+
 .right_label label{
     text-align:right;
 }
@@ -614,6 +620,7 @@ body{
 background-color:#F3F5F4;
 position:fixed;
 width:100%;
+overflow:auto;
 }
 
 body, html {
