@@ -338,12 +338,13 @@ $stateProvider
                         }
             };
         })
-        .run(function($rootScope, $location, $http, AuthenticationSharedService, Session, USER_ROLES) {
+        .run(function($rootScope, $location, $http, $window, AuthenticationSharedService, Session, USER_ROLES) {
                 $rootScope.authenticated = false;
                 $rootScope.$on('$stateChangeStart', function (event, next) {
                     $rootScope.isAuthorized = AuthenticationSharedService.isAuthorized;
                     $rootScope.userRoles = USER_ROLES;
                     AuthenticationSharedService.valid(next.access.authorizedRoles);
+                    $window.scrollTo(0,0);
                 });
 
                 // Call when the the client is confirmed
