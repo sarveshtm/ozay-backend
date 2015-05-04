@@ -309,7 +309,6 @@ ozayApp.controller('AuditsController', function ($scope, $translate, $filter, Au
 
 ozayApp.controller('DirectoryController', function ($scope, DirectoryService) {
         DirectoryService.get().then(function (directories) {
-            console.log(directories.data);
 
             var index = 0;
             var group = "";
@@ -330,6 +329,7 @@ ozayApp.controller('DirectoryController', function ($scope, DirectoryService) {
 
 
 ozayApp.controller('CollaborateCreateController', function ($scope) {
+
     $scope.sendTo = {
                     name: 'sendTo',
                     sendToRadio:undefined

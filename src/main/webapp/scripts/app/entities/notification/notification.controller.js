@@ -22,7 +22,6 @@ angular.module('ozayApp')
                                     function (data) {
                                           $scope.showSuccessAlert = true;
                                           $scope.successTextAlert = data.response;
-
                                           $scope.notification.notice = "";
                                     }, function (error){
                                         $scope.showErrorAlert = true;

@@ -19,6 +19,7 @@ angular.module('ozayApp')
 
     })
     .controller('DirectoryDetailController', function ($scope,$routeParams,  $stateParams, UserDetail) {
+    $scope.button = true;
                 $scope.roleList = [{
                        name: 'management',
                        label:'Management'
@@ -42,7 +43,6 @@ angular.module('ozayApp')
                                    label : 'No'
                                }];
 
-                console.log($stateParams.memberId);
                 $scope.getUser = function(method, id, login){
                     UserDetail.getUser({method:method, id: id, login:login}, function(result) {
                     console.log(result);

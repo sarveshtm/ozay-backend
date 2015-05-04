@@ -50,7 +50,7 @@ public class NotificationResource {
             consumes = "application/json",
             produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public ResponseEntity<JSONObject> create(@RequestBody Notification notification) {
+    public ResponseEntity<JsonResponse> create(@RequestBody Notification notification) {
         User currentUser = userRepository.findOne(SecurityUtils.getCurrentLogin());
         notification.setCreatedBy(currentUser.getLogin());
         notification.setCreatedDate(new DateTime());
@@ -63,13 +63,7 @@ public class NotificationResource {
         String message = "Notice is successfully scheduled to " + emailCount + " recipients";
         json.setResponse(message);
 
-        JSONObject jsonObject = new JSONObject();
-        try {
-            jsonObject.put("message", message);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return new ResponseEntity<JSONObject>(jsonObject,  new HttpHeaders(), HttpStatus.OK);
+        return new ResponseEntity<JsonResponse>(json,  new HttpHeaders(), HttpStatus.OK);
     }
 
     /**

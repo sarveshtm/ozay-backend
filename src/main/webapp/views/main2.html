@@ -34,7 +34,13 @@
                             Welcome,
                         </p>
                         <h4>
-                            {{account.firstName}}{{account.lastName}}
+                            <span ng-if="account.firstName.length > 0 && account.lastName.length > 0">
+                            {{account.firstName}} {{account.lastName}}
+                            </span>
+                            <span ng-if="account.firstName.length == 0 && account.lastName.length == 0 && account.login.length > 0">
+                                {{account.login}}
+                                </span>
+
                         </h4>
                     </div>
                     </div>
