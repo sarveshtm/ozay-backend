@@ -65,15 +65,5 @@ public class Application {
         }
     }
 
-    /**
-     * Set the liquibases.scan.packages to avoid an exception from ServiceLocator.
-     */
-    private static void addLiquibaseScanPackages() {
-        System.setProperty("liquibase.scan.packages", "liquibase.change" + "," + "liquibase.database" + "," +
-                "liquibase.parser" + "," + "liquibase.precondition" + "," + "liquibase.datatype" + "," +
-                "liquibase.serializer" + "," + "liquibase.sqlgenerator" + "," + "liquibase.executor" + "," +
-                "liquibase.snapshot" + "," + "liquibase.logging" + "," + "liquibase.diff" + "," +
-                "liquibase.structure" + "," + "liquibase.structurecompare" + "," + "liquibase.lockservice" + "," +
-                "liquibase.ext" + "," + "liquibase.changelog");
-    }
+
 }
