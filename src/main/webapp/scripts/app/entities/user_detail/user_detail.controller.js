@@ -18,7 +18,7 @@ angular.module('ozayApp')
         }
 
     })
-    .controller('DirectoryDetailController', function ($scope,$routeParams,  $stateParams, UserDetail) {
+    .controller('DirectoryDetailController', function ($scope,$routeParams, $location, $stateParams, UserDetail) {
     $scope.button = true;
                 $scope.roleList = [{
                        name: 'management',
@@ -50,7 +50,9 @@ angular.module('ozayApp')
                     });
                 }
                 $scope.getUser('building', 1, $stateParams.memberId);
-
+                $scope.cancel = function(){
+                    $location.path('/directory').replace();
+                }
                 $scope.model = {
                     name: 'renter',
                     radioBox:undefined
