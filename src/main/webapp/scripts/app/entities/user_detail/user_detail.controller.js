@@ -36,17 +36,17 @@ angular.module('ozayApp')
 
                 $scope.renterList = [
                                {
-                                   value:1,
+                                   value:true,
                                    label : 'Yes'
                                },{
-                                   value:0,
+                                   value:false,
                                    label : 'No'
                                }];
 
                 $scope.getUser = function(method, id, login){
                     UserDetail.getUser({method:method, id: id, login:login}, function(result) {
-                    console.log(result);
-                                            $scope.UserDetail = result;
+                        $scope.UserDetail = result;
+                        $scope.model.radioBox = result.renter;
                     });
                 }
                 $scope.getUser('building', 1, $stateParams.memberId);

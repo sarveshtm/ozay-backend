@@ -25,6 +25,10 @@ public class UserDetailRowMapper implements RowMapper {
         userDetail.setRenter(rs.getBoolean("renter"));
         userDetail.setUnit(rs.getString("unit"));
         userDetail.setParking(rs.getString("parking"));
+        userDetail.setManagement(rs.getBoolean("management"));
+        userDetail.setStaff(rs.getBoolean("staff"));
+        userDetail.setBoard(rs.getBoolean("board"));
+        userDetail.setResident(rs.getBoolean("resident"));
 
         User user = new User();
         user.setPhone(rs.getString("phone"));

@@ -24,6 +24,12 @@ public class UserDetail {
     @JsonDeserialize(using = CustomDateTimeDeserializer.class)
     private DateTime expirationDate;
 
+    private Boolean management;
+    private Boolean staff;
+
+    private Boolean board;
+    private Boolean resident;
+
     private User user;
 
     public String getLogin() {
@@ -82,12 +88,20 @@ public class UserDetail {
         this.ownership = ownership;
     }
 
-    public Boolean isRenter() {
+    public Boolean getRenter() {
         return renter;
     }
 
-    public void setRenter(boolean renter) {
+    public void setRenter(Boolean renter) {
         this.renter = renter;
+    }
+
+    public String getParking() {
+        return parking;
+    }
+
+    public void setParking(String parking) {
+        this.parking = parking;
     }
 
     public String getUnit() {
@@ -106,6 +120,38 @@ public class UserDetail {
         this.expirationDate = expirationDate;
     }
 
+    public Boolean getManagement() {
+        return management;
+    }
+
+    public void setManagement(Boolean management) {
+        this.management = management;
+    }
+
+    public Boolean getStaff() {
+        return staff;
+    }
+
+    public void setStaff(Boolean staff) {
+        this.staff = staff;
+    }
+
+    public Boolean getBoard() {
+        return board;
+    }
+
+    public void setBoard(Boolean board) {
+        this.board = board;
+    }
+
+    public Boolean getResident() {
+        return resident;
+    }
+
+    public void setResident(Boolean resident) {
+        this.resident = resident;
+    }
+
     public User getUser() {
         return user;
     }
@@ -113,13 +159,4 @@ public class UserDetail {
     public void setUser(User user) {
         this.user = user;
     }
-
-    public String getParking() {
-        return parking;
-    }
-
-    public void setParking(String parking) {
-        this.parking = parking;
-    }
-
 }
