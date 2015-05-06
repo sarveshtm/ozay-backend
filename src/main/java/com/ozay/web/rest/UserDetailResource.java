@@ -110,7 +110,7 @@ public class UserDetailResource {
             userBuildingRepository.create(userDetail);
         } else {
             log.debug("REST request :update  record");
-            User user = userRepository.findOneByEmail(userDetail.getUser().getEmail());
+            User user = userRepository.findOne(userDetail.getUser().getLogin());
             user.setFirstName(userDetail.getUser().getFirstName());
             user.setLastName(userDetail.getUser().getLastName());
             user.setEmail(userDetail.getUser().getEmail());
