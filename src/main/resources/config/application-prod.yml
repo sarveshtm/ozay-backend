@@ -6,7 +6,7 @@ spring:
 
     datasource:
         dataSourceClassName: org.postgresql.ds.PGSimpleDataSource
-        jdbc:postgresql://ec2-54-197-249-212.compute-1.amazonaws.com:5432/deortfahodiqbr?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory
+        url:  jdbc:postgresql://ec2-54-197-249-212.compute-1.amazonaws.com:5432/deortfahodiqbr?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory
         databaseName: deortfahodiqbr
         serverName: ec2-54-197-249-212.compute-1.amazonaws.com
         username: nietiirqtwhpsj
