@@ -17,10 +17,6 @@ public class UserDetailRowMapper implements RowMapper {
         UserDetail userDetail = new UserDetail();
         userDetail.setLogin(rs.getString("login"));
         userDetail.setBuildingId(rs.getInt("building_id"));
-        userDetail.setAddress_1(rs.getString("address_1"));
-        userDetail.setAddress_2(rs.getString("address_2"));
-        userDetail.setState(rs.getString("state"));
-        userDetail.setZip(rs.getString("zip"));
         userDetail.setOwnership(rs.getDouble("ownership"));
         userDetail.setRenter(rs.getBoolean("renter"));
         userDetail.setUnit(rs.getString("unit"));
@@ -35,6 +31,7 @@ public class UserDetailRowMapper implements RowMapper {
         user.setFirstName(rs.getString("first_name"));
         user.setLastName(rs.getString("last_name"));
         user.setEmail(rs.getString("email"));
+        user.setLogin(rs.getString("login"));
 
 
         userDetail.setUser(user);

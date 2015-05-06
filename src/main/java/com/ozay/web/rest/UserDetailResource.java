@@ -7,17 +7,17 @@ import com.ozay.model.UserDetail;
 import com.ozay.repository.UserDetailRepository;
 import com.ozay.repository.UserRepository;
 import com.ozay.security.AuthoritiesConstants;
+import com.ozay.security.SecurityUtils;
+import com.ozay.service.UserService;
 import com.ozay.web.rest.dto.JsonResponse;
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
@@ -35,6 +35,13 @@ public class UserDetailResource {
 
     @Inject
     private UserDetailRepository userDetailRepository;
+
+    @Inject
+    private UserService userService;
+
+    @Inject
+    private UserRepository userRepository;
+
 
     /**
      * GET  /rest/userdetails/:login -> get the "Building" ID
@@ -73,10 +80,41 @@ public class UserDetailResource {
     @Timed
     public ResponseEntity<JsonResponse> getNumberOfResidents(@PathVariable int buildingId) {
         JsonResponse jsonResponse = new JsonResponse();
-        log.debug("REST request to get all Notifications");
+        log.debug("REST request to get all User Details");
         Integer num = userDetailRepository.getAllUsersByBuilding(buildingId).size();
         jsonResponse.setResponse(num.toString());
         return new ResponseEntity<JsonResponse>(jsonResponse,  new HttpHeaders(), HttpStatus.OK);
+    }
+
+    /**
+     * POST  /notifications -> Create a new notification.
+     */
+    @RequestMapping(value = "/userdetails",
+        method = RequestMethod.POST,
+        consumes = "application/json",
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    public ResponseEntity<JsonResponse> create(@RequestBody UserDetail userDetail) {
+        log.debug("REST request :create function");
+        if(userDetail.getLogin() == null){
+            log.debug("REST request :create new record");
+            userService.createUserInformation(userDetail.getUser().getEmail(), "ERT", userDetail.getUser().getFirstName(), userDetail.getUser().getLastName(), userDetail.getUser().getEmail(), "en");
+            User user = userRepository.findOneByEmail(userDetail.getUser().getEmail());
+            userDetail.setLogin(user.getLogin());
+            userDetail.setBuildingId(1);
+            userDetailRepository.create(userDetail);
+        } else {
+            log.debug("REST request :update  record");
+            User user = userRepository.findOneByEmail(userDetail.getUser().getEmail());
+            user.setFirstName(userDetail.getUser().getFirstName());
+            user.setLastName(userDetail.getUser().getLastName());
+            user.setEmail(userDetail.getUser().getEmail());
+            userRepository.save(user);
+            userDetailRepository.update(userDetail);
+        }
+
+        JsonResponse json = new JsonResponse();
+        return new ResponseEntity<JsonResponse>(json,  new HttpHeaders(), HttpStatus.OK);
     }
 
 }

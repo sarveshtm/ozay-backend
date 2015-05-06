@@ -31,4 +31,74 @@ public class UserDetailRepository {
             });
     }
 
+    public boolean create(UserDetail userDetail){
+        String insert = "INSERT INTO user_detail(" +
+            "login, " +
+            "building_id, " +
+            "ownership, " +
+            "renter, " +
+            "unit, " +
+            "expiration_date, " +
+            "parking, " +
+            "management, " +
+            "staff, " +
+            "board, " +
+            "resident ) " +
+            "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        Object[] params = new Object[] { userDetail.getLogin(),
+            userDetail.getBuildingId(),
+            userDetail.getOwnership(),
+            userDetail.getRenter(),
+            userDetail.getUnit(),
+            userDetail.getExpirationDate(),
+            userDetail.getParking(),
+            userDetail.getManagement(),
+            userDetail.getStaff(),
+            userDetail.getBoard(),
+            userDetail.getResident() };
+
+        int count = jdbcTemplate.update(insert, params);
+        if(count > 0){
+            return true;
+        } else {
+            return false;
+        }
+
+    }
+    public boolean update(UserDetail userDetail){
+        String update = "UPDATE user_detail SET " +
+            "ownership = ?, " +
+            "renter = ?, " +
+            "unit = ?, " +
+            "expiration_date = ?, " +
+            "parking = ?, " +
+            "management = ?, " +
+            "staff = ?, " +
+            "board = ?, " +
+            "resident = ? " +
+            "WHERE building_id = ? " +
+            "AND login = ?";
+
+        Object[] params = new Object[] {
+            userDetail.getOwnership(),
+            userDetail.getRenter(),
+            userDetail.getUnit(),
+            userDetail.getExpirationDate(),
+            userDetail.getParking(),
+            userDetail.getManagement(),
+            userDetail.getStaff(),
+            userDetail.getBoard(),
+            userDetail.getResident(),
+            userDetail.getBuildingId(),
+            userDetail.getLogin()
+        };
+
+        int count = jdbcTemplate.update(update, params);
+        if(count > 0){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 }

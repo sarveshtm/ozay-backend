@@ -283,13 +283,22 @@ $stateProvider
             }
     })
     .state('home.director_details', {
-                url: "/directory/:memberId",
+                url: "/directory/:method/:memberId",
                 templateUrl: 'views/directory_details.html',
                 controller: 'DirectoryDetailController',
                 access: {
                     authorizedRoles: [USER_ROLES.user]
                 }
         })
+    .state('home.director_details_new', {
+                    url: "/directory/:method",
+                    templateUrl: 'views/directory_details.html',
+                    controller: 'DirectoryDetailController',
+                    access: {
+                        authorizedRoles: [USER_ROLES.user]
+                    }
+            })
+
 
     ;
 
