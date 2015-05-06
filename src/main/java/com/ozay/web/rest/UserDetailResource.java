@@ -102,7 +102,9 @@ public class UserDetailResource {
         log.debug("REST request :create function");
         if(userDetail.getLogin() == null){
             log.debug("REST request :create new record");
-            userService.createUserInformation(userDetail.getUser().getEmail(), "ERT", userDetail.getUser().getFirstName(), userDetail.getUser().getLastName(), userDetail.getUser().getEmail(), "en");
+            // get only username before @ (email)
+            String[] parts = userDetail.getUser().getEmail().split("@");
+            userService.createUserInformation(parts[0], "ERT", userDetail.getUser().getFirstName(), userDetail.getUser().getLastName(), userDetail.getUser().getEmail(), "en");
             User user = userRepository.findOneByEmail(userDetail.getUser().getEmail());
             userDetail.setLogin(user.getLogin());
             userDetail.setBuildingId(1);
