@@ -48,14 +48,14 @@ public class UserDetailRepository {
         Object[] params = new Object[] { userDetail.getLogin(),
             userDetail.getBuildingId(),
             userDetail.getOwnership(),
-            userDetail.getRenter(),
+            userDetail.isRenter(),
             userDetail.getUnit(),
             userDetail.getExpirationDate(),
             userDetail.getParking(),
-            userDetail.getManagement(),
-            userDetail.getStaff(),
-            userDetail.getBoard(),
-            userDetail.getResident() };
+            userDetail.isManagement(),
+            userDetail.isStaff(),
+            userDetail.isBoard(),
+            userDetail.isResident() };
 
         int count = jdbcTemplate.update(insert, params);
         if(count > 0){
@@ -81,14 +81,14 @@ public class UserDetailRepository {
 
         Object[] params = new Object[] {
             userDetail.getOwnership(),
-            userDetail.getRenter(),
+            userDetail.isRenter(),
             userDetail.getUnit(),
             userDetail.getExpirationDate(),
             userDetail.getParking(),
-            userDetail.getManagement(),
-            userDetail.getStaff(),
-            userDetail.getBoard(),
-            userDetail.getResident(),
+            userDetail.isManagement(),
+            userDetail.isStaff(),
+            userDetail.isBoard(),
+            userDetail.isResident(),
             userDetail.getBuildingId(),
             userDetail.getLogin()
         };

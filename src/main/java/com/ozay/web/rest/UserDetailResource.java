@@ -4,6 +4,7 @@ import com.codahale.metrics.annotation.Timed;
 import com.ozay.domain.Notification;
 import com.ozay.domain.User;
 import com.ozay.model.UserDetail;
+import com.ozay.repository.UserBuildingRepository;
 import com.ozay.repository.UserDetailRepository;
 import com.ozay.repository.UserRepository;
 import com.ozay.security.AuthoritiesConstants;
@@ -41,6 +42,9 @@ public class UserDetailResource {
 
     @Inject
     private UserRepository userRepository;
+
+    @Inject
+    private UserBuildingRepository userBuildingRepository;
 
 
     /**
@@ -103,6 +107,7 @@ public class UserDetailResource {
             userDetail.setLogin(user.getLogin());
             userDetail.setBuildingId(1);
             userDetailRepository.create(userDetail);
+            userBuildingRepository.create(userDetail);
         } else {
             log.debug("REST request :update  record");
             User user = userRepository.findOneByEmail(userDetail.getUser().getEmail());

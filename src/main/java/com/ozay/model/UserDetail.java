@@ -14,18 +14,18 @@ public class UserDetail {
     private Integer buildingId;
 
     private Double ownership;
-    private Boolean renter;
+    private boolean renter;
     private String parking;
     private String unit;
     @JsonSerialize(using = CustomDateTimeSerializer.class)
     @JsonDeserialize(using = CustomDateTimeDeserializer.class)
     private DateTime expirationDate;
 
-    private Boolean management;
-    private Boolean staff;
+    private boolean management;
+    private boolean staff;
 
-    private Boolean board;
-    private Boolean resident;
+    private boolean board;
+    private boolean resident;
 
     private User user;
 
@@ -53,11 +53,11 @@ public class UserDetail {
         this.ownership = ownership;
     }
 
-    public Boolean getRenter() {
+    public boolean isRenter() {
         return renter;
     }
 
-    public void setRenter(Boolean renter) {
+    public void setRenter(boolean renter) {
         this.renter = renter;
     }
 
@@ -85,35 +85,35 @@ public class UserDetail {
         this.expirationDate = expirationDate;
     }
 
-    public Boolean getManagement() {
+    public boolean isManagement() {
         return management;
     }
 
-    public void setManagement(Boolean management) {
+    public void setManagement(boolean management) {
         this.management = management;
     }
 
-    public Boolean getStaff() {
+    public boolean isStaff() {
         return staff;
     }
 
-    public void setStaff(Boolean staff) {
+    public void setStaff(boolean staff) {
         this.staff = staff;
     }
 
-    public Boolean getBoard() {
+    public boolean isBoard() {
         return board;
     }
 
-    public void setBoard(Boolean board) {
+    public void setBoard(boolean board) {
         this.board = board;
     }
 
-    public Boolean getResident() {
+    public boolean isResident() {
         return resident;
     }
 
-    public void setResident(Boolean resident) {
+    public void setResident(boolean resident) {
         this.resident = resident;
     }
 
