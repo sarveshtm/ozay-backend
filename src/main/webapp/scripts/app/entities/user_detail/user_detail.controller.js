@@ -27,7 +27,8 @@ angular.module('ozayApp')
     $scope.UserDetail.user = {};
 
     $scope.create = function () {
-
+$scope.showSuccessAlert = false;
+$scope.showErrorAlert = false;
         $scope.button = false;
 
         UserDetail.save($scope.UserDetail,

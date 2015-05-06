@@ -16,6 +16,8 @@ angular.module('ozayApp')
             UserDetail.count({method:method, id: id}, function(result) {
             console.log(result);
                 var result = result.response;
+                 $scope.showSuccessAlert = false;
+                 $scope.showErrorAlert = false;
                 var message = "Do you want to send to " + result + " recipients";
                  if(confirm(message)){
                                 Notification.save($scope.notification,
