@@ -232,16 +232,8 @@ ul#strength {
 /* end Password strength bar style */
 
 body{
-    top: 0px;
-    position: absolute;
+   // margin-top:50px;
 }
-@media (max-width: 767px) {
-    body{
-        top: 50px;
-
-    }
- }
-
 
 #top_header{
     background-color:#FFC600;
@@ -617,16 +609,21 @@ body{
     height:100%;
     background-color:#FFC600;
 }
+
 .ng-scope, #navbar-collapse ul{
     height:100%;
+
 }
 
 #wrapper{
-background-color:#F3F5F4;
-position:fixed;
-width:100%;
-overflow:auto;
-z-index:-10000;
+    background-color:#F3F5F4;
+    //position:fixed;
+    width:100%;
+
+  margin-top: 50px;
+  position: absolute;
+  margin-bottom: -50px;
+
 }
 
 body, html {
