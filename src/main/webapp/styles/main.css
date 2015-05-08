@@ -232,8 +232,16 @@ ul#strength {
 /* end Password strength bar style */
 
 body{
-    margin-top:50px;
+    top: 0px;
+    position: absolute;
 }
+@media (max-width: 767px) {
+    body{
+        top: 50px;
+
+    }
+ }
+
 
 #top_header{
     background-color:#FFC600;
@@ -551,7 +559,7 @@ input, textarea{
 
 @media (max-width: 767px) {
     #logo_wrap{
-        left:43%;
+        left:38%;
     }
  }
 
@@ -618,6 +626,7 @@ background-color:#F3F5F4;
 position:fixed;
 width:100%;
 overflow:auto;
+z-index:-10000;
 }
 
 body, html {
