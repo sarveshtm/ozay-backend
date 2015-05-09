@@ -115,7 +115,7 @@
             "password": "Password",
             "password.placeholder": "Your password",
             "rememberme": "Automatic Login",
-            "button": "Authenticate"
+            "button": "Login"
         },
         "messages": {
             "error": {

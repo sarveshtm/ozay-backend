@@ -252,8 +252,14 @@ body{
 
 #page-wrapper{
     background-color:#F3F5F4;
-    margin-top:90px;
+    margin-top:40px;
 }
+ @media (max-width: 767px) {
+   #page-wrapper{
+       background-color:#F3F5F4;
+       margin-top:100px;
+   }
+  }
 #user_area{
     width: 225px;
     padding-bottom: 15px;
@@ -396,7 +402,7 @@ body{
     width:100%;
 }
 input, textarea{
-    margin-bottom:15px;
+
     background-color:#F1F5F4;
 }
 .form-control{
@@ -610,20 +616,32 @@ body{
     background-color:#FFC600;
 }
 
-.ng-scope, #navbar-collapse ul{
+.ng-scope{
     height:100%;
-
+}
+#navbar-collapse ul{
+    height:100%;
+}
+.ng-scope{
+    width:100%;
 }
 
 #wrapper{
     background-color:#F3F5F4;
-    //position:fixed;
     width:100%;
+    position: fixed;
+    overflow:auto;
+}
 
-  margin-top: 50px;
-  position: absolute;
-  margin-bottom: -50px;
+#page-wrapper {
+  margin-top: 90px;
+  margin-bottom:70px;
+}
 
+@media (max-width: 767px) {
+    #page-wrapper {
+      margin-top: 140px;
+    }
 }
 
 body, html {
@@ -641,7 +659,6 @@ textarea{
 .page_content{
     margin-top:18px;
     margin-left:5px;
-    margin-bottom:70px;
 }
 
 
@@ -673,6 +690,8 @@ textarea{
  @media (max-width: 767px) {
    .ozay-checkbox_ul li{
           width:100%;
+          border:none;
+          border-bottom:1px solid white;
       }
   }
 
@@ -730,7 +749,6 @@ select#building_list{
 img.arrow{
     float:right;
     height:15px;
-    content:url("../images/down_white.png");
 }
 
 
@@ -744,4 +762,44 @@ ul.nav{
     margin-bottom:0;
 }
 
+.has-error, .help-block, .has-error .control-label, .has-error .radio, .has-error .checkbox, .has-error .radio-inline, .has-error .checkbox-inline {
+  color: #a94442;
+}
+
+.mb-5{
+    margin-bottom:5px;
+}
+
+.mb-15{
+    margin-bottom:15px;
+}
+.mb-20{
+    margin-bottom:20px;
+}
+.mb-25{
+    margin-bottom:25px;
+}
+
+.navbar-collapse {
+    max-height:500px;
+}
+.navbar-nav{
+    margin-top:0;
+}
+.sidebar-overflow-enabled{
+    height:60px;
+}
+
+ @media (max-width: 767px) {
+    .sidebar-overflow-enabled{
+        height:0px;
+    }
+ }
+
+ #login_btn{
+   text-align: center;
+   border: 2px solid #fcfcfc;
+   color: #fcfcfc;
+    background: linear-gradient(to right, rgb(255,201,17) 0%,rgb(255,224,0) 50%,rgb(255,201,17) 100%);
+ }
 

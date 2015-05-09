@@ -370,6 +370,10 @@ ozayApp.controller('CollaborateCreateController', function ($scope) {
     $scope.deleteItem = function (index) {
             issueDates.splice(index, 1);
         }
+
+        $scope.time1 = new Date();
+                  $scope.showMeridian = true;
+
     });
 
 

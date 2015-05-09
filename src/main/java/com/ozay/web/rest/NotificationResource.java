@@ -55,7 +55,8 @@ public class NotificationResource {
         notification.setCreatedBy(currentUser.getLogin());
         notification.setCreatedDate(new DateTime());
         notification.setBuildingId(1);
-        int emailCount = mailService.sendGrid("Notification", notification.getNotice(), 1);
+        String subject = "EAST RIVER TOWER Notice : " + notification.getSubject();
+        int emailCount = mailService.sendGrid(subject, notification.getNotice(), 1);
         log.debug("REST request to save Notification : {}", notification);
         notificationRepository.save(notification);
         JsonResponse json = new JsonResponse();

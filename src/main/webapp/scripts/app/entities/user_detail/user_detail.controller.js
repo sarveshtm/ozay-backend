@@ -4,7 +4,10 @@ angular.module('ozayApp')
     .controller('UserDetailController', function ($scope, $filter, UserDetail) {
         $scope.getAll = function (method, id) {
                     UserDetail.get({method:method, id: id}, function(result) {
-                        $scope.directories = result;
+                        $scope.managementList = result[0].userDetailList;
+                        $scope.staffList = result[1].userDetailList;
+                        $scope.boardList = result[2].userDetailList;
+                        $scope.residentList = result[3].userDetailList;
                     });
                 };
         $scope.getAll('building', 1);
@@ -23,12 +26,18 @@ angular.module('ozayApp')
         $location.path('/error').replace();
     }
 
+    $scope.type = 'EDIT';
+    if($stateParams.method == 'new'){
+        $scope.type = 'CREATE';
+    }
+
+
     $scope.UserDetail = {};
     $scope.UserDetail.user = {};
 
     $scope.create = function () {
-$scope.showSuccessAlert = false;
-$scope.showErrorAlert = false;
+    $scope.showSuccessAlert = false;
+    $scope.showErrorAlert = false;
         $scope.button = false;
 
         UserDetail.save($scope.UserDetail,

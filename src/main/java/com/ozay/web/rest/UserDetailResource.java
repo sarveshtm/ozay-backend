@@ -9,8 +9,10 @@ import com.ozay.repository.UserDetailRepository;
 import com.ozay.repository.UserRepository;
 import com.ozay.security.AuthoritiesConstants;
 import com.ozay.security.SecurityUtils;
+import com.ozay.service.UserDetailService;
 import com.ozay.service.UserService;
 import com.ozay.web.rest.dto.JsonResponse;
+import com.ozay.web.rest.dto.UserDetailListDTO;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,6 +48,9 @@ public class UserDetailResource {
     @Inject
     private UserBuildingRepository userBuildingRepository;
 
+    @Inject
+    private UserDetailService userDetailService;
+
 
     /**
      * GET  /rest/userdetails/:login -> get the "Building" ID
@@ -54,9 +59,9 @@ public class UserDetailResource {
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public List<UserDetail> getAll(@PathVariable int buildingId) {
+    public List<UserDetailListDTO> getAll(@PathVariable int buildingId) {
         log.debug("REST request to get all Notifications");
-        return userDetailRepository.getAllUsersByBuilding(buildingId);
+        return userDetailService.createUserDetailListByRole(userDetailRepository.getAllUsersByBuilding(buildingId));
     }
 
     /**
@@ -70,7 +75,7 @@ public class UserDetailResource {
         log.debug("REST request to get Building ID : {}", buildingId);
         log.debug("REST request to get Building login: {}", login);
         return Optional.ofNullable(userDetailRepository.getAllUserByBuilding(login, buildingId))
-            .map(user -> new ResponseEntity<>(user, HttpStatus.OK))
+            .map(userDetail -> new ResponseEntity<>(userDetail, HttpStatus.OK))
             .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
@@ -104,7 +109,7 @@ public class UserDetailResource {
             log.debug("REST request :create new record");
             // get only username before @ (email)
             String[] parts = userDetail.getUser().getEmail().split("@");
-            userService.createUserInformation(parts[0], "ERT", userDetail.getUser().getFirstName(), userDetail.getUser().getLastName(), userDetail.getUser().getEmail(), "en");
+            userService.createUserInformation(parts[0], "ert_" + parts[0], userDetail.getUser().getFirstName(), userDetail.getUser().getLastName(), userDetail.getUser().getEmail(), "en");
             User user = userRepository.findOneByEmail(userDetail.getUser().getEmail());
             userDetail.setLogin(user.getLogin());
             userDetail.setBuildingId(1);

@@ -27,6 +27,9 @@ public class Notification implements Serializable {
     @Column(name = "notice")
     private String notice;
 
+    @Column(name="subject")
+    private String subject;
+
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
     @JsonSerialize(using = CustomDateTimeSerializer.class)
     @JsonDeserialize(using = CustomDateTimeDeserializer.class)
@@ -88,6 +91,14 @@ public class Notification implements Serializable {
 
     public void setCreatedDate(DateTime createdDate) {
         this.createdDate = createdDate;
+    }
+
+    public String getSubject() {
+        return subject;
+    }
+
+    public void setSubject(String subject) {
+        this.subject = subject;
     }
 
     @Override

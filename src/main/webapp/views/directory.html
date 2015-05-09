@@ -22,9 +22,42 @@
                         </thead>
                         <tbody>
 
-                            <tr ng-repeat="directory in directories">
+                            <tr ng-repeat="directory in managementList">
 
-                                <td>{{directory.group}}</td>
+                                <td><span ng-if="$first">Management</span></td>
+                                <td><a href="#directory/edit/{{directory.login}}">{{directory.user.firstName}} {{directory.user.lastName}} &nbsp;{{directory.lastName}}</a></td>
+                                <td>{{directory.unit}}</td>
+                                <td>{{directory.parking}}</td>
+                                <td>{{directory.ownership}}</td>
+                                <td><span ng-if="isResident(directory.renter)">Yes</span><span ng-if="!isResident(directory.renter)">No</span></td>
+                                <td>{{directory.user.phone}}</td>
+                                <td>{{directory.user.email}}</td>
+                            </tr>
+                            <tr ng-repeat="directory in staffList">
+
+                                <td><span ng-if="$first">Staff</span></td>
+                                <td><a href="#directory/edit/{{directory.login}}">{{directory.user.firstName}} {{directory.user.lastName}} &nbsp;{{directory.lastName}}</a></td>
+                                <td>{{directory.unit}}</td>
+                                <td>{{directory.parking}}</td>
+                                <td>{{directory.ownership}}</td>
+                                <td><span ng-if="isResident(directory.renter)">Yes</span><span ng-if="!isResident(directory.renter)">No</span></td>
+                                <td>{{directory.user.phone}}</td>
+                                <td>{{directory.user.email}}</td>
+                            </tr>
+                            <tr ng-repeat="directory in boardList">
+
+                                <td><span ng-if="$first">Board</span></td>
+                                <td><a href="#directory/edit/{{directory.login}}">{{directory.user.firstName}} {{directory.user.lastName}} &nbsp;{{directory.lastName}}</a></td>
+                                <td>{{directory.unit}}</td>
+                                <td>{{directory.parking}}</td>
+                                <td>{{directory.ownership}}</td>
+                                <td><span ng-if="isResident(directory.renter)">Yes</span><span ng-if="!isResident(directory.renter)">No</span></td>
+                                <td>{{directory.user.phone}}</td>
+                                <td>{{directory.user.email}}</td>
+                            </tr>
+                            <tr ng-repeat="directory in residentList">
+
+                                <td><span ng-if="$first">Resident</span></td>
                                 <td><a href="#directory/edit/{{directory.login}}">{{directory.user.firstName}} {{directory.user.lastName}} &nbsp;{{directory.lastName}}</a></td>
                                 <td>{{directory.unit}}</td>
                                 <td>{{directory.parking}}</td>

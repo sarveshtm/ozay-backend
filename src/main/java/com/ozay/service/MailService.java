@@ -66,7 +66,7 @@ public class MailService {
                 }
             }
 
-        email.setFrom("noreply@metropolisrealtyny.com");
+        email.setFrom("noreplyy@ozay.us");
         email.setSubject(subject);
         email.setText(text);
 
