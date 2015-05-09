@@ -152,6 +152,7 @@ ozayApp.factory('Session', function () {
 ozayApp.factory('AuthenticationSharedService', function ($rootScope, $http, authService, Session, Account, Base64Service, AccessToken, $location) {
         return {
             login: function (param) {
+                $rootScope.authenticationError = false;
                 var data = "username=" + param.username + "&password=" + param.password + "&grant_type=password&scope=read%20write&client_secret=mySecretOAuthSecret&client_id=ozayapp";
                 $http.post('oauth/token', data, {
                     headers: {
