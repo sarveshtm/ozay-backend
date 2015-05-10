@@ -25,7 +25,7 @@ angular.module('ozayApp')
     if($stateParams.method != 'edit' && $stateParams.method != 'new'){
         $location.path('/error').replace();
     }
-
+    $scope.submitted = false;
     $scope.type = 'EDIT';
     if($stateParams.method == 'new'){
         $scope.type = 'CREATE';
@@ -38,7 +38,7 @@ angular.module('ozayApp')
     $scope.create = function () {
     $scope.showSuccessAlert = false;
     $scope.showErrorAlert = false;
-        $scope.button = false;
+    $scope.button = false;
 
         UserDetail.save($scope.UserDetail,
                                             function (data) {
