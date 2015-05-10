@@ -124,4 +124,39 @@ angular.module('ozayApp')
                 });
             }
         };
+    })
+    .directive('unitvalidation', function() {
+      return {
+        require: 'ngModel',
+        link: function(scope, elm, attrs, ctrl) {
+
+             var action = function() {
+                                if(attrs.management == 'true' || attrs.staff == 'true'){
+                                     ctrl.$setValidity('unitvalidation', true);
+                                } else{
+                                    if(ctrl.modelValue === undefined || ctrl.modelValue.length == 0){
+                                                        ctrl.$setValidity('unitvalidation', false);
+                                                    } else {
+                                                        ctrl.$setValidity('unitvalidation', true);
+                                                    }
+                                }
+                              }
+                       attrs.$observe('management', action);
+                       attrs.$observe('staff', action);
+
+          ctrl.$validators.unitvalidation = function(modelValue, viewValue) {
+            if(modelValue !== undefined &&modelValue.length > 0){
+               return true;
+            } else {
+                var management = scope.$eval(attrs.management);
+                if(management == true ){
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+            return false;
+          };
+        }
+      };
     });
