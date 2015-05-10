@@ -1,112 +1,114 @@
 
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="page_content">
-                <form name="user_detail_form" novalidate="" class="simple-form" ng-submit="user_detail_form.$valid && create(UserDetail)">
-                    <div class="page_content_title">
-                        DIRECTORY | {{type}}
-                        <div class="button_group">
-                            <button class="btn btn-default" type="submit" ng-disabled="!button">Submit</button>
-                            <button class="btn btn-default" type="button" ng-click="cancel()">Cancel</button>
+<div class="row">
+    <div class="col-lg-12">
+        <div class="page_content">
+            <form name="form" novalidate="" class="simple-form" ng-submit="form.$valid && create(UserDetail)">
+                <div class="page_content_title">
+                    DIRECTORY | {{type}}
+                    <div class="button_group">
+                        <button class="btn btn-default" type="submit" ng-click="submitted=true" ng-disabled="!button">Submit</button>
+                        <button class="btn btn-default" type="button" ng-click="cancel()">Cancel</button>
+                    </div>
+                </div>
+                <div class="clear"></div>
+                <div id="directory_detail_page" class="page_content_item">
+                    <div class="col-lg-12">
+                        <div class="alert alert-success" ng-show="showSuccessAlert">
+                            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                            <span class="sr-only">Success:</span>
+                            {{successTextAlert}}
+                        </div>
+                        <div class="alert alert-danger" ng-show="showErrorAlert">
+                            <strong>{{errorTextAlert}}</strong>
                         </div>
                     </div>
-                    <div class="clear"></div>
-                    <div id="directory_detail_page" class="page_content_item">
-                        <div class="col-lg-12">
-                            <div class="alert alert-success" ng-show="showSuccessAlert">
-                                <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-                                <span class="sr-only">Success:</span>
-                                {{successTextAlert}}
-                            </div>
-                            <div class="alert alert-danger" ng-show="showErrorAlert">
-                                <strong>{{errorTextAlert}}</strong>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <div class="col-lg-12" ng-class="{ 'has-error' : submitted &&  form.first_name.$invalid}">
+                                <label class="control-label">First Name</label>
+                                <input ng-model="UserDetail.user.firstName" name="first_name" required class="form-controls" type="text" value="{{UserDetail.user.firstName}}" >
+                                <p ng-show="submitted && form.first_name.$error.required" class="help-block has-error">Required</p>
                             </div>
                         </div>
-                        <div class="col-lg-6">
+                        <div class="form-group">
+                            <div class="col-lg-12" ng-class="{ 'has-error' : submitted &&  form.last_name.$invalid}">
+                                <label class="control-label">Last Name</label>
+                                <input ng-model="UserDetail.user.lastName" name="last_name" ng-required="true" class="form-control" type="text" value="{{UserDetail.user.lastName}}">
+                                <p ng-show="submitted && form.last_name.$error.required" class="help-block has-error">Required</p>
+                            </div>
+                        </div>
+                        <div class="col-lg-6" ng-class="{ 'has-error' : submitted && form.unit.$invalid}">
                             <div class="form-group">
-                                <div class="col-lg-12">
-                                    <label class="control-label">First Name</label>
-                                    <input ng-model="UserDetail.user.firstName" name="first_name" required class="form-control" type="text" value="{{UserDetail.user.firstName}}">
-                                    <p ng-show="user_detail_form.first_name.$error.required" class="help-block">Required</p>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-lg-12">
-                                    <label class="control-label">Last Name</label>
-                                    <input ng-model="UserDetail.user.lastName" ng-required="true" class="form-control" type="text" value="{{UserDetail.user.lastName}}">
-                                </div>
-                            </div>
-
-
-                                <div class="col-lg-6">
-                                    <div class="form-group">
-                                    <label class="control-label">Apt #:</label>
-                                    <input ng-model="UserDetail.unit" ng-required="true" class="form-control" type="text" value="{{UserDetail.unit}}">
-                                </div>
-                            </div>
-
-
-                                <div class="col-lg-6">
-                                    <div class="form-group">
-                                    <label class="control-label"># Parking:</label>
-                                    <input ng-model="UserDetail.parking" class="form-control" type="text" value="{{UserDetail.parking}}">
-                                </div>
-
-                            </div>
-                            <div class="clear"></div>
-                            <div class="form-group">
-                                <div class="col-lg-12">
-                                    <label class="control-label">% Ownership</label>
-                                    <input ng-model="UserDetail.ownership" class="form-control" type="text" value="{{UserDetail.ownership}}">
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <div class="col-lg-12">
-                                    <label class="control-label">Email</label>
-                                    <input ng-model="UserDetail.user.email" ng-required="true" class="form-control" type="email" value="{{UserDetail.user.email}}">
-                                </div>
+                                <label class="control-label">Apt #:</label>
+                                <input ng-model="UserDetail.unit" name="unit" class="form-control" type="text" value="{{UserDetail.unit}}" showValidation>
+                                <p ng-show="submitted && form.unit.$error.required" class="help-block has-error">Required</p>
                             </div>
                         </div>
 
 
                         <div class="col-lg-6">
                             <div class="form-group">
-                                <div class="col-lg-12">
-                                    <label class="control-label">Phone#</label>
-                                    <input ng-model="UserDetail.user.phone" class="form-control" type="text" value="{{UserDetail.user.phone}}">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-lg-12">
-                                    <label class="control-label">Role</label>
-                                    <ul class="ozay-checkbox_ul block_4">
-                                        <li ng-class="{'active': UserDetail[obj.name],'inactive': !UserDetail[obj.name]}" ng-repeat="obj in roleList"><a ng-click="UserDetail[obj.name] = !UserDetail[obj.name]"><input ng-model="UserDetail[obj.name]"  type="checkbox" value='1' name="{{obj.name}}">{{obj.label}}</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-lg-12">
-                                    <label class="control-label">Renter</label>
-                                    <ul class="ozay-checkbox_ul block_4">
-                                        <li ng-class="{'active': UserDetail.renter == obj.value, 'inactive': UserDetail.renter != obj.value}" ng-repeat="obj in renterList"><a ng-click="UserDetail.renter = obj.value">{{obj.label}}</a><input ng-model="UserDetail.renter" type="radio" name="model.name" value="{{obj.value}}" ng-value="{{obj.name}}"></li>
-                                    </ul>
-                                </div>
+                                <label class="control-label"># Parking:</label>
+                                <input ng-model="UserDetail.parking" class="form-control" type="text" value="{{UserDetail.parking}}">
                             </div>
 
+                        </div>
+                        <div class="clear"></div>
+                        <div class="form-group">
+                            <div class="col-lg-12">
+                                <label class="control-label">% Ownership</label>
+                                <input ng-model="UserDetail.ownership" class="form-control" type="text" value="{{UserDetail.ownership}}">
+                            </div>
+                        </div>
 
-                            <div class="form-group">
-                                <div class="col-lg-12">
-                                    <label class="control-label">Expiration date</label>
-                                    <input class="form-control" min="{{minDate| date:'yyyy-MM-dd'}}" type="date" value="">
-                                </div>
+                        <div class="form-group">
+                            <div class="col-lg-12" ng-class="{ 'has-error' : submitted &&  form.email.$invalid}">
+                                <label class="control-label">Email</label>
+                                <input ng-model="UserDetail.user.email" ng-required="true" name="email" class="form-control" type="email" value="{{UserDetail.user.email}} required">
+                                <p ng-show="submitted && form.email.$error.required" class="help-block">Required</p>
+                                <p ng-show="submitted && form.email.$error.email" class="help-block">Enter Email Address</p>
                             </div>
                         </div>
                     </div>
-                    <div class="clear"></div>
-                </form>
-            </div>
+
+
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <div class="col-lg-12">
+                                <label class="control-label">Phone#</label>
+                                <input ng-model="UserDetail.user.phone" class="form-control" type="text" value="{{UserDetail.user.phone}}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-lg-12">
+                                <label class="control-label">Role</label>
+                                <ul class="ozay-checkbox_ul block_4">
+                                    <li ng-class="{'active': UserDetail[obj.name],'inactive': !UserDetail[obj.name]}" ng-repeat="obj in roleList"><a ng-click="UserDetail[obj.name] = !UserDetail[obj.name]"><input ng-model="UserDetail[obj.name]"  type="checkbox" value='1' name="{{obj.name}}">{{obj.label}}</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-lg-12">
+                                <label class="control-label">Renter</label>
+                                <ul class="ozay-checkbox_ul block_4">
+                                    <li ng-class="{'active': UserDetail.renter == obj.value, 'inactive': UserDetail.renter != obj.value}" ng-repeat="obj in renterList"><a ng-click="UserDetail.renter = obj.value">{{obj.label}}</a><input ng-model="UserDetail.renter" type="radio" name="model.name" value="{{obj.value}}" ng-value="{{obj.name}}"></li>
+                                </ul>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <div class="col-lg-12">
+                                <label class="control-label">Expiration date</label>
+                                <input class="form-control" min="{{minDate| date:'yyyy-MM-dd'}}" type="date" value="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="clear"></div>
+            </form>
         </div>
     </div>
-    <div class="clear"></div>
-    <!-- /.row -->
+</div>
+<div class="clear"></div>
+<!-- /.row -->
