@@ -11,18 +11,18 @@
                         <thead>
                             <tr>
                                 <th>&nbsp;</th>
-                                <th>Name</th>
-                                <th>Unit</th>
-                                <th>Parking #</th>
-                                <th>% Ownership</th>
-                                <th>Renter</th>
-                                <th>Phone</th>
-                                <th>Email</th>
+                                <th><a href="" ng-click="predicate = 'login'; reverse=!reverse">Name</a></th>
+                                <th><a href="" ng-click="predicate = 'unit'; reverse=!reverse">Unit</a></th>
+                                <th><a href="" ng-click="predicate = 'parking'; reverse=!reverse">Parking</a></th>
+                                <th><a href="" ng-click="predicate = 'ownership'; reverse=!reverse">Ownership</a></th>
+                                <th><a href="" ng-click="predicate = 'renter'; reverse=!reverse">Renter</a></th>
+                                <th><a href="" ng-click="predicate = 'user.phone'; reverse=!reverse">Phone</a></th>
+                                <th><a href="" ng-click="predicate = 'user.email'; reverse=!reverse">Email</a></th>
                             </tr>
                         </thead>
                         <tbody>
 
-                            <tr ng-repeat="directory in managementList">
+                            <tr ng-repeat="directory in managementList | orderBy:predicate:reverse">
 
                                 <td><span ng-if="$first">Management</span></td>
                                 <td><a href="#directory/edit/{{directory.login}}">{{directory.user.firstName}} {{directory.user.lastName}} &nbsp;{{directory.lastName}}</a></td>
@@ -33,7 +33,7 @@
                                 <td>{{directory.user.phone}}</td>
                                 <td>{{directory.user.email}}</td>
                             </tr>
-                            <tr ng-repeat="directory in staffList">
+                            <tr ng-repeat="directory in staffList | orderBy:predicate:reverse">
 
                                 <td><span ng-if="$first">Staff</span></td>
                                 <td><a href="#directory/edit/{{directory.login}}">{{directory.user.firstName}} {{directory.user.lastName}} &nbsp;{{directory.lastName}}</a></td>
@@ -44,7 +44,7 @@
                                 <td>{{directory.user.phone}}</td>
                                 <td>{{directory.user.email}}</td>
                             </tr>
-                            <tr ng-repeat="directory in boardList">
+                            <tr ng-repeat="directory in boardList | orderBy:predicate:reverse">
 
                                 <td><span ng-if="$first">Board</span></td>
                                 <td><a href="#directory/edit/{{directory.login}}">{{directory.user.firstName}} {{directory.user.lastName}} &nbsp;{{directory.lastName}}</a></td>

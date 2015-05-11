@@ -131,31 +131,37 @@ angular.module('ozayApp')
         link: function(scope, elm, attrs, ctrl) {
 
              var action = function() {
-                                if(attrs.management == 'true' || attrs.staff == 'true'){
-                                     ctrl.$setValidity('unitvalidation', true);
-                                } else{
-                                    if(ctrl.modelValue === undefined || ctrl.modelValue.length == 0){
-                                                        ctrl.$setValidity('unitvalidation', false);
-                                                    } else {
-                                                        ctrl.$setValidity('unitvalidation', true);
-                                                    }
-                                }
-                              }
-                       attrs.$observe('management', action);
-                       attrs.$observe('staff', action);
+                if(attrs.management == 'true' || attrs.staff == 'true'){
+                     ctrl.$setValidity('unitvalidation', true);
+                } else{
+                    if(ctrl.$modelValue === undefined || ctrl.$modelValue.length == 0){
+                        ctrl.$setValidity('unitvalidation', false);
+
+                        } else {
+                            ctrl.$setValidity('unitvalidation', true);
+                        }
+                }
+              }
+
+          attrs.$observe('management', action);
+          attrs.$observe('staff', action);
 
           ctrl.$validators.unitvalidation = function(modelValue, viewValue) {
-            if(modelValue !== undefined &&modelValue.length > 0){
+            if(modelValue !== undefined && modelValue.length > 0){
+               ctrl.$setValidity('unitvalidation', true);
+
                return true;
             } else {
                 var management = scope.$eval(attrs.management);
+
                 if(management == true ){
-                    return true;
+                    return false;
                 } else {
+
                     return false;
                 }
             }
-            return false;
+            return true;
           };
         }
       };
