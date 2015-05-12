@@ -224,17 +224,17 @@ $stateProvider
         })
     .state('home', {
       url: "",
-      templateUrl: 'views/main2.html',
+      templateUrl: 'views/main.html',
       controller: 'MainController',
       access: {
-          authorizedRoles: [USER_ROLES.user]
+          authorizedRoles: [USER_ROLES.all]
       }
     })
     .state('home.home', {
           url: '/',
           templateUrl: "/views/main.html",
           access: {
-              authorizedRoles: [USER_ROLES.user]
+              authorizedRoles: [USER_ROLES.all]
           }
         })
     .state('home.dashboard', {
@@ -297,10 +297,8 @@ $stateProvider
                     access: {
                         authorizedRoles: [USER_ROLES.user]
                     }
-            })
+            });
 
-
-    ;
 
 
             // Initialize angular-translate
@@ -358,6 +356,7 @@ $stateProvider
 
                 // Call when the the client is confirmed
                 $rootScope.$on('event:auth-loginConfirmed', function(data) {
+
                     $rootScope.authenticated = true;
                     if ($location.path() === "/login") {
                         var search = $location.search();
@@ -390,4 +389,6 @@ $stateProvider
                 $rootScope.$on('event:auth-loginCancelled', function() {
                     $location.path('');
                 });
+
+
         });

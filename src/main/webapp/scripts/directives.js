@@ -125,6 +125,23 @@ angular.module('ozayApp')
             }
         };
     })
+    .directive('resize', function ($window) {
+        return function (scope, element, attr) {
+        $('#side-menu').metisMenu();
+        var w = angular.element($window);
+
+        var height = (($window.innerHeight > 0) ? $window.innerHeight : this.screen.height) - 1;
+        height = height - 50;
+
+                if (height < 1) height = 1;
+                if (height > 50) {
+
+
+                    $("#page-wrapper").css("min-height", (height) + "px");
+                }
+
+        }
+    })
     .directive('unitvalidation', function() {
       return {
         require: 'ngModel',

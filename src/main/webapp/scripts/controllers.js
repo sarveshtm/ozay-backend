@@ -4,6 +4,7 @@
 
 ozayApp.controller('MainController', function ($scope, $location) {
 
+
     });
 
 ozayApp.controller('AdminController', function ($scope) {
