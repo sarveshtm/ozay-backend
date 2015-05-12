@@ -66,7 +66,7 @@ public class MailService {
                 }
             }
 
-        email.setFrom("noreplyy@ozay.us");
+        email.setFrom("noreply@ozay.us");
         email.setSubject(subject);
         email.setText(text);
 
