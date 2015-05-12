@@ -232,14 +232,14 @@ $stateProvider
     })
     .state('home.home', {
           url: '/',
-          templateUrl: "/views/main.html",
+          templateUrl: "/views/blank.html",
           access: {
               authorizedRoles: [USER_ROLES.all]
           }
         })
     .state('home.dashboard', {
              url: "/dashboard",
-             templateUrl: "/views/main.html",
+             templateUrl: "/views/blank.html",
             access: {
                 authorizedRoles: [USER_ROLES.user]
             }
