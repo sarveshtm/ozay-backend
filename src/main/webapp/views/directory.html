@@ -11,7 +11,7 @@
                         <thead>
                             <tr>
                                 <th>&nbsp;</th>
-                                <th><a href="" ng-click="predicate = 'login'; reverse=!reverse">Name</a></th>
+                                <th><a href="" ng-click="predicate = 'user.lastName'; reverse=!reverse">Name</a></th>
                                 <th><a href="" ng-click="predicate = 'unit'; reverse=!reverse">Unit</a></th>
                                 <th><a href="" ng-click="predicate = 'parking'; reverse=!reverse">Parking</a></th>
                                 <th><a href="" ng-click="predicate = 'ownership'; reverse=!reverse">Ownership</a></th>
@@ -55,7 +55,7 @@
                                 <td>{{directory.user.phone}}</td>
                                 <td>{{directory.user.email}}</td>
                             </tr>
-                            <tr ng-repeat="directory in residentList">
+                            <tr ng-repeat="directory in residentList  | orderBy:predicate:reverse">
 
                                 <td><span ng-if="$first">Resident</span></td>
                                 <td><a href="#directory/edit/{{directory.login}}">{{directory.user.firstName}} {{directory.user.lastName}} &nbsp;{{directory.lastName}}</a></td>
