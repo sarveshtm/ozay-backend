@@ -1,34 +1,33 @@
 <!-- Page Heading -->
+<div class="row" ng-controller="NotificationController">
+    <div class="col-lg-12">
+        <div class="panel panel-default page_content">
+            <div id="page_content_title">
+                NOTIFICATIONS | ARCHIVE
+            </div>
+            <!-- START table-responsive-->
+            <div class="table-responsive page_content_item">
+                <table id="notification_archive_table" class="dataTable">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>Date</th>
+                        <th>Subject</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="notification in notifications | orderBy:'-createdDate'">
+                        <td></td>
+                        <td>{{notification.createdDate | date: "MM/dd/yyyy"}}</td>
+                        <td>{{notification.notice}}</td>
+                    </tr>
 
-
-    <div class="row" ng-controller="NotificationController">
-        <div class="col-lg-12">
-            <div class="page_content">
-                <div class="page_content_title">
-                    NOTIFICATIONS | ARCHIVE
-
-                </div>
-                <div class="clear"></div>
-                <div class="page_content_item">
-                    <table id="notification_archive_table" class="dataTable">
-                        <thead>
-                            <tr>
-                                <th></th>
-                                <th>Date</th>
-                                <th>Subject</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr ng-repeat="notification in notifications | orderBy:'-createdDate'">
-                                <td></td>
-                                <td>{{notification.createdDate | date: "MM/dd/yyyy"}}</td>
-                                <td>{{notification.notice}}</td>
-                            </tr>
-
-                        </tbody>
-                    </table>
-                </div>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
-    <!-- /.row -->
+
+</div>
+<!-- /.row -->
+

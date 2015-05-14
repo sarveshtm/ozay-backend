@@ -3,8 +3,12 @@
 /* Controllers */
 
 ozayApp.controller('MainController', function ($scope, $location) {
-
-
+        $scope.search_open = function(){
+            $('#navbar-search-form').addClass('open');
+        }
+        $scope.search_close = function(){
+              $('#navbar-search-form').removeClass('open');
+        }
     });
 
 ozayApp.controller('AdminController', function ($scope) {

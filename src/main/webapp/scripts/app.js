@@ -227,14 +227,14 @@ $stateProvider
       templateUrl: 'views/main.html',
       controller: 'MainController',
       access: {
-          authorizedRoles: [USER_ROLES.all]
+          authorizedRoles: [USER_ROLES.user]
       }
     })
     .state('home.home', {
           url: '/',
           templateUrl: "/views/blank.html",
           access: {
-              authorizedRoles: [USER_ROLES.all]
+              authorizedRoles: [USER_ROLES.user]
           }
         })
     .state('home.dashboard', {
@@ -247,6 +247,7 @@ $stateProvider
     .state('home.notification_create', {
       url: "/notification_create",
       templateUrl: "/views/notification_create.html",
+      controller: 'NotificationController',
       access: {
                 authorizedRoles: [USER_ROLES.user]
             }

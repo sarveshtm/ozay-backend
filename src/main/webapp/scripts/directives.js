@@ -125,21 +125,31 @@ angular.module('ozayApp')
             }
         };
     })
-    .directive('resize', function ($window) {
+    .directive('resize', function ($window, $location) {
         return function (scope, element, attr) {
-        $('#side-menu').metisMenu();
-        var w = angular.element($window);
+            $('#side-menu').metisMenu();
+            var url = $location.$$path;
 
-        var height = (($window.innerHeight > 0) ? $window.innerHeight : this.screen.height) - 1;
-        height = height - 50;
+            var  topOffset = 0;
+            var height = (($window.innerHeight > 0) ? $window.innerHeight : this.screen.height) - 1;
+                    height = height - topOffset;
+                    if (height < 1) height = 1;
+                    if (height > topOffset) {
+                        $("#page-wrapper").css("min-height", (height) + "px");
+                    }
 
-                if (height < 1) height = 1;
-                if (height > 50) {
-
-
-                    $("#page-wrapper").css("min-height", (height) + "px");
+            var element = $('ul.nav a').filter(function() {
+                    var res = this.href.split('#');
+                    var currentUrl = res[res.length - 1];
+                    var result = false;
+                    if(url != '/'){
+                        result = currentUrl ==  url;
+                    }
+                    return result;
+                }).addClass('active').parent().parent().addClass('in').parent();
+                if (element.is('li')) {
+                    element.addClass('active');
                 }
-
         }
     })
     .directive('unitvalidation', function() {
