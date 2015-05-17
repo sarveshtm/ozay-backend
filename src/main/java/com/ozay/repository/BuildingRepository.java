@@ -1,12 +1,8 @@
 package com.ozay.repository;
 
 import com.ozay.model.Building;
-import com.ozay.model.UserDetail;
 import com.ozay.rowmapper.BuildingRowMapper;
-import org.joda.time.DateTime;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import javax.inject.Inject;
@@ -53,7 +49,7 @@ public class BuildingRepository {
             building.getPhone(),
             building.getCreatedBy(),
             building.getLastModifiedBy(),
-            };
+        };
 
         int id = jdbcTemplate.queryForInt(insert, params);
         return id;

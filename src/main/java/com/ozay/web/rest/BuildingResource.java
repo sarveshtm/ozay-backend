@@ -1,7 +1,6 @@
 package com.ozay.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
-import com.ozay.domain.User;
 import com.ozay.model.Building;
 import com.ozay.model.UserDetail;
 import com.ozay.repository.BuildingRepository;
@@ -10,20 +9,20 @@ import com.ozay.repository.UserDetailRepository;
 import com.ozay.repository.UserRepository;
 import com.ozay.security.SecurityUtils;
 import com.ozay.service.UserDetailService;
-import com.ozay.service.UserService;
 import com.ozay.web.rest.dto.JsonResponse;
-import com.ozay.web.rest.dto.UserDetailListDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.inject.Inject;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * REST controller for managing users.
@@ -50,8 +49,8 @@ public class BuildingResource {
      * GET  /rest/building/:login -> get the "Building" ID
      */
     @RequestMapping(value = "/building",
-            method = RequestMethod.GET,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+        method = RequestMethod.GET,
+        produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
     public List<Building> getAll() {
         log.debug("REST request to get building by user");

@@ -1,8 +1,6 @@
 package com.ozay.repository;
 
-import com.ozay.model.Building;
 import com.ozay.model.UserDetail;
-import com.ozay.rowmapper.BuildingRowMapper;
 import com.ozay.rowmapper.UserDetailRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -22,7 +20,7 @@ public class UserDetailRepository {
 
             new Object[]{buildingId, buildingId}, new UserDetailRowMapper(){
 
-        });
+            });
     }
 
     public UserDetail getAllUserByBuilding(String username, int buildingId){

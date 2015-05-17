@@ -8,11 +8,7 @@ import com.ozay.repository.UserRepository;
 import com.ozay.security.SecurityUtils;
 import com.ozay.service.MailService;
 import com.ozay.web.rest.dto.JsonResponse;
-import com.ozay.web.rest.dto.UserDTO;
-import com.sendgrid.Mail;
 import org.joda.time.DateTime;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -46,9 +42,9 @@ public class NotificationResource {
      * POST  /notifications -> Create a new notification.
      */
     @RequestMapping(value = "/notifications",
-            method = RequestMethod.POST,
-            consumes = "application/json",
-            produces = MediaType.APPLICATION_JSON_VALUE)
+        method = RequestMethod.POST,
+        consumes = "application/json",
+        produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
     public ResponseEntity<JsonResponse> create(@RequestBody Notification notification) {
         User currentUser = userRepository.findOne(SecurityUtils.getCurrentLogin());
@@ -71,8 +67,8 @@ public class NotificationResource {
      * GET  /notifications -> get all the notifications.
      */
     @RequestMapping(value = "/notifications",
-            method = RequestMethod.GET,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+        method = RequestMethod.GET,
+        produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
     public List<Notification> getAll() {
         log.debug("REST request to get all Notifications");
@@ -83,8 +79,8 @@ public class NotificationResource {
      * GET  /notifications/:id -> get the "id" notification.
      */
     @RequestMapping(value = "/notifications/{id}",
-            method = RequestMethod.GET,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+        method = RequestMethod.GET,
+        produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
     public ResponseEntity<Notification> get(@PathVariable Long id) {
         log.debug("REST request to get Notification : {}", id);
@@ -99,8 +95,8 @@ public class NotificationResource {
      * DELETE  /notifications/:id -> delete the "id" notification.
      */
     @RequestMapping(value = "/notifications/{id}",
-            method = RequestMethod.DELETE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+        method = RequestMethod.DELETE,
+        produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
     public void delete(@PathVariable Long id) {
         log.debug("REST request to delete Notification : {}", id);

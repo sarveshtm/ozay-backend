@@ -1,19 +1,15 @@
 package com.ozay.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
-import com.ozay.domain.Notification;
 import com.ozay.domain.User;
 import com.ozay.model.UserDetail;
 import com.ozay.repository.UserBuildingRepository;
 import com.ozay.repository.UserDetailRepository;
 import com.ozay.repository.UserRepository;
-import com.ozay.security.AuthoritiesConstants;
-import com.ozay.security.SecurityUtils;
 import com.ozay.service.UserDetailService;
 import com.ozay.service.UserService;
 import com.ozay.web.rest.dto.JsonResponse;
 import com.ozay.web.rest.dto.UserDetailListDTO;
-import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -22,7 +18,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import java.util.List;
 import java.util.Optional;
@@ -56,8 +51,8 @@ public class UserDetailResource {
      * GET  /rest/userdetails/:login -> get the "Building" ID
      */
     @RequestMapping(value = "/userdetails/building/{buildingId}",
-            method = RequestMethod.GET,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+        method = RequestMethod.GET,
+        produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
     public List<UserDetailListDTO> getAll(@PathVariable int buildingId) {
         log.debug("REST request to get all Notifications");

@@ -1,36 +1,16 @@
 package com.ozay.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
-import com.ozay.domain.Authority;
-import com.ozay.domain.PersistentToken;
-import com.ozay.domain.User;
-import com.ozay.repository.PersistentTokenRepository;
-import com.ozay.repository.UserRepository;
-import com.ozay.security.SecurityUtils;
-import com.ozay.service.MailService;
-import com.ozay.service.UserService;
-import com.ozay.web.rest.dto.UserDTO;
-import org.apache.commons.lang.StringUtils;
+import com.ozay.web.rest.dto.MemberDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.ApplicationContext;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.thymeleaf.context.IWebContext;
-import org.thymeleaf.spring4.SpringTemplateEngine;
-import org.thymeleaf.spring4.context.SpringWebContext;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.inject.Inject;
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.util.*;
-import java.util.stream.Collectors;
-import com.ozay.web.rest.dto.MemberDTO;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * REST controller for managing the current user's account.
