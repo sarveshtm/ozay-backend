@@ -19,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
+import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
 
@@ -103,27 +104,43 @@ public class UserDetailResource {
             userDetail.setResident(true);
         }
         log.debug("REST request :create function");
-        if(userDetail.getLogin() == null){
-            log.debug("REST request :create new record");
-            // get only username before @ (email)
-            String[] parts = userDetail.getUser().getEmail().split("@");
-            userService.createUserInformation(parts[0], "ert_" + parts[0], userDetail.getUser().getFirstName(), userDetail.getUser().getLastName(), userDetail.getUser().getEmail(), "en");
-            User user = userRepository.findOneByEmail(userDetail.getUser().getEmail());
-            userDetail.setLogin(user.getLogin());
-            userDetailRepository.create(userDetail);
-            userBuildingRepository.create(userDetail);
-        } else {
-            log.debug("REST request :update  record");
-            User user = userRepository.findOne(userDetail.getUser().getLogin());
-            user.setFirstName(userDetail.getUser().getFirstName());
-            user.setLastName(userDetail.getUser().getLastName());
-            user.setEmail(userDetail.getUser().getEmail());
-            userRepository.save(user);
-            userDetailRepository.update(userDetail);
-        }
-
         JsonResponse json = new JsonResponse();
+        if(userDetail.getLogin() != null) {
+            return new ResponseEntity<JsonResponse>(json,  new HttpHeaders(), HttpStatus.BAD_REQUEST);
+        }
+        // get only username before @ (email)
+        String[] parts = userDetail.getUser().getEmail().split("@");
+        userService.createUserInformation(parts[0], "ert_" + parts[0], userDetail.getUser().getFirstName(), userDetail.getUser().getLastName(), userDetail.getUser().getEmail(), "en");
+        User user = userRepository.findOneByEmail(userDetail.getUser().getEmail());
+        userDetail.setLogin(user.getLogin());
+        userDetailRepository.create(userDetail);
+        userBuildingRepository.create(userDetail);
+
+
+
+
         return new ResponseEntity<JsonResponse>(json,  new HttpHeaders(), HttpStatus.OK);
     }
 
+    /**
+     * PUT  /collaborates -> Updates an existing userDetail.
+     */
+    @RequestMapping(value = "/userdetails",
+        method = RequestMethod.PUT,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    public ResponseEntity<JsonResponse> update(@RequestBody UserDetail userDetail) throws URISyntaxException {
+        log.debug("REST request :update  record");
+        JsonResponse json = new JsonResponse();
+        if(userDetail.getLogin() == null){
+            return new ResponseEntity<JsonResponse>(json,  new HttpHeaders(), HttpStatus.BAD_REQUEST);
+        }
+        User user = userRepository.findOne(userDetail.getUser().getLogin());
+        user.setFirstName(userDetail.getUser().getFirstName());
+        user.setLastName(userDetail.getUser().getLastName());
+        user.setEmail(userDetail.getUser().getEmail());
+        userRepository.save(user);
+
+        return new ResponseEntity<JsonResponse>(json,  new HttpHeaders(), HttpStatus.OK);
+    }
 }

@@ -13,6 +13,7 @@ angular.module('ozayApp')
 		},
 		'getUser' : {
 			method: 'GET',
-		}
+		},
+		'update': { method:'PUT' }
 	});
 });

@@ -56,16 +56,28 @@ angular.module('ozayApp')
 		$scope.showSuccessAlert = false;
 		$scope.showErrorAlert = false;
 		$scope.button = false;
+        if($scope.type == 'EDIT'){
+            UserDetail.update($scope.UserDetail,
+            				function (data) {
+            			$scope.showSuccessAlert = true;
+            			$scope.successTextAlert = "Successfully Saved";
+            		}, function (error){
+            			$scope.showErrorAlert = true;
+            			$scope.errorTextAlert = "Error! Please try later.";
+            			$scope.button = true;
+            		});
+        } else {
+            UserDetail.save($scope.UserDetail,
+            				function (data) {
+            			$scope.showSuccessAlert = true;
+            			$scope.successTextAlert = "Successfully Saved";
+            		}, function (error){
+            			$scope.showErrorAlert = true;
+            			$scope.errorTextAlert = "Error! Please try later.";
+            			$scope.button = true;
+            		});
+        }
 
-		UserDetail.save($scope.UserDetail,
-				function (data) {
-			$scope.showSuccessAlert = true;
-			$scope.successTextAlert = "Successfully Saved";
-		}, function (error){
-			$scope.showErrorAlert = true;
-			$scope.errorTextAlert = "Error! Please try later.";
-			$scope.button = true;
-		});
 		$scope.button = true;
 	};
 
