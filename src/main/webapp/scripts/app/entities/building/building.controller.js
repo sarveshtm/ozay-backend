@@ -5,7 +5,7 @@ angular.module('ozayApp')
 
 	$scope.button = true;
 	$scope.building = {};
-
+console.log($state);
 
 	$scope.startProcess = function () {
 		console.log($scope.building);
@@ -19,7 +19,8 @@ angular.module('ozayApp')
 				$scope.successTextAlert = data.response;
 				$cookieStore.put('selectedBuilding', data.response);
 				$rootScope.selectedBuilding = data.response;
-				$state.reload();
+				$state.transitionTo('home.home', null, {'reload':true});
+
 			}, function (error){
 				$scope.showErrorAlert = true;
 				$scope.errorTextAlert = "Error! Please try later.";

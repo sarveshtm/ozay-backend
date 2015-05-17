@@ -225,7 +225,6 @@ ozayApp
 	.state('home', {
 		url: "",
 		templateUrl: 'views/main.html',
-		controller: 'MainController',
 		access: {
 			authorizedRoles: [USER_ROLES.user]
 		}
@@ -233,6 +232,7 @@ ozayApp
 	.state('home.home', {
 		url: '/',
 		templateUrl: "/views/blank.html",
+		controller: 'MainController',
 		access: {
 			authorizedRoles: [USER_ROLES.user]
 		}
