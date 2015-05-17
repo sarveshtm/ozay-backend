@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('ozayApp')
-    .controller('UserDetailController', function ($scope, $filter, UserDetail) {
+    .controller('UserDetailController', function ($scope, $filter, UserDetail, $cookieStore) {
         $scope.getAll = function (method, id) {
                     UserDetail.get({method:method, id: id}, function(result) {
                         $scope.managementList = result[0].userDetailList;
@@ -10,7 +10,8 @@ angular.module('ozayApp')
                         $scope.residentList = result[3].userDetailList;
                     });
                 };
-        $scope.getAll('building', 1);
+        var building = $cookieStore.get('selectedBuilding');
+        $scope.getAll('building', building);
 
         $scope.isResident = function(renter){
             if(renter === true){
@@ -21,7 +22,7 @@ angular.module('ozayApp')
         }
 
     })
-    .controller('DirectoryDetailController', function ($scope, $routeParams, $location, $stateParams, UserDetail) {
+    .controller('DirectoryDetailController', function ($scope, $routeParams, $location, $stateParams, UserDetail, $cookieStore) {
     if($stateParams.method != 'edit' && $stateParams.method != 'new'){
         $location.path('/error').replace();
     }
@@ -30,7 +31,6 @@ angular.module('ozayApp')
     if($stateParams.method == 'new'){
         $scope.type = 'CREATE';
     }
-
 
     $scope.UserDetail = {};
     $scope.UserDetail.user = {};
@@ -78,12 +78,16 @@ angular.module('ozayApp')
 
                  $scope.getUser = function(method, id, login){
                                     UserDetail.getUser({method:method, id: id, login:login}, function(result) {
+                                        if(result.unit == null){
+                                            result.unit = "";
+                                        }
                                         $scope.UserDetail = result;
                                         $scope.model.radioBox = result.renter;
                                     });
                                 }
                 if($stateParams.method == 'edit'){
-                    $scope.getUser('building', 1, $stateParams.memberId);
+                    var selectedBuildingId = $cookieStore.get('selectedBuilding');
+                    $scope.getUser('building', selectedBuildingId, $stateParams.memberId);
                 }
 
 
@@ -99,7 +103,5 @@ angular.module('ozayApp')
                     $scope.model = obj;
                 };
 
+
             });
-
-
-    ;

@@ -18,16 +18,16 @@ public class UserDetailRepository {
     private JdbcTemplate jdbcTemplate;
 
     public List<UserDetail> getAllUsersByBuilding(int buildingId){
-        return jdbcTemplate.query("Select * FROM user_building ub INNER JOIN t_user u ON ub.login = u.login INNER JOIN user_detail ud ON ud.login = u.login WHERE ub.building_id =? ORDER BY u.login",
+        return jdbcTemplate.query("Select * FROM user_building ub INNER JOIN t_user u ON ub.login = u.login INNER JOIN user_detail ud ON ud.login = u.login WHERE ub.building_id =? AND ud.building_id =? ORDER BY u.login",
 
-            new Object[]{buildingId}, new UserDetailRowMapper(){
+            new Object[]{buildingId, buildingId}, new UserDetailRowMapper(){
 
         });
     }
 
     public UserDetail getAllUserByBuilding(String username, int buildingId){
-        return (UserDetail)jdbcTemplate.queryForObject("Select * FROM user_building ub INNER JOIN t_user u ON ub.login = u.login INNER JOIN user_detail ud ON ud.login = u.login WHERE ub.building_id = ? AND u.login = ?",
-            new Object[]{buildingId, username}, new UserDetailRowMapper(){
+        return (UserDetail)jdbcTemplate.queryForObject("Select * FROM user_building ub INNER JOIN t_user u ON ub.login = u.login INNER JOIN user_detail ud ON ud.login = u.login WHERE ub.building_id = ? AND ud.building_id = ?AND u.login = ?",
+            new Object[]{buildingId, buildingId, username}, new UserDetailRowMapper(){
             });
     }
 
@@ -44,7 +44,7 @@ public class UserDetailRepository {
             "staff, " +
             "board, " +
             "resident ) " +
-            "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         Object[] params = new Object[] { userDetail.getLogin(),
             userDetail.getBuildingId(),
             userDetail.getOwnership(),

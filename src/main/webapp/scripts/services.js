@@ -149,7 +149,7 @@ ozayApp.factory('Session', function () {
         return this;
     });
 
-ozayApp.factory('AuthenticationSharedService', function ($rootScope, $http, authService, Session, Account, Base64Service, AccessToken, $location) {
+ozayApp.factory('AuthenticationSharedService', function ($rootScope, $http, authService, Session, Account, Base64Service, AccessToken, $location, $cookieStore) {
         return {
             login: function (param) {
                 $rootScope.authenticationError = false;
@@ -167,7 +167,10 @@ ozayApp.factory('AuthenticationSharedService', function ($rootScope, $http, auth
 
                     Account.get(function(data) {
                         Session.create(data.login, data.firstName, data.lastName, data.email, data.roles);
+
                         $rootScope.account = Session;
+
+
                         authService.loginConfirmed(data);
                     });
                    // document.location.href = "/admin.html";

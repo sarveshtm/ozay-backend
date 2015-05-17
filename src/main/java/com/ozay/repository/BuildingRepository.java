@@ -1,8 +1,12 @@
 package com.ozay.repository;
 
 import com.ozay.model.Building;
+import com.ozay.model.UserDetail;
 import com.ozay.rowmapper.BuildingRowMapper;
+import org.joda.time.DateTime;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import javax.inject.Inject;
@@ -16,10 +20,42 @@ public class BuildingRepository {
     private JdbcTemplate jdbcTemplate;
 
     public List<Building> getBuildings(){
-        return jdbcTemplate.query("select * from building", new Object[]{}, new BuildingRowMapper(){
+        return jdbcTemplate.query("SELECT * FROM building", new Object[]{}, new BuildingRowMapper(){
 
         });
     }
 
+    public List<Building> getBuildingsByUser(String login){
+        return jdbcTemplate.query("SELECT * FROM building b INNER JOIN user_building u ON b.id = u.building_id WHERE u.login = ?", new Object[]{login}, new BuildingRowMapper(){
+        });
+    }
 
+    public int create(Building building){
+
+        String insert = "INSERT INTO building(" +
+            "name, " +
+            "address_1, " +
+            "address_2, " +
+            "state, " +
+            "zip, " +
+            "phone, " +
+            "created_by, " +
+            "created_date, " +
+            "last_modified_by," +
+            "last_modified_date )" +
+            "VALUES (?, ?, ?, ?, ?, ?,?, now(), ?, now()) RETURNING id";
+        Object[] params = new Object[] {
+            building.getName(),
+            building.getAddress_1(),
+            building.getAddress_2(),
+            building.getState(),
+            building.getZip(),
+            building.getPhone(),
+            building.getCreatedBy(),
+            building.getLastModifiedBy(),
+            };
+
+        int id = jdbcTemplate.queryForInt(insert, params);
+        return id;
+    }
 }

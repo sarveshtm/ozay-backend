@@ -274,6 +274,14 @@ $stateProvider
                     authorizedRoles: [USER_ROLES.user]
                 }
         })
+    .state('home.building_create', {
+          url: "/building_create",
+          controller:'BuildingController',
+          templateUrl: "/views/building_create.html",
+          access: {
+                    authorizedRoles: [USER_ROLES.user]
+                }
+        })
 
     .state('home.directory', {
             url: "/directory",

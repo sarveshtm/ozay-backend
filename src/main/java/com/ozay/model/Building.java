@@ -1,5 +1,14 @@
 package com.ozay.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.ozay.domain.util.CustomDateTimeDeserializer;
+import com.ozay.domain.util.CustomDateTimeSerializer;
+import org.hibernate.annotations.Type;
+import org.joda.time.DateTime;
+
+import javax.persistence.Column;
+
 public class Building {
     private int id;
     private String name;
@@ -8,6 +17,11 @@ public class Building {
     private String state;
     private String zip;
     private String phone;
+    private String createdBy;
+
+
+    private String lastModifiedBy;
+
 
     public int getId() {
         return id;
@@ -64,4 +78,22 @@ public class Building {
     public void setZip(String zip) {
         this.zip = zip;
     }
+
+    public String getLastModifiedBy() {
+        return lastModifiedBy;
+    }
+
+    public void setLastModifiedBy(String lastModifiedBy) {
+        this.lastModifiedBy = lastModifiedBy;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+
 }
