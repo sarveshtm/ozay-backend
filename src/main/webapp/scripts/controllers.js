@@ -31,9 +31,10 @@ ozayApp.controller('LanguageController', function ($scope, $translate, LanguageS
 ozayApp.controller('MenuController', function ($scope) {
     });
 
-ozayApp.controller('LoginController', function ($scope, $location, AuthenticationSharedService) {
+ozayApp.controller('LoginController', function ($scope, $location, AuthenticationSharedService, $cookieStore) {
         $scope.rememberMe = true;
         $scope.login = function () {
+            $cookieStore.remove("selectedBuilding");
             AuthenticationSharedService.login({
                 username: $scope.username,
                 password: $scope.password,

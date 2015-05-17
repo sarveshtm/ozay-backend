@@ -402,7 +402,7 @@ body, html{
 
 }
 #login_wrapper{
-    padding-top:20%;
+    padding-top:15%;
     background-color:#FFC600;
     height:100%;
     width:100%;
@@ -470,6 +470,6 @@ display: block;
 }
 @media (min-width: 767px){
     #directory_detail_page .form-group {
-      height: 70px;
+      height: 80px;
     }
 }

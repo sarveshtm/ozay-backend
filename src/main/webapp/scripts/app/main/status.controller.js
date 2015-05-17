@@ -1,12 +1,16 @@
 'use strict';
 
 angular.module('ozayApp')
-    .controller('StatusController', function ($scope,$cookieStore, Building, $state, $location) {
+    .controller('StatusController', function ($scope,$cookieStore, Building, $state, $location, $rootScope) {
 
         $scope.loadAll = function() {
             Building.query(function(result) {
                $scope.buildings = result;
-               var building = $cookieStore.get('selectedBuilding');
+               var building = $rootScope.selectedBuilding;
+               if(building === undefined){
+                   building = $cookieStore.get('selectedBuilding');
+                   $rootScope.selectedBuilding = building;
+               }
                if(building !== undefined){
                    $scope.selectedBuilding.buildingId = building;
                } else{
@@ -19,11 +23,13 @@ angular.module('ozayApp')
                     optionText = value.name;
                  }
                });
+               $rootScope.selectedBuilding = $scope.selectedBuilding.buildingId;
                $scope.building_name = optionText;
             });
         };
         $scope.changeBuilding = function(){
             $cookieStore.put('selectedBuilding', $scope.selectedBuilding.buildingId);
+             $rootScope.selectedBuilding = $scope.selectedBuilding.buildingId;
             $location.path("/");
         }
 

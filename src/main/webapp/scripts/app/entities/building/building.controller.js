@@ -1,16 +1,10 @@
 'use strict';
 
 angular.module('ozayApp')
-    .controller('BuildingController', function ($scope, $cookieStore, Session, $state, $location, $filter, Building) {
-        $scope.refresh = function(){
-//            var building = $cookieStore.get('selectedBuilding');
-//            $cookieStore.put('selectedBuilding', 1);
-
-
-            //$state.reload();
-        }
+    .controller('BuildingController', function ($rootScope, $scope, $cookieStore, Session, $state, $location, $filter, Building) {
 
         $scope.button = true;
+        $scope.building = {};
 
 
         $scope.startProcess = function () {
@@ -24,6 +18,7 @@ angular.module('ozayApp')
                               $scope.showSuccessAlert = true;
                               $scope.successTextAlert = data.response;
                               $cookieStore.put('selectedBuilding', data.response);
+                              $rootScope.selectedBuilding = data.response;
                               $state.reload();
                         }, function (error){
                             $scope.showErrorAlert = true;

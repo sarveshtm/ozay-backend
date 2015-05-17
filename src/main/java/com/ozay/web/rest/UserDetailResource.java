@@ -104,6 +104,9 @@ public class UserDetailResource {
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
     public ResponseEntity<JsonResponse> create(@RequestBody UserDetail userDetail) {
+        if(userDetail.isManagement() == false && userDetail.isStaff() == false && userDetail.isBoard() == false){
+            userDetail.setResident(true);
+        }
         log.debug("REST request :create function");
         if(userDetail.getLogin() == null){
             log.debug("REST request :create new record");
@@ -112,7 +115,6 @@ public class UserDetailResource {
             userService.createUserInformation(parts[0], "ert_" + parts[0], userDetail.getUser().getFirstName(), userDetail.getUser().getLastName(), userDetail.getUser().getEmail(), "en");
             User user = userRepository.findOneByEmail(userDetail.getUser().getEmail());
             userDetail.setLogin(user.getLogin());
-            userDetail.setBuildingId(1);
             userDetailRepository.create(userDetail);
             userBuildingRepository.create(userDetail);
         } else {
