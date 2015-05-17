@@ -11,6 +11,7 @@ angular.module('ozayApp')
 	};
 	$scope.loadAll();
 	$scope.showSuccessAlert = false;
+	$scope.predicate = '-createdDate';
 
 	$scope.startProcess = function (method, id) {
 		UserDetail.count({method:method, id: id}, function(result) {

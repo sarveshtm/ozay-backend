@@ -11,14 +11,16 @@
                     <thead>
                     <tr>
                         <th></th>
-                        <th>Date</th>
-                        <th>Subject</th>
+                        <th><a href="" ng-click="predicate = 'createdDate'; reverse=!reverse">Date</a></th>
+                        <th><a href="" ng-click="predicate = 'subject'; reverse=!reverse">Subject</a></th>
+                        <th><a href="" ng-click="predicate = 'notice'; reverse=!reverse">Message</a></th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr ng-repeat="notification in notifications | orderBy:'-createdDate'">
+                    <tr ng-repeat="notification in notifications | orderBy:predicate:reverse">
                         <td></td>
                         <td>{{notification.createdDate | date: "MM/dd/yyyy"}}</td>
+                        <td>{{notification.subject}}</td>
                         <td>{{notification.notice}}</td>
                     </tr>
 

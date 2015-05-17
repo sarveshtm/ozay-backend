@@ -31,6 +31,7 @@ angular.module('ozayApp')
 		$cookieStore.put('selectedBuilding', $scope.selectedBuilding.buildingId);
 		$rootScope.selectedBuilding = $scope.selectedBuilding.buildingId;
 		$location.path("/");
+		$state.reload();
 	}
 
 	$scope.selectedBuilding = {}

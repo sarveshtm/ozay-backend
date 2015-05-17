@@ -1,6 +1,8 @@
 package com.ozay.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
+import com.ozay.domain.Authority;
+import com.ozay.domain.User;
 import com.ozay.model.Building;
 import com.ozay.model.UserDetail;
 import com.ozay.repository.BuildingRepository;
@@ -9,7 +11,9 @@ import com.ozay.repository.UserDetailRepository;
 import com.ozay.repository.UserRepository;
 import com.ozay.security.SecurityUtils;
 import com.ozay.service.UserDetailService;
+import com.ozay.service.UserService;
 import com.ozay.web.rest.dto.JsonResponse;
+import com.ozay.web.rest.dto.UserDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -22,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -41,6 +46,8 @@ public class BuildingResource {
     private UserBuildingRepository userBuildingRepository;
     @Inject
     private UserRepository userRepository;
+    @Inject
+    private UserService userService;
 
     private final Logger log = LoggerFactory.getLogger(BuildingResource.class);
 
@@ -52,10 +59,25 @@ public class BuildingResource {
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public List<Building> getAll() {
+    public List<Building> getAll(HttpServletRequest request) {
         log.debug("REST request to get building by user");
         log.debug("REST GET LOGIN USER : {}", SecurityUtils.getCurrentLogin());
-        return buildingRepository.getBuildingsByUser(SecurityUtils.getCurrentLogin());
+        User user = userService.getUserWithAuthorities();
+        boolean isAdmin = false;
+        for(Authority authority : user.getAuthorities()){
+            log.debug(authority.getName());
+            if(authority.getName().equals("ROLE_ADMIN")){
+                isAdmin = true;
+                break;
+            }
+        }
+
+        if(isAdmin == true){
+            return buildingRepository.getBuildings();
+        } else {
+            return buildingRepository.getBuildingsByUser(SecurityUtils.getCurrentLogin());
+        }
+
     }
 
     /**

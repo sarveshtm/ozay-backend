@@ -18,6 +18,7 @@ public class Building {
     private String zip;
     private String phone;
     private String createdBy;
+    private String email;
 
 
     private String lastModifiedBy;
@@ -96,4 +97,11 @@ public class Building {
     }
 
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 }

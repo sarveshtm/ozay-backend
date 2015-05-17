@@ -116,9 +116,6 @@ public class UserDetailResource {
         userDetailRepository.create(userDetail);
         userBuildingRepository.create(userDetail);
 
-
-
-
         return new ResponseEntity<JsonResponse>(json,  new HttpHeaders(), HttpStatus.OK);
     }
 
