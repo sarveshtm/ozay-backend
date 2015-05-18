@@ -1,8 +1,7 @@
 'use strict';
 
 angular.module('ozayApp')
-.controller('StatusController', function ($scope,$cookieStore, Building, $state, $location, $rootScope) {
-
+.controller('MenuController', function ($scope,$cookieStore, Building, $state, $location, $rootScope) {
 	$scope.loadAll = function() {
 		Building.query(function(result) {
 			$scope.buildings = result;
@@ -17,13 +16,14 @@ angular.module('ozayApp')
 				$cookieStore.put('selectedBuilding', result[0].id);
 				$scope.selectedBuilding.buildingId = result[0].id;
 			}
+			$scope.selectedBuilding.buildingId = building;
 			var optionText = '';
 			angular.forEach(result, function(value, key) {
 				if(value.id == $scope.selectedBuilding.buildingId){
 					optionText = value.name;
 				}
 			});
-			$rootScope.selectedBuilding = $scope.selectedBuilding.buildingId;
+			$scope.selectedBuilding.buildingId = building;
 			$scope.building_name = optionText;
 		});
 	};
@@ -35,5 +35,21 @@ angular.module('ozayApp')
 	}
 
 	$scope.selectedBuilding = {}
+
 	$scope.loadAll();
+
+	$scope.search = {};
+
+	$scope.search.searchTopItem = "";
+
+	$scope.search.searchNavItem = "";
+
+
+    $scope.searchNav = function(){
+        $scope.search.searchTopItem = "";
+        if($scope.search.searchNavItem != false){
+            $state.go("home.search", {item:$scope.search.searchNavItem});
+        }
+    }
+
 });

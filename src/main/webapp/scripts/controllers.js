@@ -331,7 +331,26 @@ ozayApp.controller('DirectoryController', function ($scope, DirectoryService) {
 	});
 });
 
+ozayApp.controller('SearchController', function ($scope, $rootScope, $stateParams, Search) {
+console.log($stateParams);
+$scope.searchItem = $stateParams.item;
 
+$scope.getSearchItems = function(){
+    var method= 'all';
+    Search.get({method:method, building:$rootScope.selectedBuilding, item:$stateParams.item}, function(data){
+        $scope.searchResult = data;
+    });
+
+}
+$rootScope.$watch('selectedBuilding', function(){
+    if($rootScope.selectedBuilding !== undefined){
+        $scope.getSearchItems();
+
+    }
+
+});
+
+});
 
 
 ozayApp.controller('CollaborateCreateController', function ($scope) {

@@ -1,0 +1,27 @@
+<div>
+Search Result: {{searchItem}}
+</div>
+
+<div ng-repeat="group in searchResult">
+
+    <div ng-repeat="item in group.list">
+
+        <div ng-if="group.type == 'Directory'">
+            <div ng-if="$first == true">
+                Directory Result
+            </div>
+            <div>
+                <a href="#/directory/edit/{{item.login}}">{{item.user.firstName}} {{item.user.lastName}}</a>
+            </div>
+        </div>
+        <div ng-if="group.type == 'Notification'">
+            <div ng-if="$first == true">
+                Notification Result
+            </div>
+            <div>
+                <a href="#/notification_archive">{{item.subject}}</a>
+            </div>
+        </div>
+
+    </div>
+</div>

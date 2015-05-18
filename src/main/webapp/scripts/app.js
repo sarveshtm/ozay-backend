@@ -306,7 +306,14 @@ ozayApp
 		access: {
 			authorizedRoles: [USER_ROLES.user]
 		}
-	});
+	}).state('home.search', {
+      		url: "/search/:item",
+      		templateUrl: 'views/search.html',
+      		controller: 'SearchController',
+      		access: {
+      			authorizedRoles: [USER_ROLES.user]
+      		}
+      	});
 
 
 
@@ -354,9 +361,11 @@ ozayApp
 		}
 	};
 })
-
-.run(function($rootScope, $cookieStore, $location, $http, $window, AuthenticationSharedService, Session, USER_ROLES) {
+.factory('custom', function ($rootScope, $cookieStore) {
     $rootScope.selectedBuilding = $cookieStore.selectedBuilding;
+})
+.run(function($rootScope, $cookieStore, $location, $http, $window, AuthenticationSharedService, Session, USER_ROLES) {
+
 	$rootScope.authenticated = false;
 	$rootScope.$on('$stateChangeStart', function (event, next) {
 		$rootScope.isAuthorized = AuthenticationSharedService.isAuthorized;
