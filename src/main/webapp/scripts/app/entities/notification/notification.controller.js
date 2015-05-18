@@ -1,15 +1,26 @@
 'use strict';
 
 angular.module('ozayApp')
-.controller('NotificationController', function ($scope, $filter, $rootScope, Notification, UserDetail) {
+.controller('NotificationController', function ($scope, $filter, $rootScope, $cookieStore, Notification, UserDetail) {
 	$scope.button = true;
 	$scope.notifications = [];
+
 	$scope.loadAll = function() {
-		Notification.query(function(result) {
+	    var method= 'building';
+
+
+		Notification.get({method:method, id:$rootScope.selectedBuilding}, function(result) {
 			$scope.notifications = result;
 		});
 	};
-	$scope.loadAll();
+
+
+    $rootScope.$watch('selectedBuilding', function() {
+            if($rootScope.selectedBuilding !== undefined){
+                $scope.loadAll();
+            }
+       });
+
 	$scope.showSuccessAlert = false;
 	$scope.predicate = '-createdDate';
 

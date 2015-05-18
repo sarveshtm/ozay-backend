@@ -5,7 +5,7 @@ angular.module('ozayApp')
 
 	$scope.button = true;
 	$scope.building = {};
-console.log($state);
+    console.log($state);
 
 	$scope.startProcess = function () {
 		console.log($scope.building);

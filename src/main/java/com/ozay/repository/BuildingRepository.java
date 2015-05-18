@@ -26,6 +26,11 @@ public class BuildingRepository {
         });
     }
 
+    public Building getBuilding(int id){
+        return (Building)jdbcTemplate.queryForObject("SELECT * FROM building WHERE id = ?", new Object[]{id}, new BuildingRowMapper(){
+        });
+    }
+
     public int create(Building building){
 
         String insert = "INSERT INTO building(" +

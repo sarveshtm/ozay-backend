@@ -3,8 +3,10 @@ package com.ozay.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import com.ozay.domain.Notification;
 import com.ozay.domain.User;
+import com.ozay.repository.BuildingRepository;
 import com.ozay.repository.NotificationRepository;
 import com.ozay.repository.UserRepository;
+import com.ozay.security.AuthoritiesConstants;
 import com.ozay.security.SecurityUtils;
 import com.ozay.service.MailService;
 import com.ozay.web.rest.dto.JsonResponse;
@@ -17,6 +19,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import java.util.List;
 import java.util.Optional;
@@ -38,6 +41,10 @@ public class NotificationResource {
 
     @Inject
     private MailService mailService;
+
+    @Inject
+    private BuildingRepository buildingRepository;
+
     /**
      * POST  /notifications -> Create a new notification.
      */
@@ -50,7 +57,8 @@ public class NotificationResource {
         User currentUser = userRepository.findOne(SecurityUtils.getCurrentLogin());
         notification.setCreatedBy(currentUser.getLogin());
         notification.setCreatedDate(new DateTime());
-        String subject = "EAST RIVER TOWER Notice : " + notification.getSubject();
+        String buildingName = buildingRepository.getBuilding(notification.getBuildingId()).getName();
+        String subject = buildingName + " Notice : " + notification.getSubject();
         int emailCount = mailService.sendGrid(subject, notification.getNotice(), notification.getBuildingId());
         log.debug("REST request to save Notification : {}", notification);
         notificationRepository.save(notification);
@@ -69,15 +77,28 @@ public class NotificationResource {
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
+    @RolesAllowed(AuthoritiesConstants.ADMIN)
     public List<Notification> getAll() {
         log.debug("REST request to get all Notifications");
         return notificationRepository.findAll();
     }
 
     /**
+     * GET  /notifications -> get all the notifications.
+     */
+    @RequestMapping(value = "/notifications/building/{buildingId}",
+        method = RequestMethod.GET,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    public List<Notification> getAllByBuilding(@PathVariable Integer buildingId) {
+        log.debug("REST request to get all Notifications by Building");
+        return notificationRepository.findAllByBuilding(buildingId);
+    }
+
+    /**
      * GET  /notifications/:id -> get the "id" notification.
      */
-    @RequestMapping(value = "/notifications/{id}",
+    @RequestMapping(value = "/notifications/notification/{id}",
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed

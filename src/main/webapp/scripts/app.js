@@ -354,7 +354,9 @@ ozayApp
 		}
 	};
 })
-.run(function($rootScope, $location, $http, $window, AuthenticationSharedService, Session, USER_ROLES) {
+
+.run(function($rootScope, $cookieStore, $location, $http, $window, AuthenticationSharedService, Session, USER_ROLES) {
+    $rootScope.selectedBuilding = $cookieStore.selectedBuilding;
 	$rootScope.authenticated = false;
 	$rootScope.$on('$stateChangeStart', function (event, next) {
 		$rootScope.isAuthorized = AuthenticationSharedService.isAuthorized;
