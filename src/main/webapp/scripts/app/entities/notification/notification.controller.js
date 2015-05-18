@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('ozayApp')
-.controller('NotificationController', function ($scope, $filter, Notification, UserDetail) {
+.controller('NotificationController', function ($scope, $filter, $rootScope, Notification, UserDetail) {
 	$scope.button = true;
 	$scope.notifications = [];
 	$scope.loadAll = function() {
@@ -21,6 +21,7 @@ angular.module('ozayApp')
 			$scope.showErrorAlert = false;
 			var message = "Do you want to send to " + result + " recipients";
 			if(confirm(message)){
+			    $scope.notification.buildingId = $rootScope.selectedBuilding;
 				Notification.save($scope.notification,
 						function (data) {
 					$scope.showSuccessAlert = true;
@@ -38,7 +39,7 @@ angular.module('ozayApp')
 
 	$scope.create = function () {
 		$scope.button = false;
-		$scope.startProcess('building_user_count', 1);
+		$scope.startProcess('building_user_count', $rootScope.selectedBuilding);
 	};
 
 	$scope.update = function (id) {
@@ -68,7 +69,6 @@ angular.module('ozayApp')
 		$scope.notification = {buildingId: null, notice: null, issueDate: null, createdBy: null, createdDate: null, id: null};
 	};
 	$scope.notification = {};
-
 	$scope.notification.issueDate = new Date();
 
 	$scope.minDate = new Date();

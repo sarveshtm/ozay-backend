@@ -14,6 +14,16 @@ public class BuildingRowMapper implements RowMapper {
         Building building = new Building();
         building.setId(rs.getInt("id"));
         building.setName(rs.getString("name"));
+        building.setAddress_1("address_1");
+        building.setAddress_2("address_2");
+        building.setState("state");
+        building.setZip("zip");
+        building.setPhone("phone");
+        building.setCreatedBy("created_by");
+        building.setEmail(rs.getString("email"));
+        building.setState(rs.getString("state"));
+        building.setLastModifiedBy("last_modified_by");
+
         return building;
     }
 }

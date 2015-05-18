@@ -12,6 +12,7 @@ import com.ozay.repository.UserRepository;
 import com.ozay.security.SecurityUtils;
 import com.ozay.service.UserDetailService;
 import com.ozay.service.UserService;
+import com.ozay.web.rest.dto.BuildingDTO;
 import com.ozay.web.rest.dto.JsonResponse;
 import com.ozay.web.rest.dto.UserDTO;
 import org.slf4j.Logger;
@@ -27,6 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -59,7 +61,7 @@ public class BuildingResource {
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public List<Building> getAll(HttpServletRequest request) {
+    public List<BuildingDTO> getAll(HttpServletRequest request) {
         log.debug("REST request to get building by user");
         log.debug("REST GET LOGIN USER : {}", SecurityUtils.getCurrentLogin());
         User user = userService.getUserWithAuthorities();
@@ -72,12 +74,23 @@ public class BuildingResource {
             }
         }
 
+        List<Building> buildingList = buildingRepository.getBuildings();
         if(isAdmin == true){
-            return buildingRepository.getBuildings();
+            buildingList=  buildingRepository.getBuildings();
         } else {
-            return buildingRepository.getBuildingsByUser(SecurityUtils.getCurrentLogin());
+            buildingList = buildingRepository.getBuildingsByUser(SecurityUtils.getCurrentLogin());
         }
 
+        List<BuildingDTO> buildingDtoList = new ArrayList<BuildingDTO>();
+
+        for(Building building : buildingList){
+            BuildingDTO buildingDTO = new BuildingDTO();
+            buildingDTO.setId(building.getId());
+            buildingDTO.setName(building.getName());
+            buildingDtoList.add(buildingDTO);
+
+        }
+        return buildingDtoList;
     }
 
     /**
