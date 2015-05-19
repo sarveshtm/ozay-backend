@@ -26,10 +26,11 @@ angular.module('ozayApp')
 	}
 
 })
-.controller('DirectoryDetailController', function ($scope, $cookieStore, $routeParams, $location, $stateParams, UserDetail, $rootScope) {
+.controller('DirectoryDetailController', function ($scope, $cookieStore, $routeParams, $location, $state, $stateParams, UserDetail, $rootScope) {
 	if($stateParams.method != 'edit' && $stateParams.method != 'new'){
 		$location.path('/error').replace();
 	}
+
 	$scope.submitted = false;
 	$scope.UserDetail = {};
 	$scope.UserDetail.user = {};
@@ -109,11 +110,16 @@ angular.module('ozayApp')
 
 	$scope.getUser = function(method, id, login){
 		UserDetail.getUser({method:method, id: id, login:login}, function(result) {
+
 			if(result.unit == null){
 				result.unit = "";
 			}
 			$scope.UserDetail = result;
 			$scope.model.radioBox = result.renter;
+		}, function(){
+
+		    $state.go("home.directory");
+
 		});
 	}
 	if($stateParams.method == 'edit'){
