@@ -474,3 +474,17 @@ display: block;
       height: 80px;
     }
 }
+
+.search-result{
+    margin-bottom:10px;
+    font-size:20px;
+    font-weight: bold;
+    text-decoration:underline;
+}
+
+.search-item-title{
+    margin-top:10px;
+
+    font-size:18px;
+    font-weight: bold;
+}

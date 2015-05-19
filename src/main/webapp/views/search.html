@@ -1,5 +1,5 @@
-<div>
-Search Result: {{searchItem}}
+<div class="search-result">
+Search Result: "{{searchItem}}"
 </div>
 
 <div ng-repeat="group in searchResult">
@@ -7,7 +7,7 @@ Search Result: {{searchItem}}
     <div ng-repeat="item in group.list">
 
         <div ng-if="group.type == 'Directory'">
-            <div ng-if="$first == true">
+            <div ng-if="$first == true" class="search-item-title">
                 Directory Result
             </div>
             <div>
@@ -15,7 +15,7 @@ Search Result: {{searchItem}}
             </div>
         </div>
         <div ng-if="group.type == 'Notification'">
-            <div ng-if="$first == true">
+            <div ng-if="$first == true" class="search-item-title">
                 Notification Result
             </div>
             <div>
