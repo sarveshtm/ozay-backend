@@ -30,8 +30,8 @@ public class UserDetailRepository {
     }
 
     public List<UserDetail> searchUsers(int buildingId, String item){
-        String likeItem = "%" + item + "%";
-        return jdbcTemplate.query("Select * FROM user_building ub INNER JOIN t_user u ON ub.login = u.login INNER JOIN user_detail ud ON ud.login = u.login WHERE ub.building_id =? AND ud.building_id =? AND (u.first_name LIKE ? OR u.last_name LIKE ? OR ud.unit = ?)",
+        String likeItem = "%" + item.toLowerCase() + "%";
+        return jdbcTemplate.query("Select * FROM user_building ub INNER JOIN t_user u ON ub.login = u.login INNER JOIN user_detail ud ON ud.login = u.login WHERE ub.building_id =? AND ud.building_id =? AND (LOWER(u.first_name) LIKE ? OR LOWER(u.last_name) LIKE ? OR LOWER(ud.unit) = ?)",
 
             new Object[]{buildingId, buildingId, item, likeItem, likeItem}, new UserDetailRowMapper(){
 
