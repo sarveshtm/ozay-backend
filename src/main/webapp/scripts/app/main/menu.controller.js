@@ -37,7 +37,12 @@ angular.module('ozayApp')
 
 	$scope.selectedBuilding = {}
 
-	$scope.loadAll();
+    $rootScope.$watch('authenticated', function(){
+        if($rootScope.authenticated == true){
+            $scope.loadAll();
+        }
+    });
+
 
 	$scope.search = {};
 

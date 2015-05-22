@@ -137,6 +137,7 @@ public class UserDetailResource {
         user.setLastName(userDetail.getUser().getLastName());
         user.setEmail(userDetail.getUser().getEmail());
         userRepository.save(user);
+        userDetailRepository.update(userDetail);
 
         return new ResponseEntity<JsonResponse>(json,  new HttpHeaders(), HttpStatus.OK);
     }

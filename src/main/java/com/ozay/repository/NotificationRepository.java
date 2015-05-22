@@ -16,7 +16,7 @@ public interface NotificationRepository extends JpaRepository<Notification,Long>
     @Query("select t from Notification t where t.buildingId = ?1")
     List<Notification> findAllByBuilding(Integer buildingId);
 
-    @Query("select t from Notification t where t.buildingId = ?1 AND (t.subject LIKE %?2% OR t.notice LIKE %?2% )")
+    @Query("select t from Notification t where t.buildingId = ?1 AND ( (LOWER(t.subject)) LIKE ?2 OR (LOWER(t.notice)) LIKE ?2 )")
     List<Notification> searchNotification(int buildingId, String item);
 
 }

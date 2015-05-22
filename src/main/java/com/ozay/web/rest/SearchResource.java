@@ -67,7 +67,9 @@ public class SearchResource {
 
         SearchDTO notification = new SearchDTO();
         notification.setType("Notification");
-        notification.setList(notificationRepository.searchNotification(buildingId, item));
+
+        String likeItem = "%" + item + "%";
+        notification.setList(notificationRepository.searchNotification(buildingId, likeItem));
         searchDTOs.add(notification);
 
         return searchDTOs;
