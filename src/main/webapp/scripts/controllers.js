@@ -43,8 +43,10 @@ ozayApp.controller('LoginController', function ($scope, $location, Authenticatio
 	}
 });
 
-ozayApp.controller('LogoutController', function ($location, AuthenticationSharedService) {
+ozayApp.controller('LogoutController', function ($location, $cookieStore, AuthenticationSharedService, $rootScope) {
 	AuthenticationSharedService.logout();
+    $cookieStore.remove('selectedBuilding');
+    delete $rootScope.selectedBuilding;
 	$location.path('/login').replace();
 });
 

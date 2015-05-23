@@ -4,7 +4,7 @@ angular.module('ozayApp')
 .controller('MenuController', function ($scope,$cookieStore, Building, $state, $location, $rootScope) {
 	$scope.loadAll = function() {
 		Building.query(function(result) {
-			$scope.buildings = result;
+            $scope.buildings = result;
 			var building = $rootScope.selectedBuilding;
 			if(building === undefined){
 				building = $cookieStore.get('selectedBuilding');
@@ -16,15 +16,18 @@ angular.module('ozayApp')
 				$cookieStore.put('selectedBuilding', result[0].id);
 				$scope.selectedBuilding.buildingId = result[0].id;
 			}
-			$scope.selectedBuilding.buildingId = building;
 			var optionText = '';
 			angular.forEach(result, function(value, key) {
 				if(value.id == $scope.selectedBuilding.buildingId){
 					optionText = value.name;
 				}
 			});
-			$scope.selectedBuilding.buildingId = building;
+
 			$scope.building_name = optionText;
+
+
+
+
 		});
 	};
 	$scope.changeBuilding = function(){
@@ -38,7 +41,7 @@ angular.module('ozayApp')
 	$scope.selectedBuilding = {}
 
     $rootScope.$watch('authenticated', function(){
-        if($rootScope.authenticated == true){
+        if($rootScope.authenticated == true && $scope.buildings == undefined){
             $scope.loadAll();
         }
     });
