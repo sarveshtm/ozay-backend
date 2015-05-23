@@ -196,10 +196,10 @@ select#building_list {
   border-radius: 0 0 5px 5px;
 }
 .page_title {
-  padding: 90px 0 0 40px;
+  padding: 50px 0 0 40px;
   width: 100%;
   background-color: #E4E5E0;
-  min-height: 140px;
+  min-height: 90px;
   top: 50px;
   z-index: 1000;
 }
@@ -213,16 +213,7 @@ select#building_list {
     background-color:#F3F5F4;
     height:100%;
 }
-@media(max-width:767px){
-    .page_title {
-      padding: 140px 0 0 40px;
-      width: 100%;
-      background-color: #E4E5E0;
-      min-height: 190px;
-      top: 50px;
-      z-index: 1000;
-    }
-}
+
 .button_group{
     float:right;
 }
@@ -231,7 +222,6 @@ select#building_list {
 }
 
 .navbar-static-top{
-    position: fixed;
     top: 0;
     width: 100%;
 }

@@ -130,6 +130,12 @@ angular.module('ozayApp')
 		$('#side-menu').metisMenu();
 		var url = $location.$$path;
 
+		$(document).on('click', '.navbar-collapse a', function(){
+            if($(this).attr('href') != '#'){
+                $('.sidebar-nav').collapse('hide');
+            }
+		});
+
 		var  topOffset = 0;
 		var height = (($window.innerHeight > 0) ? $window.innerHeight : this.screen.height) - 1;
 		height = height - topOffset;
