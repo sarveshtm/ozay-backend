@@ -16,9 +16,9 @@
             </a>
         </div>
         <!-- /.navbar-header -->
-        <form id="navbar-search-form" role="search" action="search.html" class="navbar-form ng-pristine ng-valid">
+        <form id="navbar-search-form" role="search" ng-submit="searchTopNav()" class="navbar-form ng-pristine ng-valid">
             <div class="form-group has-feedback">
-                <input type="text" placeholder="Type and hit enter.." class="form-control">
+                <input ng-model="search.searchTopItem" type="text" placeholder="Type and hit enter.." class="form-control">
                 <div search-dismiss="search-dismiss" class="fa fa-times form-control-feedback" ng-click="search_close()"></div>
             </div>
             <button type="submit" class="hidden btn btn-default">Submit</button>
@@ -211,14 +211,18 @@
 
                     </li>
                     <li class="sidebar-search">
+                        <form ng-submit="searchNav()">
                         <div class="input-group custom-search-form">
+
                             <input ng-model="search.searchNavItem" type="text" class="form-control" placeholder="Search...">
                                 <span class="input-group-btn">
-                                <button class="btn btn-default" type="button" ng-click="searchNav()">
+                                <button class="btn btn-default" type="button" ng-click="searchNav()" >
                                     <i class="fa fa-search"></i>
                                 </button>
                             </span>
+
                         </div>
+                        </form>
                         <!-- /input-group -->
                     </li>
                     <li>

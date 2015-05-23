@@ -61,4 +61,11 @@ angular.module('ozayApp')
         }
     }
 
+    $scope.searchTopNav = function(){
+            $scope.search.searchNavItem = "";
+            if($scope.search.searchTopItem != false){
+                $state.go("home.search", {item:$scope.search.searchTopItem});
+            }
+        }
+
 });
