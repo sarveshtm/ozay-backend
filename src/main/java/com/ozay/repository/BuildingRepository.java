@@ -58,7 +58,7 @@ public class BuildingRepository {
             building.getLastModifiedBy(),
         };
 
-        int id = jdbcTemplate.queryForInt(insert, params);
+        int id = jdbcTemplate.queryForObject(insert, Integer.class, params);
         return id;
     }
 }
