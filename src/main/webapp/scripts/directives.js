@@ -132,7 +132,7 @@ angular.module('ozayApp')
 
 		$(document).on('click', '.navbar-collapse a', function(){
             if($(this).attr('href') != '#'){
-                $('.sidebar-nav').collapse('hide');
+                $('.sidebar-nav').removeClass('in');
             }
 		});
 
