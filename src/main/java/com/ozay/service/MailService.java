@@ -49,6 +49,10 @@ public class MailService {
      */
     private String from;
 
+    private static final String EMAIL_PATTERN =
+        "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+            + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+
     @PostConstruct
     public void init() {
         this.from = env.getProperty("spring.mail.from");
@@ -57,14 +61,19 @@ public class MailService {
     public int sendGrid(String subject, String text, int buildingId){
         SendGrid sendgrid = new SendGrid("OzayOrg", "OzayOrg1124");
 
+        int sentCount = 0;
+
         SendGrid.Email email = new SendGrid.Email();
         List<UserDetail> userList = userDetailRepository.getAllUsersByBuilding(buildingId);
         for(UserDetail userDetail : userList){
-            String userEmail = userDetail.getUser().getEmail();
+            String userEmail = userDetail.getEmail();
             if(email != null){
-                email.addSmtpApiTo(userEmail);
+                if(userEmail.matches(EMAIL_PATTERN)){
+                    email.addSmtpApiTo(userEmail);
+                    sentCount++;
                 }
             }
+        }
 
         email.setFrom("noreply@ozay.us");
         email.setSubject(subject);
@@ -79,7 +88,7 @@ public class MailService {
         catch (SendGridException e) {
             System.err.println(e);
         }
-        return userList.size();
+        return sentCount;
     }
 
     @Async

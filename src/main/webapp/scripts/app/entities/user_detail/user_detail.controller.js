@@ -31,6 +31,10 @@ angular.module('ozayApp')
 		$location.path('/error').replace();
 	}
 
+	$scope.goBack = function(){
+	    $state.go('home.directory');
+	}
+
 	$scope.submitted = false;
 	$scope.UserDetail = {};
 	$scope.UserDetail.user = {};
@@ -62,9 +66,14 @@ angular.module('ozayApp')
             				function (data) {
             			$scope.showSuccessAlert = true;
             			$scope.successTextAlert = "Successfully Saved";
+            			$scope.button = true;
             		}, function (error){
             			$scope.showErrorAlert = true;
-            			$scope.errorTextAlert = "Error! Please try later.";
+                                    			$scope.errorTextAlert = "";
+                                                for(var i =0; i< error.data.fieldErrorDTOs.length;i++){
+                                                console.log(error.data.fieldErrorDTOs[i]);
+                                                    $scope.errorTextAlert += error.data.fieldErrorDTOs[i].field + ": " + error.data.fieldErrorDTOs[i].message;
+                                                }
             			$scope.button = true;
             		});
         } else {
@@ -74,12 +83,15 @@ angular.module('ozayApp')
             			$scope.successTextAlert = "Successfully Saved";
             		}, function (error){
             			$scope.showErrorAlert = true;
-            			$scope.errorTextAlert = "Error! Please try later.";
+            			$scope.errorTextAlert = "";
+                        for(var i =0; i< error.data.fieldErrorDTOs.length;i++){
+                        console.log(error.data.fieldErrorDTOs[i]);
+                            $scope.errorTextAlert += error.data.fieldErrorDTOs[i].field + ": " + error.data.fieldErrorDTOs[i].message;
+                        }
+
             			$scope.button = true;
             		});
         }
-
-		$scope.button = true;
 	};
 
 

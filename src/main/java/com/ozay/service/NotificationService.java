@@ -1,0 +1,73 @@
+package com.ozay.service;
+
+import com.ozay.domain.Notification;
+import com.ozay.domain.User;
+import com.ozay.model.UserDetail;
+import com.ozay.repository.BuildingRepository;
+import com.ozay.repository.NotificationRepository;
+import com.ozay.repository.UserDetailRepository;
+import com.ozay.repository.UserRepository;
+import com.ozay.security.SecurityUtils;
+import com.ozay.web.rest.dto.JsonResponse;
+import com.ozay.web.rest.dto.NotificationDTO;
+import com.ozay.web.rest.dto.UserDetailListDTO;
+import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Service class for managing users.
+ */
+
+
+@Service
+@Transactional
+public class NotificationService {
+
+    private final Logger log = LoggerFactory.getLogger(NotificationService.class);
+
+    @Inject
+    private NotificationRepository notificationRepository;
+
+    @Inject
+    private UserRepository userRepository;
+
+    @Inject
+    private MailService mailService;
+
+    @Inject
+    private BuildingRepository buildingRepository;
+
+    public int sendNotice(NotificationDTO notificationDto){
+        Notification notification = new Notification();
+        notification.setBuildingId(notificationDto.getBuildingId());
+        notification.setNotice(notificationDto.getSubject());
+        notification.setIssueDate(notificationDto.getIssueDate());
+        User currentUser = userRepository.findOne(SecurityUtils.getCurrentLogin());
+        notification.setCreatedBy(currentUser.getLogin());
+        notification.setCreatedDate(new DateTime());
+        String buildingName = buildingRepository.getBuilding(notification.getBuildingId()).getName();
+        String subject = buildingName + " Notice : " + notification.getSubject();
+        int emailCount = mailService.sendGrid(subject, notification.getNotice(), notification.getBuildingId());
+        log.debug("REST request to save Notification : {}", notification);
+        notificationRepository.save(notification);
+        JsonResponse json = new JsonResponse();
+
+        String message = "Notice is successfully scheduled to " + emailCount + " recipients";
+        json.setResponse(message);
+
+        return emailCount;
+    }
+
+
+
+}

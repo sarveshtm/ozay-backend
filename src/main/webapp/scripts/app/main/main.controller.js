@@ -6,4 +6,5 @@ angular.module('ozayApp')
             $scope.account = account;
             $scope.isAuthenticated = Principal.isAuthenticated;
         });
+
     });

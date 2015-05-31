@@ -1,4 +1,7 @@
 <div id="wrapper" ng-controller="MenuController">
+    <div id="loading" ng-model="loading.hide" ng-hide="loading.hide">
+        <img id="loading-image" src="/images/ajax-loader.gif" >
+    </div>
     <!-- Navigation -->
     <nav class="navbar navbar-default navbar-static-top topnavbar" role="navigation" style="margin-bottom: 0" >
         <div class="navbar-header">
@@ -242,7 +245,7 @@
                         <!-- /.nav-second-level -->
                     </li>
                     <li>
-                        <a href="#">COLLABORATE<span style="color:red;"> Coming soon</span><span class="fa arrow"></span></a>
+                        <a href="#">COLLABORATE<span style="color:white;"> Coming soon</span><span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
                             <li>
                                 <a href="#/collaborate_create">CREATE</a>

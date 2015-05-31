@@ -16,24 +16,38 @@ public class UserDetailRepository {
     private JdbcTemplate jdbcTemplate;
 
     public List<UserDetail> getAllUsersByBuilding(int buildingId){
-        return jdbcTemplate.query("Select * FROM user_building ub INNER JOIN t_user u ON ub.login = u.login INNER JOIN user_detail ud ON ud.login = u.login WHERE ub.building_id =? AND ud.building_id =?",
+        return jdbcTemplate.query("Select * FROM user_detail WHERE building_id =?",
 
-            new Object[]{buildingId, buildingId}, new UserDetailRowMapper(){
+            new Object[]{buildingId}, new UserDetailRowMapper() {
 
             });
     }
 
-    public UserDetail getAllUserByBuilding(String username, int buildingId){
-        return (UserDetail)jdbcTemplate.queryForObject("Select * FROM user_building ub INNER JOIN t_user u ON ub.login = u.login INNER JOIN user_detail ud ON ud.login = u.login WHERE ub.building_id = ? AND ud.building_id = ?AND u.login = ?",
-            new Object[]{buildingId, buildingId, username}, new UserDetailRowMapper(){
+    public List<UserDetail> getUserByBuildingEmailUnit(int buildingId, String email, String unit){
+        return jdbcTemplate.query("Select * FROM user_detail WHERE building_id = ? AND email = ? AND UPPER(unit) = ?",
+            new Object[]{buildingId, email, unit}, new UserDetailRowMapper() {
+            });
+    }
+
+
+    public UserDetail getUserByBuilding(int id, int buildingId){
+        return (UserDetail)jdbcTemplate.queryForObject("Select * FROM user_detail WHERE building_id = ? AND id = ?",
+            new Object[]{buildingId, id}, new UserDetailRowMapper(){
             });
     }
 
     public List<UserDetail> searchUsers(int buildingId, String item){
         String likeItem = "%" + item.toLowerCase() + "%";
-        return jdbcTemplate.query("Select * FROM user_building ub INNER JOIN t_user u ON ub.login = u.login INNER JOIN user_detail ud ON ud.login = u.login WHERE ub.building_id =? AND ud.building_id =? AND (LOWER(u.first_name) LIKE ? OR LOWER(u.last_name) LIKE ? OR LOWER(ud.unit) = ?)",
+        return jdbcTemplate.query("Select * FROM user_detail " +
+                "WHERE building_id =? AND " +
+                "(LOWER(first_name) LIKE ? " +
+                "OR LOWER(last_name) LIKE ? " +
+                "OR LOWER(phone) LIKE ? " +
+                "OR LOWER(email) LIKE ? " +
+                "OR LOWER(unit) LIKE ? " +
+                "OR LOWER(parking) LIKE ?)",
 
-            new Object[]{buildingId, buildingId, item, likeItem, likeItem}, new UserDetailRowMapper(){
+            new Object[]{buildingId, item, likeItem, likeItem, likeItem, likeItem, likeItem}, new UserDetailRowMapper(){
 
             });
     }
@@ -41,6 +55,10 @@ public class UserDetailRepository {
     public boolean create(UserDetail userDetail){
         String insert = "INSERT INTO user_detail(" +
             "login, " +
+            "first_name," +
+            "last_name," +
+            "email," +
+            "phone," +
             "building_id, " +
             "ownership, " +
             "renter, " +
@@ -51,8 +69,12 @@ public class UserDetailRepository {
             "staff, " +
             "board, " +
             "resident ) " +
-            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         Object[] params = new Object[] { userDetail.getLogin(),
+            userDetail.getFirstName(),
+            userDetail.getLastName(),
+            userDetail.getEmail(),
+            userDetail.getPhone(),
             userDetail.getBuildingId(),
             userDetail.getOwnership(),
             userDetail.isRenter(),
@@ -74,6 +96,10 @@ public class UserDetailRepository {
     }
     public boolean update(UserDetail userDetail){
         String update = "UPDATE user_detail SET " +
+            "first_name = ?, " +
+            "last_name = ?, " +
+            "email = ?, " +
+            "phone = ?, " +
             "ownership = ?, " +
             "renter = ?, " +
             "unit = ?, " +
@@ -84,9 +110,13 @@ public class UserDetailRepository {
             "board = ?, " +
             "resident = ? " +
             "WHERE building_id = ? " +
-            "AND login = ?";
+            "AND id = ?";
 
         Object[] params = new Object[] {
+            userDetail.getFirstName(),
+            userDetail.getLastName(),
+            userDetail.getEmail(),
+            userDetail.getPhone(),
             userDetail.getOwnership(),
             userDetail.isRenter(),
             userDetail.getUnit(),
@@ -97,7 +127,8 @@ public class UserDetailRepository {
             userDetail.isBoard(),
             userDetail.isResident(),
             userDetail.getBuildingId(),
-            userDetail.getLogin()
+            userDetail.getId()
+
         };
 
         int count = jdbcTemplate.update(update, params);

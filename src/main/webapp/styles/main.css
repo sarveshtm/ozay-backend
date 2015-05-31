@@ -420,19 +420,31 @@ display: block;
     margin:0;
  }
  .ozay-checkbox_ul li{
-    width:25%;
+
     display: inline-block;
     background-color:#F1F5F4;
     text-align:center;
     border-right:2px solid white;
  }
+ .block_4 li{
+    width:25%;
+ }
+
+  .block_5 li{
+     width:20%;
+  }
 
  @media (max-width: 767px) {
    .ozay-checkbox_ul li{
-          width:100%;
           border:none;
           border-bottom:1px solid white;
       }
+       .block_4 li{
+          width:100%;
+       }
+       .block_5 li{
+            width:100%;
+         }
   }
 
  .ozay-checkbox_ul li.active{
@@ -451,11 +463,11 @@ display: block;
   .ozay-checkbox_ul li.inactive{
       background-color:#F1F5F4;
    }
-  .block_4 li a{
-    cursor:pointer;
-    height:40px;
-    display:block;
-  }
+  .block_4 li a, .block_5 li a{
+       cursor:pointer;
+       height:40px;
+       display:block;
+     }
 .ozay-checkbox_ul input{
     display:none;
 }
@@ -478,3 +490,30 @@ display: block;
     font-size:18px;
     font-weight: bold;
 }
+
+#loading{
+    position:fixed;
+    width:100%;
+    height:100%;
+    text-align:center;
+    z-index:99999;
+    background-color:#F3F5F4;
+    display:table-cell; vertical-align:middle; text-align:center
+}
+
+#loading{
+    position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        display: flex; /* add */
+        justify-content: center; /* add to align horizontal */
+        align-items: center; /* add to align vertical */
+        z-index:99999;
+}
+#loading-image{
+    vertical-align: middle;
+    display: inline-block;
+}
+

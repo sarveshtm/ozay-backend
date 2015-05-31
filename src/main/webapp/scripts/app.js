@@ -4,7 +4,7 @@
 var httpHeaders;
 
 var ozayApp = angular.module('ozayApp', ['http-auth-interceptor', 'tmh.dynamicLocale',
-                                         'ngResource', 'ngRoute', 'ngCookies', 'ozayAppUtils', 'pascalprecht.translate', 'truncate', 'ui.router']);
+                                         'ngResource', 'ngRoute', 'ngCookies', 'ozayAppUtils', 'pascalprecht.translate', 'truncate', 'ui.router', 'angularjs-dropdown-multiselect']);
 
 ozayApp
 .config(function ($routeProvider, $httpProvider, $translateProvider, tmhDynamicLocaleProvider, $stateProvider, $urlRouterProvider, USER_ROLES) {
@@ -232,7 +232,7 @@ ozayApp
 	.state('home.home', {
 		url: '/',
 		templateUrl: "/views/blank.html",
-		controller: 'MainController',
+
 		access: {
 			authorizedRoles: [USER_ROLES.user]
 		}
@@ -255,6 +255,7 @@ ozayApp
 	.state('home.notification_archive', {
 		url: "/notification_archive",
 		templateUrl: "/views/notification_archive.html",
+		controller: 'NotificationArchiveController',
 		access: {
 			authorizedRoles: [USER_ROLES.user]
 		}

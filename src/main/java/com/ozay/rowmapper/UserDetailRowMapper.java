@@ -15,7 +15,12 @@ public class UserDetailRowMapper implements RowMapper {
 
     public UserDetail mapRow(ResultSet rs, int rowNum) throws SQLException {
         UserDetail userDetail = new UserDetail();
+        userDetail.setId(rs.getInt("id"));
         userDetail.setLogin(rs.getString("login"));
+        userDetail.setEmail(rs.getString("email"));
+        userDetail.setPhone(rs.getString("phone"));
+        userDetail.setFirstName(rs.getString("first_name"));
+        userDetail.setLastName(rs.getString("last_name"));
         userDetail.setBuildingId(rs.getInt("building_id"));
         userDetail.setOwnership(rs.getDouble("ownership"));
         userDetail.setRenter(rs.getBoolean("renter"));
@@ -26,15 +31,6 @@ public class UserDetailRowMapper implements RowMapper {
         userDetail.setBoard(rs.getBoolean("board"));
         userDetail.setResident(rs.getBoolean("resident"));
 
-        User user = new User();
-        user.setPhone(rs.getString("phone"));
-        user.setFirstName(rs.getString("first_name"));
-        user.setLastName(rs.getString("last_name"));
-        user.setEmail(rs.getString("email"));
-        user.setLogin(rs.getString("login"));
-
-
-        userDetail.setUser(user);
         return userDetail;
     }
 }

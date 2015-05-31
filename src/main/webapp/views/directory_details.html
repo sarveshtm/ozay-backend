@@ -1,11 +1,12 @@
 <form name="form" novalidate="" class="simple-form" ng-submit="roleValidationCheck() && form.$valid && create(UserDetail)">
+    <div class="row">
     <div class="col-lg-12">
         <div class="panel panel-default page_content">
             <div id="page_content_title" class="panel-heading">
                 DIRECTORY | {{type}}
                 <div class="button_group">
-                    <button class="btn btn-default" type="submit" ng-click="submitted=true"ng-disabled="!button">Submit</button>
-                    <button class="btn btn-default" type="button">Cancel</button>
+                    <button class="btn btn-default" type="submit" ng-click="submitted=true" ng-disabled="!button">Submit</button>
+                    <button class="btn btn-default" type="button" ng-click="goBack()">Cancel</button>
                 </div>
                 <div class="clear"></div>
             </div>
@@ -26,7 +27,7 @@
                         <div class="form-group">
                             <div class="col-lg-12" ng-class="{ 'has-error' : submitted && form.first_name.$invalid}">
                                 <label class="control-label">First Name</label>
-                                <input ng-model="UserDetail.user.firstName" name="first_name" class="form-control" type="text" value="{{UserDetail.user.firstName}}" required>
+                                <input ng-model="UserDetail.firstName" name="first_name" class="form-control" type="text" value="{{UserDetail.firstName}}" required>
                                 <input type="hidden" ng-model="UserDetail.buildingId" value="{{rootScope.selectedBuilding}}">
                                 <p ng-show="submitted && form.first_name.$error.required" class="help-block has-error">Required</p>
                             </div>
@@ -34,7 +35,7 @@
                         <div class="form-group">
                             <div class="col-lg-12" ng-class="{ 'has-error' : submitted &&  form.last_name.$invalid}">
                                 <label class="control-label">Last Name</label>
-                                <input ng-model="UserDetail.user.lastName" name="last_name" required class="form-control" type="text" value="{{UserDetail.user.lastName}}">
+                                <input ng-model="UserDetail.lastName" name="last_name" required class="form-control" type="text" value="{{UserDetail.lastName}}">
                                 <p ng-show="submitted && form.last_name.$error.required" class="help-block has-error">Required</p>
                             </div>
                         </div>
@@ -65,7 +66,7 @@
                         <div class="form-group">
                             <div class="col-lg-12" ng-class="{ 'has-error' : submitted &&  form.email.$invalid}">
                                 <label class="control-label">Email</label>
-                                <input ng-model="UserDetail.user.email"  name="email" class="form-control" type="email" value="{{UserDetail.user.email}} required">
+                                <input ng-model="UserDetail.email"  name="email" class="form-control" type="email" value="{{UserDetail.email}} required">
                                 <p ng-show="submitted && form.email.$error.required" class="help-block">Required</p>
                                 <p ng-show="submitted && form.email.$error.email" class="help-block">Enter Email Address</p>
                             </div>
@@ -77,12 +78,11 @@
                         <div class="form-group">
                             <div class="col-lg-12">
                                 <label class="control-label">Phone#</label>
-                                <input ng-model="UserDetail.user.phone" class="form-control" type="text" value="{{UserDetail.user.phone}}" ng-change="roleValidation()">
+                                <input ng-model="UserDetail.phone" class="form-control" type="text" value="{{UserDetail.phone}}" ng-change="roleValidation()">
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="col-lg-12" ng-class="{ 'has-error' : submitted && roleValidation == false}">
-
                                 <label class="control-label">Role</label>
                                 <ul class="ozay-checkbox_ul block_4">
                                     <li ng-class="{'active': UserDetail[obj.name],'inactive': !UserDetail[obj.name]}" ng-repeat="obj in roleList"><a ng-click="UserDetail[obj.name] = !UserDetail[obj.name]"><input ng-model="UserDetail[obj.name]"  type="checkbox" value='1' name="{{obj.name}}" >{{obj.label}}</a></li>
@@ -112,6 +112,7 @@
 
             </div>
         </div>
+    </div>
     </div>
     <div class="clear"></div>
     <!-- /.row -->

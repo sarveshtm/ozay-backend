@@ -9,7 +9,9 @@ import com.ozay.repository.UserRepository;
 import com.ozay.security.AuthoritiesConstants;
 import com.ozay.security.SecurityUtils;
 import com.ozay.service.MailService;
+import com.ozay.service.NotificationService;
 import com.ozay.web.rest.dto.JsonResponse;
+import com.ozay.web.rest.dto.NotificationDTO;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,7 +42,7 @@ public class NotificationResource {
     private UserRepository userRepository;
 
     @Inject
-    private MailService mailService;
+    private NotificationService notificationService;
 
     @Inject
     private BuildingRepository buildingRepository;
@@ -53,15 +55,10 @@ public class NotificationResource {
         consumes = "application/json",
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public ResponseEntity<JsonResponse> create(@RequestBody Notification notification) {
-        User currentUser = userRepository.findOne(SecurityUtils.getCurrentLogin());
-        notification.setCreatedBy(currentUser.getLogin());
-        notification.setCreatedDate(new DateTime());
-        String buildingName = buildingRepository.getBuilding(notification.getBuildingId()).getName();
-        String subject = buildingName + " Notice : " + notification.getSubject();
-        int emailCount = mailService.sendGrid(subject, notification.getNotice(), notification.getBuildingId());
-        log.debug("REST request to save Notification : {}", notification);
-        notificationRepository.save(notification);
+    public ResponseEntity<JsonResponse> create(@RequestBody NotificationDTO notificationDto) {
+        log.debug("REST request to save Notification : {}", notificationDto);
+        //int emailCount = notificationService.sendNotice(notificationDto);
+        int emailCount = 0;
         JsonResponse json = new JsonResponse();
 
         String message = "Notice is successfully scheduled to " + emailCount + " recipients";

@@ -2,13 +2,30 @@
 
 /* Controllers */
 
-ozayApp.controller('MainController', function ($scope, $location) {
+ozayApp.controller('MainController', function ($scope, $location, $rootScope) {
 	$scope.search_open = function(){
 		$('#navbar-search-form').addClass('open');
 	}
 	$scope.search_close = function(){
 		$('#navbar-search-form').removeClass('open');
 	}
+	$scope.loading = {};
+    $scope.loading.hide = false;
+
+    $scope.checkPageReady = function(){
+        if($rootScope.authenticated == true && $rootScope.buildingReady == true){
+            $scope.loading.hide = true;
+        }
+    }
+
+	$rootScope.$watch('pageReady', function(){
+           $scope.checkPageReady();
+     });
+
+     $rootScope.$watch('buildingReady', function(){
+
+                $scope.checkPageReady();
+          });
 });
 
 ozayApp.controller('AdminController', function ($scope) {

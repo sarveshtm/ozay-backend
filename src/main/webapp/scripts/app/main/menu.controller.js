@@ -24,11 +24,10 @@ angular.module('ozayApp')
 			});
 
 			$scope.building_name = optionText;
-
-
-
-
+			$rootScope.buildingReady = true;
 		});
+
+
 	};
 	$scope.changeBuilding = function(){
 		$cookieStore.put('selectedBuilding', $scope.selectedBuilding.buildingId);
@@ -41,7 +40,7 @@ angular.module('ozayApp')
 	$scope.selectedBuilding = {}
 
     $rootScope.$watch('authenticated', function(){
-        if($rootScope.authenticated == true && $scope.buildings == undefined){
+        if($rootScope.authenticated == true){
             $scope.loadAll();
         }
     });
