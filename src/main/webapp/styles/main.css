@@ -501,16 +501,15 @@ display: block;
     display:table-cell; vertical-align:middle; text-align:center
 }
 
-#loading{
-    position: fixed;
+#loading-center{
+        position: fixed;
         top: 0;
         bottom: 0;
         left: 0;
         right: 0;
-        display: flex; /* add */
+display: flex; /* add */
         justify-content: center; /* add to align horizontal */
         align-items: center; /* add to align vertical */
-        z-index:99999;
 }
 #loading-image{
     vertical-align: middle;
