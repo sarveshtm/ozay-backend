@@ -66,6 +66,7 @@ public class DatabaseConfiguration implements EnvironmentAware {
         config.addDataSourceProperty("user", propertyResolver.getProperty("username"));
         config.addDataSourceProperty("password", propertyResolver.getProperty("password"));
 
+
         if (metricRegistry != null) {
 //            config.setMetricRegistry(metricRegistry);
         }

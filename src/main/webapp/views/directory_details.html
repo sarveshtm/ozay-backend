@@ -66,7 +66,7 @@
                         <div class="form-group">
                             <div class="col-lg-12" ng-class="{ 'has-error' : submitted &&  form.email.$invalid}">
                                 <label class="control-label">Email</label>
-                                <input ng-model="UserDetail.email"  name="email" class="form-control" type="email" value="{{UserDetail.email}} required">
+                                <input ng-model="UserDetail.email"  name="email" class="form-control" type="email"  required>
                                 <p ng-show="submitted && form.email.$error.required" class="help-block">Required</p>
                                 <p ng-show="submitted && form.email.$error.email" class="help-block">Enter Email Address</p>
                             </div>

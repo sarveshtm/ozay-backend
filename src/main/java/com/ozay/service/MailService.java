@@ -58,32 +58,30 @@ public class MailService {
         this.from = env.getProperty("spring.mail.from");
     }
 
-    public int sendGrid(String subject, String text, int buildingId){
+    public int sendGrid(String subject, String text, List<String> emailList){
         SendGrid sendgrid = new SendGrid("OzayOrg", "OzayOrg1124");
 
         int sentCount = 0;
 
-        SendGrid.Email email = new SendGrid.Email();
-        List<UserDetail> userList = userDetailRepository.getAllUsersByBuilding(buildingId);
-        for(UserDetail userDetail : userList){
-            String userEmail = userDetail.getEmail();
-            if(email != null){
-                if(userEmail.matches(EMAIL_PATTERN)){
-                    email.addSmtpApiTo(userEmail);
+        SendGrid.Email sendGrid = new SendGrid.Email();
+
+        for(String memberEmail : emailList){
+            if(memberEmail != null){
+                if(memberEmail.matches(EMAIL_PATTERN)){
+                    sendGrid.addSmtpApiTo(memberEmail);
                     sentCount++;
                 }
             }
         }
 
-        email.setFrom("noreply@ozay.us");
-        email.setSubject(subject);
-        email.setText(text);
+        sendGrid.setFrom("noreply@ozay.us");
+        sendGrid.setSubject(subject);
+        sendGrid.setText(text);
 
         try {
-            SendGrid.Response response = sendgrid.send(email);
-            log.debug("Send email with sendgrid ");
+            SendGrid.Response response = sendgrid.send(sendGrid);
+            log.debug("Send email with sendgrid count {}", sentCount);
             System.out.println(response.getMessage());
-            return userList.size();
         }
         catch (SendGridException e) {
             System.err.println(e);

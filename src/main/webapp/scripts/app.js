@@ -190,7 +190,15 @@ ozayApp
 			authorizedRoles: [USER_ROLES.all]
 		}
 	})
-	.state('/logout', {
+	.state('loginRedirect', {
+    		url: "/login?redirect",
+    		templateUrl: "views/login.html",
+    		controller: 'LoginController',
+    		access: {
+    			authorizedRoles: [USER_ROLES.all]
+    		}
+    	})
+	.state('logout', {
 		url: "/logout",
 		templateUrl: "views/login.html",
 		controller: 'LogoutController',
@@ -365,7 +373,7 @@ ozayApp
 .factory('custom', function ($rootScope, $cookieStore) {
     $rootScope.selectedBuilding = $cookieStore.selectedBuilding;
 })
-.run(function($rootScope, $cookieStore, $location, $http, $window, AuthenticationSharedService, Session, USER_ROLES) {
+.run(function($rootScope, $cookieStore, $location, $http, $window, AuthenticationSharedService, Session, USER_ROLES, $state) {
 
 	$rootScope.authenticated = false;
 	$rootScope.$on('$stateChangeStart', function (event, next) {
@@ -396,7 +404,14 @@ ozayApp
 		if ($location.path() !== "/register" &&
 				$location.path() !== "/activate" && $location.path() !== "/login") {
 			var redirect = $location.path();
-			$location.path('/login').search('redirect', redirect).replace();
+//			$location.path('/login').search('redirect', redirect).replace();
+
+            if(redirect.length > 1 && redirect.charAt(0) == '/'){
+                    redirect = redirect.slice(1);
+            } else {
+                redirect = "";
+            }
+			$state.transitionTo('loginRedirect', {redirect:redirect}, {'reload':true});
 		}
 	});
 

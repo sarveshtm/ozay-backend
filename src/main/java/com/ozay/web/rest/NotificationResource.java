@@ -57,8 +57,8 @@ public class NotificationResource {
     @Timed
     public ResponseEntity<JsonResponse> create(@RequestBody NotificationDTO notificationDto) {
         log.debug("REST request to save Notification : {}", notificationDto);
-        //int emailCount = notificationService.sendNotice(notificationDto);
-        int emailCount = 0;
+        int emailCount = notificationService.sendNotice(notificationDto);
+
         JsonResponse json = new JsonResponse();
 
         String message = "Notice is successfully scheduled to " + emailCount + " recipients";

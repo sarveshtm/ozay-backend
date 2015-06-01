@@ -4,11 +4,24 @@ angular.module('ozayApp')
 .controller('MenuController', function ($scope,$cookieStore, Building, $state, $location, $rootScope) {
 	$scope.loadAll = function() {
 		Building.query(function(result) {
-            $scope.buildings = result;
+			$scope.buildings = result;
 			var building = $rootScope.selectedBuilding;
 			if(building === undefined){
-				building = $cookieStore.get('selectedBuilding');
-				$rootScope.selectedBuilding = building;
+				// Check if building in cookie can be accessible to user
+				var tempBuilding = $cookieStore.get('selectedBuilding');
+				if(tempBuilding !== undefined || tempBuilding == false){
+					var accessible = false;
+					for(var i = 0; i< result.length; i++){
+						if(result[i].id == tempBuilding){
+							accessible = true;
+							break;
+						}
+					}
+					if(accessible === true){
+					    building = tempBuilding;
+						$rootScope.selectedBuilding = tempBuilding;
+					}
+				}
 			}
 			if(building !== undefined){
 				$scope.selectedBuilding.buildingId = building;
@@ -27,7 +40,6 @@ angular.module('ozayApp')
 			$rootScope.buildingReady = true;
 		});
 
-
 	};
 	$scope.changeBuilding = function(){
 		$cookieStore.put('selectedBuilding', $scope.selectedBuilding.buildingId);
@@ -39,12 +51,11 @@ angular.module('ozayApp')
 
 	$scope.selectedBuilding = {}
 
-    $rootScope.$watch('authenticated', function(){
-        if($rootScope.authenticated == true){
-            $scope.loadAll();
-        }
-    });
-
+	$rootScope.$watch('authenticated', function(){
+		if($rootScope.authenticated == true){
+			$scope.loadAll();
+		}
+	});
 
 	$scope.search = {};
 
@@ -52,19 +63,18 @@ angular.module('ozayApp')
 
 	$scope.search.searchNavItem = "";
 
+	$scope.searchNav = function(){
+		$scope.search.searchTopItem = "";
+		if($scope.search.searchNavItem != false){
+			$state.go("home.search", {item:$scope.search.searchNavItem});
+		}
+	}
 
-    $scope.searchNav = function(){
-        $scope.search.searchTopItem = "";
-        if($scope.search.searchNavItem != false){
-            $state.go("home.search", {item:$scope.search.searchNavItem});
-        }
-    }
-
-    $scope.searchTopNav = function(){
-            $scope.search.searchNavItem = "";
-            if($scope.search.searchTopItem != false){
-                $state.go("home.search", {item:$scope.search.searchTopItem});
-            }
-        }
+	$scope.searchTopNav = function(){
+		$scope.search.searchNavItem = "";
+		if($scope.search.searchTopItem != false){
+			$state.go("home.search", {item:$scope.search.searchTopItem});
+		}
+	}
 
 });

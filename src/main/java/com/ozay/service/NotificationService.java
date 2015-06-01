@@ -47,6 +47,9 @@ public class NotificationService {
     @Inject
     private BuildingRepository buildingRepository;
 
+    @Inject
+    private UserDetailRepository userDetailRepository;
+
     public int sendNotice(NotificationDTO notificationDto){
         Notification notification = new Notification();
         notification.setBuildingId(notificationDto.getBuildingId());
@@ -56,8 +59,18 @@ public class NotificationService {
         notification.setCreatedBy(currentUser.getLogin());
         notification.setCreatedDate(new DateTime());
         String buildingName = buildingRepository.getBuilding(notification.getBuildingId()).getName();
-        String subject = buildingName + " Notice : " + notification.getSubject();
-        int emailCount = mailService.sendGrid(subject, notification.getNotice(), notification.getBuildingId());
+        String subject = buildingName + " Notice : " + notificationDto.getSubject();
+        notification.setSubject(notificationDto.getSubject());
+
+        List<UserDetail>userDetails = userDetailRepository.getUserEmailsForNotification(notificationDto);
+        log.debug("Notification : size of user details {}", userDetails.size());
+        List<String> emailList = new ArrayList<String>();
+        for (UserDetail userDetail : userDetails){
+            emailList.add(userDetail.getEmail());
+        }
+
+        int emailCount = mailService.sendGrid(subject, notification.getNotice(), emailList);
+
         log.debug("REST request to save Notification : {}", notification);
         notificationRepository.save(notification);
         JsonResponse json = new JsonResponse();

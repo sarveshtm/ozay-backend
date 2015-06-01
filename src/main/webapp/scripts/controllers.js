@@ -2,7 +2,7 @@
 
 /* Controllers */
 
-ozayApp.controller('MainController', function ($scope, $location, $rootScope) {
+ozayApp.controller('MainController', function ($scope, $location, $rootScope, $state) {
 	$scope.search_open = function(){
 		$('#navbar-search-form').addClass('open');
 	}
@@ -13,17 +13,20 @@ ozayApp.controller('MainController', function ($scope, $location, $rootScope) {
     $scope.loading.hide = false;
 
     $scope.checkPageReady = function(){
+    console.log("Maincontroller authenticated" + $rootScope.authenticated);
+    console.log("Maincontroller buildingReady" + $rootScope.authenticated);
         if($rootScope.authenticated == true && $rootScope.buildingReady == true){
             $scope.loading.hide = true;
         }
     }
 
 	$rootScope.$watch('pageReady', function(){
+	console.log("Page Ready function changed Main Controller" );
            $scope.checkPageReady();
      });
 
      $rootScope.$watch('buildingReady', function(){
-
+console.log("buildingReady function changed Main Controller" );
                 $scope.checkPageReady();
           });
 });
@@ -48,10 +51,11 @@ ozayApp.controller('LanguageController', function ($scope, $translate, LanguageS
 ozayApp.controller('MenuController', function ($scope) {
 });
 
-ozayApp.controller('LoginController', function ($scope, $location, AuthenticationSharedService, $cookieStore) {
+ozayApp.controller('LoginController', function ($scope, $location, AuthenticationSharedService, $cookieStore, $stateParams) {
+
 	$scope.rememberMe = true;
+	console.log("Login Controller")
 	$scope.login = function () {
-		$cookieStore.remove("selectedBuilding");
 		AuthenticationSharedService.login({
 			username: $scope.username,
 			password: $scope.password,
@@ -60,11 +64,10 @@ ozayApp.controller('LoginController', function ($scope, $location, Authenticatio
 	}
 });
 
-ozayApp.controller('LogoutController', function ($location, $cookieStore, AuthenticationSharedService, $rootScope) {
+ozayApp.controller('LogoutController', function ($location, $cookieStore, AuthenticationSharedService, $rootScope, $state) {
 	AuthenticationSharedService.logout();
-    $cookieStore.remove('selectedBuilding');
     delete $rootScope.selectedBuilding;
-	$location.path('/login').replace();
+	$state.go('login');
 });
 
 ozayApp.controller('SettingsController', function ($scope, Account) {

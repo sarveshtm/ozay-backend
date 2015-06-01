@@ -2,18 +2,29 @@ package com.ozay.repository;
 
 import com.ozay.model.UserDetail;
 import com.ozay.rowmapper.UserDetailRowMapper;
+import com.ozay.web.rest.dto.NotificationDTO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 
 @Repository
 public class UserDetailRepository {
-
+    private final Logger log = LoggerFactory.getLogger(UserDetail.class);
     @Inject
     private JdbcTemplate jdbcTemplate;
+
+    @Inject
+    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     public List<UserDetail> getAllUsersByBuilding(int buildingId){
         return jdbcTemplate.query("Select * FROM user_detail WHERE building_id =?",
@@ -27,6 +38,71 @@ public class UserDetailRepository {
         return jdbcTemplate.query("Select * FROM user_detail WHERE building_id = ? AND email = ? AND UPPER(unit) = ?",
             new Object[]{buildingId, email, unit}, new UserDetailRowMapper() {
             });
+    }
+
+
+
+    public List<UserDetail> getUserEmailsForNotification(NotificationDTO notificationDTO){
+
+        String query = "Select * FROM user_detail WHERE building_id = :buildingId ";
+
+        MapSqlParameterSource parameterSource = new MapSqlParameterSource();
+
+        parameterSource.addValue("buildingId", notificationDTO.getBuildingId());
+        List<String> whereClauses = new ArrayList<String>();
+
+        if(notificationDTO.isManagement() == true){
+            whereClauses.add(" management = :management ");
+            parameterSource.addValue("management", notificationDTO.isManagement());
+        }
+        if(notificationDTO.isStaff() == true){
+            whereClauses.add(" staff = :staff ");
+            parameterSource.addValue("staff", notificationDTO.isStaff());
+
+        }
+        if(notificationDTO.isBoard() == true){
+            whereClauses.add(" board = :board ");
+
+            parameterSource.addValue("board", notificationDTO.isBoard());
+        }
+        if(notificationDTO.isResident() == true){
+            whereClauses.add(" resident = :resident ");
+            parameterSource.addValue("resident", notificationDTO.isResident());
+        }
+
+
+        boolean hasIds = false;
+        if(notificationDTO.isIndividual() == true && notificationDTO.getIndividuals().size() > 0){
+            log.debug("Notification individual id : {}", notificationDTO.getIndividuals());
+            hasIds = true;
+            parameterSource.addValue("ids", notificationDTO.getIndividuals());
+        }
+        String restQuery = "";
+        if(whereClauses.size() > 0 || (notificationDTO.isIndividual() == true && notificationDTO.getIndividuals().size() > 0)){
+            boolean hasAndQuery = false;
+            restQuery += " AND ( ";
+            for(int i = 0; i<whereClauses.size(); i++){
+                hasAndQuery = true;
+                if(i != 0){
+                    restQuery += " AND ";
+                }
+                restQuery += whereClauses.get(i);
+            }
+            if(hasIds == true){
+                if(hasAndQuery == true){
+                    restQuery += " OR ";
+                }
+                restQuery += " id IN ( :ids ) ";
+            }
+
+            restQuery += " ) ";
+        }
+        log.debug("Notification individual query : {}", query + restQuery);
+
+
+
+        return namedParameterJdbcTemplate.query(query + restQuery,
+            parameterSource ,  new UserDetailRowMapper() );
     }
 
 
