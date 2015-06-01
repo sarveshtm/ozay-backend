@@ -387,6 +387,8 @@ ozayApp
 	$rootScope.$on('event:auth-loginConfirmed', function(data) {
 
 		$rootScope.authenticated = true;
+
+		console.log( $rootScope.authenticated )
 		if ($location.path() === "/login") {
 			var search = $location.search();
 			if (search.redirect !== undefined) {
