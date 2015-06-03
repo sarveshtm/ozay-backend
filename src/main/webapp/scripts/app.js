@@ -190,6 +190,14 @@ ozayApp
 			authorizedRoles: [USER_ROLES.all]
 		}
 	})
+	.state('activate', {
+    		url: "/activate?key",
+    		templateUrl: "views/activate.html",
+    		controller: 'ActivationController',
+    		access: {
+    			authorizedRoles: [USER_ROLES.all]
+    		}
+    	})
 	.state('loginRedirect', {
     		url: "/login?redirect",
     		templateUrl: "views/login.html",

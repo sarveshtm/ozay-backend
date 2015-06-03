@@ -139,9 +139,11 @@ ozayApp.controller('RegisterController', function ($scope, $translate, Register)
 	}
 });
 
-ozayApp.controller('ActivationController', function ($scope, $routeParams, Activate) {
-	Activate.get({key: $routeParams.key},
+ozayApp.controller('ActivationController', function ($scope, $routeParams, Activate, $stateParams) {
+
+	Activate.get({key: $stateParams.key},
 			function (value, responseHeaders) {
+			console.log(responseHeaders);
 		$scope.error = null;
 		$scope.success = 'OK';
 	},
