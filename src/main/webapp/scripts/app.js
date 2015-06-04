@@ -265,7 +265,7 @@ ozayApp
 		templateUrl: "/views/notification_create.html",
 		controller: 'NotificationController',
 		access: {
-			authorizedRoles: [USER_ROLES.user]
+			authorizedRoles: [USER_ROLES.admin, USER_ROLES.access_notification]
 		}
 	})
 	.state('home.notification_archive', {
@@ -273,7 +273,7 @@ ozayApp
 		templateUrl: "/views/notification_archive.html",
 		controller: 'NotificationArchiveController',
 		access: {
-			authorizedRoles: [USER_ROLES.user]
+			authorizedRoles: [USER_ROLES.admin, USER_ROLES.access_notification]
 		}
 	})
 	.state('home.collaborate_create', {
@@ -305,7 +305,7 @@ ozayApp
 		templateUrl: 'views/directory.html',
 
 		access: {
-			authorizedRoles: [USER_ROLES.user]
+			authorizedRoles: [USER_ROLES.admin, USER_ROLES.access_directory]
 		}
 	})
 	.state('home.director_details', {
@@ -313,7 +313,7 @@ ozayApp
 		templateUrl: 'views/directory_details.html',
 		controller: 'DirectoryDetailController',
 		access: {
-			authorizedRoles: [USER_ROLES.user]
+			authorizedRoles: [USER_ROLES.admin, USER_ROLES.access_directory]
 		}
 	})
 	.state('home.director_details_new', {
@@ -328,7 +328,7 @@ ozayApp
       		templateUrl: 'views/search.html',
       		controller: 'SearchController',
       		access: {
-      			authorizedRoles: [USER_ROLES.user]
+      			authorizedRoles: [USER_ROLES.admin, USER_ROLES.access_directory]
       		}
       	});
 

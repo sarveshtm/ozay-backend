@@ -238,7 +238,7 @@
                         <a href="#/dashboard">DASHBOARD</a>
                     </li>
 
-                    <li>
+                    <li g-show="isAuthorized(userRoles.access_notification)">
                         <a href="#">NOTIFICATION<span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
                             <li>
@@ -268,7 +268,7 @@
                     <li>
                         <a href="#/">EVENTS</a>
                     </li>
-                    <li>
+                    <li ng-show="isAuthorized(userRoles.access_directory)">
                         <a href="#">DIRECTORY<span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
                             <li>

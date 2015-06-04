@@ -133,13 +133,6 @@ public class User extends AbstractAuditingEntity implements Serializable {
         return authorities;
     }
 
-    public Set<Authority> getAuthorities(List<Authority> authorityList) {
-        for(Authority authority : authorityList){
-            authorities.add(authority);
-        }
-        return authorities;
-    }
-
     public void setAuthorities(Set<Authority> authorities) {
         this.authorities = authorities;
     }

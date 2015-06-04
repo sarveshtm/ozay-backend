@@ -112,6 +112,12 @@ public class UserDetailRepository {
             });
     }
 
+    public UserDetail getUserByBuilding(String login, int buildingId){
+        return (UserDetail)jdbcTemplate.queryForObject("Select * FROM user_detail WHERE building_id = ? AND login = ?",
+            new Object[]{buildingId, login}, new UserDetailRowMapper(){
+            });
+    }
+
     public List<UserDetail> searchUsers(int buildingId, String item){
         String likeItem = "%" + item.toLowerCase() + "%";
         return jdbcTemplate.query("Select * FROM user_detail " +

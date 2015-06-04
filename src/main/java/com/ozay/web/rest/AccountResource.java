@@ -139,9 +139,8 @@ public class AccountResource {
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
     public ResponseEntity<UserDTO> getAccountWithBuildingId(@PathVariable int buildingId) {
-        List<Authority> authorityList = new ArrayList<Authority>();
-        authorityList.add(new Authority("ACCESS_DIRECTORY"));
-        return Optional.ofNullable(userService.getUserWithAuthorities())
+
+        return Optional.ofNullable(userService.getUserWithAuthoritiesAndAddMoreAuthorities(buildingId))
             .map(user -> new ResponseEntity<>(
                 new UserDTO(
                     user.getLogin(),
@@ -150,7 +149,7 @@ public class AccountResource {
                     user.getLastName(),
                     user.getEmail(),
                     user.getLangKey(),
-                    user.getAuthorities(authorityList).stream().map(Authority::getName).collect(Collectors.toList())),
+                    user.getAuthorities().stream().map(Authority::getName).collect(Collectors.toList())),
                 HttpStatus.OK))
             .orElse(new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
     }

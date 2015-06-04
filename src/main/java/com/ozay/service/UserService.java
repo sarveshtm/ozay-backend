@@ -3,8 +3,10 @@ package com.ozay.service;
 import com.ozay.domain.Authority;
 import com.ozay.domain.PersistentToken;
 import com.ozay.domain.User;
+import com.ozay.model.UserDetail;
 import com.ozay.repository.AuthorityRepository;
 import com.ozay.repository.PersistentTokenRepository;
+import com.ozay.repository.UserDetailRepository;
 import com.ozay.repository.UserRepository;
 import com.ozay.security.SecurityUtils;
 import com.ozay.service.util.RandomUtil;
@@ -43,6 +45,9 @@ public class UserService {
 
     @Inject
     private AuthorityRepository authorityRepository;
+
+    @Inject
+    private UserDetailRepository userDetailRepository;
 
     public User activateRegistration(String key) {
         log.debug("Activating user for activation key {}", key);
@@ -104,6 +109,27 @@ public class UserService {
     public User getUserWithAuthorities() {
         User currentUser = userRepository.findOne(SecurityUtils.getCurrentLogin());
         currentUser.getAuthorities().size(); // eagerly load the association
+        return currentUser;
+    }
+
+    @Transactional(readOnly = true)
+    public User getUserWithAuthoritiesAndAddMoreAuthorities(int buildingId) {
+        User currentUser = userRepository.findOne(SecurityUtils.getCurrentLogin());
+        currentUser.getAuthorities().size(); // eagerly load the association
+        try{
+            UserDetail userDetail = userDetailRepository.getUserByBuilding(currentUser.getLogin(), buildingId);
+
+            if(userDetail.isManagement() == true){
+                currentUser.getAuthorities().add(new Authority("ACCESS_DIRECTORY"));
+                currentUser.getAuthorities().add(new Authority("ACCESS_NOTIFICATION"));
+            }
+            else if(userDetail.isStaff() == true){
+                currentUser.getAuthorities().add(new Authority("ACCESS_NOTIFICATION"));
+            }
+        }catch (Exception e){
+            log.debug("UserService getUserWithAuthoritiesAddMoreAuthrities no user detail found {}", currentUser.getLogin());
+        }
+
         return currentUser;
     }
 

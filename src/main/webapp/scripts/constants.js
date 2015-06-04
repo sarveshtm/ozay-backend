@@ -5,7 +5,8 @@
 ozayApp.constant('USER_ROLES', {
         'all': '*',
         'admin': 'ROLE_ADMIN',
-        'user': 'ROLE_USER'
+        'user': 'ROLE_USER',
+        'access_directory': 'ACCESS_DIRECTORY',
     });
 
 /*
