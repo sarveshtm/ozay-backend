@@ -9,6 +9,8 @@ ozayApp.controller('MainController', function ($scope, $location, $rootScope, $s
 	$scope.search = {};
 	$scope.search.searchTopItem = "";
 	$scope.search.searchNavItem = "";
+	$rootScope.pageReady = false;
+
 
 	// Search functions
 	$scope.search_open = function(){
@@ -72,7 +74,7 @@ ozayApp.controller('MainController', function ($scope, $location, $rootScope, $s
 				});
 				$scope.building_name = optionText;
 			}
-            $rootScope.$broadcast("event:building-ready");
+			$rootScope.buildingReady = true;
 		});
 	};
 
@@ -82,9 +84,10 @@ ozayApp.controller('MainController', function ($scope, $location, $rootScope, $s
 		//$state.transitionTo('home.home', null, {'reload':true});
 		$state.reload();
 	}
-
-	$rootScope.$on('event:auth-session-authenticated', function() {
-		$scope.loadAll();
+	$rootScope.$watch("sessionAuthenticated", function(){
+	    if($rootScope.sessionAuthenticated = true){
+	        $scope.loadAll();
+	    }
 	});
 
 	$rootScope.$on('event:auth-loginConfirmed', function() {

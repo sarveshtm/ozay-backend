@@ -393,7 +393,6 @@ ozayApp
 
 	// Call when the the client is confirmed
 	$rootScope.$on('event:auth-loginConfirmed', function(data) {
-
 		$rootScope.authenticated = true;
 		if ($location.path() === "/login") {
 			var search = $location.search();
