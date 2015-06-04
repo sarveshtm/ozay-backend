@@ -23,22 +23,22 @@ angular.module('ozayApp')
 			residentList = result[3].userDetailList;
 
 			for(var i = 0; i<managementList.length; i++){
-				$scope.individualList.push({id: managementList[i].id, label: managementList[i].firstName + " " + managementList[i].lastName, role: '1'});
+				$scope.individualList.push({id: managementList[i].id, label: managementList[i].unit + " " + managementList[i].firstName + " " + managementList[i].lastName, role: '1'});
 				memberList.push({id: managementList[i].id, label: managementList[i].firstName + " " + managementList[i].lastName, role: 'management'});
 			}
 
 			for(var i = 0; i<staffList.length; i++){
-				$scope.individualList.push({id: staffList[i].id, label: staffList[i].firstName + " " + staffList[i].lastName, role: '2'});
+				$scope.individualList.push({id: staffList[i].id, label: staffList[i].unit + " " +  staffList[i].firstName + " " + staffList[i].lastName, role: '2'});
 				memberList.push({id: staffList[i].id, label: staffList[i].firstName + " " + staffList[i].lastName, role: 'staff'});
 			}
 
 			for(var i = 0; i<boardList.length; i++){
-				$scope.individualList.push({id: boardList[i].id, label: boardList[i].firstName + " " + boardList[i].lastName, role: '3'});
+				$scope.individualList.push({id: boardList[i].id, label: boardList[i].unit + " " + boardList[i].firstName + " " + boardList[i].lastName, role: '3'});
 				memberList.push({id: boardList[i].id, label: boardList[i].firstName + " " + boardList[i].lastName, role: 'board'});
 			}
 
 			for(var i = 0; i<residentList.length; i++){
-				$scope.individualList.push({id: residentList[i].id, label: residentList[i].firstName + " " + residentList[i].lastName, role: '4'});
+				$scope.individualList.push({id: residentList[i].id, label: residentList[i].unit + " " +  residentList[i].firstName + " " + residentList[i].lastName, role: '4'});
 				memberList.push({id: residentList[i].id, label: residentList[i].firstName + " " + residentList[i].lastName, role: 'resident'});
 			}
 		});
