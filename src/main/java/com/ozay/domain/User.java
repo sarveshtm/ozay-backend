@@ -8,6 +8,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -129,6 +130,13 @@ public class User extends AbstractAuditingEntity implements Serializable {
     }
 
     public Set<Authority> getAuthorities() {
+        return authorities;
+    }
+
+    public Set<Authority> getAuthorities(List<Authority> authorityList) {
+        for(Authority authority : authorityList){
+            authorities.add(authority);
+        }
         return authorities;
     }
 

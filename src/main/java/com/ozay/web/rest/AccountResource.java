@@ -88,12 +88,14 @@ public class AccountResource {
      * GET  /rest/activate -> activate the registered user.
      */
     @RequestMapping(value = "/rest/activate",
-        method = RequestMethod.GET,
-        produces = MediaType.APPLICATION_JSON_VALUE)
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
     public ResponseEntity<String> activateAccount(@RequestParam(value = "key") String key) {
         return Optional.ofNullable(userService.activateRegistration(key))
-            .map(user -> new ResponseEntity<String>(HttpStatus.OK))
+            .map(user -> new ResponseEntity<String>(
+                    user.getLogin(),
+                    HttpStatus.OK))
             .orElse(new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
     }
 
@@ -127,6 +129,30 @@ public class AccountResource {
                     user.getEmail(),
                     user.getLangKey(),
                     user.getAuthorities().stream().map(Authority::getName).collect(Collectors.toList())),
+                HttpStatus.OK))
+            .orElse(new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
+    }
+
+    /**
+     * GET  /rest/account -> get the current user.
+     */
+    @RequestMapping(value = "/rest/account/building/{buildingId}",
+        method = RequestMethod.GET,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    public ResponseEntity<UserDTO> getAccountWithBuildingId(@PathVariable int buildingId) {
+        List<Authority> authorityList = new ArrayList<Authority>();
+        authorityList.add(new Authority("ACCESS_DIRECTORY"));
+        return Optional.ofNullable(userService.getUserWithAuthorities())
+            .map(user -> new ResponseEntity<>(
+                new UserDTO(
+                    user.getLogin(),
+                    null,
+                    user.getFirstName(),
+                    user.getLastName(),
+                    user.getEmail(),
+                    user.getLangKey(),
+                    user.getAuthorities(authorityList).stream().map(Authority::getName).collect(Collectors.toList())),
                 HttpStatus.OK))
             .orElse(new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
     }

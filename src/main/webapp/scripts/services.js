@@ -43,7 +43,7 @@ ozayApp.factory('Activate', function ($resource) {
 });
 
 ozayApp.factory('Account', function ($resource) {
-	return $resource('app/rest/account', {}, {
+	return $resource('app/rest/account/:method/:buildingId', {}, {
 	});
 });
 
@@ -197,15 +197,28 @@ ozayApp.factory('AuthenticationSharedService', function ($rootScope, $http, auth
 						$rootScope.$broadcast("event:auth-loginRequired");
 						return;
 					}
-					Account.get(function(data) {
-						Session.create(data.login, data.firstName, data.lastName, data.email, data.roles);
-						$rootScope.account = Session;
-						if (!$rootScope.isAuthorized(authorizedRoles)) {
-							// user is not allowed
-							$rootScope.$broadcast("event:auth-notAuthorized");
-						} else {
-							$rootScope.$broadcast("event:auth-loginConfirmed");
-						}
+                    console.log(1);
+					$rootScope.$broadcast("event:auth-session-authenticated");
+
+					$rootScope.$on('event:building-ready', function() {
+					    var method = null;
+					    var buildingId =  $rootScope.selectedBuilding;
+					    if(buildingId === undefined || buildingId == false){
+					        buildingId = null
+					    } else {
+					        method = 'building';
+					    }
+					    console.log(buildingId);
+						Account.get({method: method, buildingId:buildingId},function(data) {
+							Session.create(data.login, data.firstName, data.lastName, data.email, data.roles);
+							$rootScope.account = Session;
+							if (!$rootScope.isAuthorized(authorizedRoles)) {
+								// user is not allowed
+								$rootScope.$broadcast("event:auth-notAuthorized");
+							} else {
+								$rootScope.$broadcast("event:auth-loginConfirmed");
+							}
+						});
 					});
 				}else{
 					if (!$rootScope.isAuthorized(authorizedRoles)) {

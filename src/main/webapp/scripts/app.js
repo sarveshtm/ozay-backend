@@ -241,6 +241,7 @@ ozayApp
 	.state('home', {
 		url: "",
 		templateUrl: 'views/main.html',
+		controller: 'MainController',
 		access: {
 			authorizedRoles: [USER_ROLES.user]
 		}
@@ -248,7 +249,6 @@ ozayApp
 	.state('home.home', {
 		url: '/',
 		templateUrl: "/views/blank.html",
-
 		access: {
 			authorizedRoles: [USER_ROLES.user]
 		}
@@ -395,8 +395,6 @@ ozayApp
 	$rootScope.$on('event:auth-loginConfirmed', function(data) {
 
 		$rootScope.authenticated = true;
-
-		console.log( $rootScope.authenticated )
 		if ($location.path() === "/login") {
 			var search = $location.search();
 			if (search.redirect !== undefined) {

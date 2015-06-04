@@ -1,43 +1,6 @@
 'use strict';
 
 /* Controllers */
-
-ozayApp.controller('MainController', function ($scope, $location, $rootScope, $state) {
-	$scope.search_open = function(){
-		$('#navbar-search-form').addClass('open');
-	}
-	$scope.search_close = function(){
-		$('#navbar-search-form').removeClass('open');
-	}
-	$scope.loading = {};
-    $scope.loading.hide = false;
-
-    $scope.checkPageReady = function(){
-
-    console.log("Maincontroller authenticated" + $rootScope.authenticated);
-    console.log("Maincontroller buildingReady" + $rootScope.buildingReady);
-        if($rootScope.authenticated == true && $rootScope.buildingReady == true){
-            $scope.loading.hide = true;
-        }
-    }
-
-    $rootScope.$watch('authenticated', function(){
-        if($rootScope.authenticated == false){
-            $scope.loading.hide = false;
-        }
-    });
-
-	$rootScope.$watch('pageReady', function(){
-	console.log("Page Ready function changed Main Controller" );
-           $scope.checkPageReady();
-     });
-
-     $rootScope.$watch('buildingReady', function(){
-    console.log("buildingReady function changed Main Controller" );
-                $scope.checkPageReady();
-          });
-});
-
 ozayApp.controller('AdminController', function ($scope) {
 });
 
@@ -72,11 +35,7 @@ ozayApp.controller('LoginController', function ($scope, $location, Authenticatio
 
 ozayApp.controller('LogoutController', function ($location, $cookieStore, AuthenticationSharedService, $rootScope, $state) {
 	AuthenticationSharedService.logout();
-    delete $rootScope.selectedBuilding;
-    delete $rootScope.buildingReady;
-    $rootScope.authenticated = false;
-    $rootScope.pageReady = false;
-    $rootScope.buildingReady = false;
+	$rootScope.authenticated = false;
 	$state.go('login');
 });
 
