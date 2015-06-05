@@ -16,13 +16,13 @@ public class BuildingRepository {
     private JdbcTemplate jdbcTemplate;
 
     public List<Building> getBuildings(){
-        return jdbcTemplate.query("SELECT * FROM building", new Object[]{}, new BuildingRowMapper(){
+        return jdbcTemplate.query("SELECT * FROM building order by id", new Object[]{}, new BuildingRowMapper(){
 
         });
     }
 
     public List<Building> getBuildingsByUser(String login){
-        return jdbcTemplate.query("SELECT * FROM building b INNER JOIN user_building u ON b.id = u.building_id WHERE u.login = ?", new Object[]{login}, new BuildingRowMapper(){
+        return jdbcTemplate.query("SELECT * FROM building b INNER JOIN user_building u ON b.id = u.building_id WHERE u.login = ? order by id", new Object[]{login}, new BuildingRowMapper(){
         });
     }
 

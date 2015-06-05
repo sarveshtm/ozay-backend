@@ -203,6 +203,7 @@ ozayApp.factory('AuthenticationSharedService', function ($rootScope, $http, auth
 						if($rootScope.buildingReady == true){
 							var method = null;
 							var buildingId =  $rootScope.selectedBuilding;
+
 							if(buildingId === undefined || buildingId == false){
 								buildingId = null
 							} else {

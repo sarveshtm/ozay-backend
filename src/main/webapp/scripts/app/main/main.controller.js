@@ -60,6 +60,7 @@ ozayApp.controller('MainController', function ($scope, $location, $rootScope, $s
 						}
 					}
 				}
+
 				if(building !== undefined){
 					$scope.selectedBuilding.buildingId = building;
 				} else{
@@ -74,12 +75,14 @@ ozayApp.controller('MainController', function ($scope, $location, $rootScope, $s
 				});
 				$scope.building_name = optionText;
 			}
+			$rootScope.selectedBuilding = building;
 			$rootScope.buildingReady = true;
 		});
 	};
 
 	$scope.changeBuilding = function(){
 		$cookieStore.put('selectedBuilding', $scope.selectedBuilding.buildingId);
+
 		$rootScope.selectedBuilding = $scope.selectedBuilding.buildingId;
 		//$state.transitionTo('home.home', null, {'reload':true});
 		$state.reload();
