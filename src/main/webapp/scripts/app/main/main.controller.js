@@ -65,16 +65,18 @@ ozayApp.controller('MainController', function ($scope, $location, $rootScope, $s
 					$scope.selectedBuilding.buildingId = building;
 				} else{
 					$cookieStore.put('selectedBuilding', result[0].id);
-					$scope.selectedBuilding.buildingId = result[0].id;
+					building = result[0].id;
 				}
 				var optionText = '';
 				angular.forEach(result, function(value, key) {
-					if(value.id == $scope.selectedBuilding.buildingId){
+					if(value.id == building){
 						optionText = value.name;
 					}
 				});
 				$scope.building_name = optionText;
 			}
+
+			$scope.selectedBuilding.buildingId = building;
 			$rootScope.selectedBuilding = building;
 			$rootScope.buildingReady = true;
 		});

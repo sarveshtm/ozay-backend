@@ -19,6 +19,10 @@ import java.util.Set;
 public class User extends AbstractAuditingEntity implements Serializable {
 
     @NotNull
+    @GeneratedValue(strategy=GenerationType.AUTO)
+    private Integer id;
+
+    @NotNull
     @Size(min = 0, max = 50)
     @Id
     @Column(length = 50)
@@ -145,6 +149,18 @@ public class User extends AbstractAuditingEntity implements Serializable {
         this.persistentTokens = persistentTokens;
     }
 
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public boolean isActivated() {
+        return activated;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -171,6 +187,7 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @Override
     public String toString() {
         return "User{" +
+                "id='" + id + '\'' +
                 "login='" + login + '\'' +
                 ", password='" + password + '\'' +
                 ", firstName='" + firstName + '\'' +

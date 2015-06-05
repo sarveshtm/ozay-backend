@@ -30,6 +30,7 @@ public class UserDetailRowMapper implements RowMapper {
         userDetail.setStaff(rs.getBoolean("staff"));
         userDetail.setBoard(rs.getBoolean("board"));
         userDetail.setResident(rs.getBoolean("resident"));
+        userDetail.setUserId(rs.getInt("user_id"));
 
         return userDetail;
     }

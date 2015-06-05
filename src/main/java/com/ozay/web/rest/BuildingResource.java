@@ -78,7 +78,7 @@ public class BuildingResource {
         if(isAdmin == true){
             buildingList=  buildingRepository.getBuildings();
         } else {
-            buildingList = buildingRepository.getBuildingsByUser(SecurityUtils.getCurrentLogin());
+            buildingList = buildingRepository.getBuildingsByUser(user.getId());
         }
 
         List<BuildingDTO> buildingDtoList = new ArrayList<BuildingDTO>();
@@ -103,13 +103,15 @@ public class BuildingResource {
     @Timed
     public ResponseEntity<JsonResponse> create(@RequestBody Building building) {
         log.debug("REST request : Building create function");
-        building.setCreatedBy(SecurityUtils.getCurrentLogin());
-        building.setLastModifiedBy(SecurityUtils.getCurrentLogin());
+        User user = userRepository.findOne(SecurityUtils.getCurrentLogin());
+        building.setCreatedBy(user.getId());
+        building.setLastModifiedBy(user.getId());
         Integer insertedId = buildingRepository.create(building);
         log.debug("REST request : Building insertedId " + insertedId);
         JsonResponse json = new JsonResponse();
         if(insertedId > 0){
             UserDetail userDetail = new UserDetail();
+            userDetail.setUserId(user.getId());
             userDetail.setLogin(SecurityUtils.getCurrentLogin());
             userDetail.setBuildingId(insertedId);
             userDetail.setManagement(true);

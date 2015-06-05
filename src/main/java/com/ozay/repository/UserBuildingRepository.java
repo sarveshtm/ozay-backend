@@ -16,10 +16,10 @@ public class UserBuildingRepository {
 
     public boolean create(UserDetail userDetail){
         String insert = "INSERT INTO user_building(" +
-            "login, " +
+            "user_id, " +
             "building_id )" +
             "VALUES(?, ?)";
-        Object[] params = new Object[] { userDetail.getLogin(),
+        Object[] params = new Object[] {userDetail.getUserId(),
             userDetail.getBuildingId()
         };
 

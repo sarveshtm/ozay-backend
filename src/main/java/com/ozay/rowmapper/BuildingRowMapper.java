@@ -19,10 +19,10 @@ public class BuildingRowMapper implements RowMapper {
         building.setState("state");
         building.setZip("zip");
         building.setPhone("phone");
-        building.setCreatedBy("created_by");
+        building.setCreatedBy(rs.getInt("created_by"));
         building.setEmail(rs.getString("email"));
         building.setState(rs.getString("state"));
-        building.setLastModifiedBy(rs.getString("last_modified_by"));
+        building.setLastModifiedBy(rs.getInt("last_modified_by"));
         building.setTotalUnits(rs.getInt("total_units"));
 
         return building;

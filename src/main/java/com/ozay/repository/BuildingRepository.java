@@ -26,6 +26,11 @@ public class BuildingRepository {
         });
     }
 
+    public List<Building> getBuildingsByUser(int id){
+        return jdbcTemplate.query("SELECT * FROM building b INNER JOIN user_building u ON b.id = u.building_id WHERE u.user_id = ? order by id", new Object[]{id}, new BuildingRowMapper(){
+        });
+    }
+
     public Building getBuilding(int id){
         return (Building)jdbcTemplate.queryForObject("SELECT * FROM building WHERE id = ?", new Object[]{id}, new BuildingRowMapper(){
         });
@@ -41,11 +46,12 @@ public class BuildingRepository {
             "state, " +
             "zip, " +
             "phone, " +
+            "total_units, " +
             "created_by, " +
             "created_date, " +
             "last_modified_by," +
             "last_modified_date )" +
-            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, now(), ?, now()) RETURNING id";
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, now(), ?, now()) RETURNING id";
         Object[] params = new Object[] {
             building.getName(),
             building.getEmail(),
@@ -54,6 +60,7 @@ public class BuildingRepository {
             building.getState(),
             building.getZip(),
             building.getPhone(),
+            building.getTotalUnits(),
             building.getCreatedBy(),
             building.getLastModifiedBy(),
         };

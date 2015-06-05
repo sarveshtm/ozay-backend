@@ -17,6 +17,7 @@ public class UserDetail {
     private String phone;
     private String login;
     private Integer buildingId;
+    private Integer userId;
 
     private Double ownership;
     private boolean renter;
@@ -168,5 +169,13 @@ public class UserDetail {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 }
