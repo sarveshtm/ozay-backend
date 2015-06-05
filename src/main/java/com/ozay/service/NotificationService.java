@@ -53,7 +53,7 @@ public class NotificationService {
     public int sendNotice(NotificationDTO notificationDto){
         Notification notification = new Notification();
         notification.setBuildingId(notificationDto.getBuildingId());
-        notification.setNotice(notificationDto.getSubject());
+        notification.setNotice(notificationDto.getNotice());
         notification.setIssueDate(notificationDto.getIssueDate());
         User currentUser = userRepository.findOne(SecurityUtils.getCurrentLogin());
         notification.setCreatedBy(currentUser.getLogin());

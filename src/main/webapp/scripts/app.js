@@ -304,7 +304,7 @@ ozayApp
 	.state('home.directory', {
 		url: "/directory",
 		templateUrl: 'views/directory.html',
-
+        controller: 'UserDetailController',
 		access: {
 			authorizedRoles: [USER_ROLES.admin, USER_ROLES.access_directory]
 		}
