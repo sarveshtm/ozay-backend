@@ -198,7 +198,6 @@ ozayApp.factory('AuthenticationSharedService', function ($rootScope, $http, auth
 						$rootScope.sessionAuthenticated = false;
 						return;
 					}
-
 					$rootScope.sessionAuthenticated = true;
 					$rootScope.$watch('buildingReady', function(){
 						if($rootScope.buildingReady == true){
@@ -209,7 +208,6 @@ ozayApp.factory('AuthenticationSharedService', function ($rootScope, $http, auth
 							} else {
 								method = 'building';
 							}
-							console.log(buildingId);
 							Account.get({method: method, buildingId:buildingId},function(data) {
 								Session.create(data.login, data.firstName, data.lastName, data.email, data.roles);
 								$rootScope.account = Session;

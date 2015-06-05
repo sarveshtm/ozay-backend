@@ -22,7 +22,8 @@ public class BuildingRowMapper implements RowMapper {
         building.setCreatedBy("created_by");
         building.setEmail(rs.getString("email"));
         building.setState(rs.getString("state"));
-        building.setLastModifiedBy("last_modified_by");
+        building.setLastModifiedBy(rs.getString("last_modified_by"));
+        building.setTotalUnits(rs.getInt("total_units"));
 
         return building;
     }

@@ -61,7 +61,7 @@ public class UserDetailResource {
     }
 
     /**
-     * GET  /rest/userdetails/:login -> get the "Building" ID
+     * GET  /rest/userdetails/building/{buildingId}/{id} -> get the "Building" by bu
      */
     @RequestMapping(value = "/userdetails/building/{buildingId}/{id}",
         method = RequestMethod.GET,

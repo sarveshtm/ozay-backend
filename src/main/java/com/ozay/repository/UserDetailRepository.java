@@ -34,6 +34,10 @@ public class UserDetailRepository {
             });
     }
 
+    public Integer countActiveUnits(int buildingId){
+        return jdbcTemplate.queryForObject("SELECT COUNT(DISTINCT unit) FROM USER_DETAIL WHERE building_id = ?", Integer.class, new Object[]{buildingId});
+    }
+
     public List<UserDetail> getUserByBuildingEmailUnit(int buildingId, String email, String unit){
         return jdbcTemplate.query("Select * FROM user_detail WHERE building_id = ? AND email = ? AND UPPER(unit) = ?",
             new Object[]{buildingId, email, unit}, new UserDetailRowMapper() {

@@ -197,7 +197,7 @@
                 <ul class="nav" id="side-menu">
                     <li class="profile-li" >
                         <select id="building_list" ng-change="changeBuilding()" ng-model="selectedBuilding.buildingId">
-                            <option  ng-selected="{{building.id == selectedBuilding.buildingId}}" ng-repeat="building in buildings" value="{{building.id}}">
+                            <option  ng-selected="{{building.id == selectedBuilding.buildingId}}" ng-repeat="building in buildings |orderBy:building.id">
                                 {{building.name}}
                             </option>
                         </select>

@@ -255,7 +255,8 @@ ozayApp
 	})
 	.state('home.dashboard', {
 		url: "/dashboard",
-		templateUrl: "/views/blank.html",
+		templateUrl: "/views/dashboard.html",
+		controller: 'DashboardController',
 		access: {
 			authorizedRoles: [USER_ROLES.user]
 		}

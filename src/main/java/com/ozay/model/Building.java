@@ -19,7 +19,7 @@ public class Building {
     private String phone;
     private String createdBy;
     private String email;
-    private int numUnits;
+    private int totalUnits;
 
 
     private String lastModifiedBy;
@@ -106,11 +106,11 @@ public class Building {
         this.email = email;
     }
 
-    public int getNumUnits() {
-        return numUnits;
+    public int getTotalUnits() {
+        return totalUnits;
     }
 
-    public void setNumUnits(int numUnits) {
-        this.numUnits = numUnits;
+    public void setTotalUnits(int totalUnits) {
+        this.totalUnits = totalUnits;
     }
 }
