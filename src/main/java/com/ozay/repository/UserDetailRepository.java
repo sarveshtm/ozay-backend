@@ -26,6 +26,11 @@ public class UserDetailRepository {
     @Inject
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
+
+    public UserDetail getOne(int id){
+        return (UserDetail)jdbcTemplate.queryForObject("SELECT * FROM user_detail WHERE id =?",new Object[]{id}, new UserDetailRowMapper());
+    }
+
     public List<UserDetail> getAllUsersByBuilding(int buildingId){
         return jdbcTemplate.query("Select * FROM user_detail WHERE building_id =?",
 

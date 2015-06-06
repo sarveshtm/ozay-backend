@@ -55,7 +55,7 @@ public class NotificationService {
         notification.setBuildingId(notificationDto.getBuildingId());
         notification.setNotice(notificationDto.getNotice());
         notification.setIssueDate(notificationDto.getIssueDate());
-        User currentUser = userRepository.findOne(SecurityUtils.getCurrentLogin());
+        User currentUser = userRepository.findOneByLogin(SecurityUtils.getCurrentLogin());
         notification.setCreatedBy(currentUser.getLogin());
         notification.setCreatedDate(new DateTime());
         String buildingName = buildingRepository.getBuilding(notification.getBuildingId()).getName();

@@ -3,6 +3,7 @@ package com.ozay.service;
 import com.ozay.domain.Authority;
 import com.ozay.domain.PersistentToken;
 import com.ozay.domain.User;
+import com.ozay.model.InvitedUser;
 import com.ozay.model.UserDetail;
 import com.ozay.repository.*;
 import com.ozay.security.SecurityUtils;
@@ -49,6 +50,10 @@ public class UserService {
     @Inject
     private AccountRepository accountRepository;
 
+    @Inject
+    private InvitedUserRepository invitedUserRepository;
+
+
     public User activateRegistration(String key) {
         log.debug("Activating user for activation key {}", key);
         return Optional.ofNullable(userRepository.getUserByActivationKey(key))
@@ -62,6 +67,29 @@ public class UserService {
             })
             .orElse(null);
     }
+    public User activateInvitation(String key) {
+        log.debug("Activating user for activation key {}", key);
+        return Optional.ofNullable(invitedUserRepository.getOne(key))
+            .map(invited_user -> {
+                User newUser = new User();
+                UserDetail userDetail = userDetailRepository.getOne(invited_user.getUserDetailId());
+
+                newUser.setFirstName(userDetail.getFirstName());
+                newUser.setLangKey(invited_user.getLangKey());
+                newUser.setActivationKey(invited_user.getActivationKey());
+                newUser.setEmail(userDetail.getEmail());
+                newUser.setLogin(newUser.getEmail());
+                newUser.setPassword(null);
+
+                newUser.setActivated(true);
+                newUser.setActivationKey(null);
+                userRepository.save(newUser);
+                return newUser;
+            })
+            .orElse(null);
+
+    }
+
     @Transactional
     public User createUserInformation(String login, String password, String firstName, String lastName, String email,
                                       String langKey) {
@@ -69,7 +97,7 @@ public class UserService {
         Authority authority = authorityRepository.findOne("ROLE_USER");
         Set<Authority> authorities = new HashSet<>();
         String encryptedPassword = passwordEncoder.encode(password);
-        User currentLoginUser = userRepository.findOne(SecurityUtils.getCurrentLogin());
+        User currentLoginUser = userRepository.findOneByLogin(SecurityUtils.getCurrentLogin());
         newUser.setLogin(login);
         newUser.setCreatedBy(currentLoginUser.getId().toString());
         // new user gets initially a generated password
@@ -89,13 +117,13 @@ public class UserService {
         for(Authority authority1 : newUser.getAuthorities()){
             accountRepository.insertAuthority(authority1, newUser.getLogin());
         }
-        User createdUser = userRepository.findOne(newUser.getLogin());
+        User createdUser = userRepository.findOneByLogin(newUser.getLogin());
         log.debug("Created Information for User: {}", newUser);
         return createdUser;
     }
 
     public void updateUserInformation(String firstName, String lastName, String email) {
-        User currentUser = userRepository.findOne(SecurityUtils.getCurrentLogin());
+        User currentUser = userRepository.findOneByLogin(SecurityUtils.getCurrentLogin());
         currentUser.setFirstName(firstName);
         currentUser.setLastName(lastName);
         currentUser.setEmail(email);
@@ -104,7 +132,7 @@ public class UserService {
     }
 
     public void changePassword(String password) {
-        User currentUser = userRepository.findOne(SecurityUtils.getCurrentLogin());
+        User currentUser = userRepository.findOneByLogin(SecurityUtils.getCurrentLogin());
         currentUser.setPasswordChageRequired(false);
         String encryptedPassword = passwordEncoder.encode(password);
         currentUser.setPassword(encryptedPassword);
@@ -114,27 +142,36 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public User getUserWithAuthorities() {
-        User currentUser = userRepository.findOne(SecurityUtils.getCurrentLogin());
+        User currentUser = userRepository.findOneByLogin(SecurityUtils.getCurrentLogin());
         currentUser.getAuthorities().size(); // eagerly load the association
         return currentUser;
     }
 
     @Transactional(readOnly = true)
     public User getUserWithAuthoritiesAndAddMoreAuthorities(int buildingId) {
-        User currentUser = userRepository.findOne(SecurityUtils.getCurrentLogin());
+        User currentUser = userRepository.findOneByLogin(SecurityUtils.getCurrentLogin());
         currentUser.getAuthorities().size(); // eagerly load the association
-        try{
-            UserDetail userDetail = userDetailRepository.getUserDetailByBuildingAndUserId(currentUser.getId(), buildingId);
 
-            if(userDetail.isManagement() == true){
-                currentUser.getAuthorities().add(new Authority("ACCESS_DIRECTORY"));
-                currentUser.getAuthorities().add(new Authority("ACCESS_NOTIFICATION"));
+        boolean isAdmin = false;
+        for(Authority authority : currentUser.getAuthorities()){
+            if(authority.getName() == "ROLE_ADMIN"){
+                isAdmin = true;
+                break;
             }
-            else if(userDetail.isStaff() == true){
-                currentUser.getAuthorities().add(new Authority("ACCESS_NOTIFICATION"));
+        }
+        if(isAdmin == false) {
+            try {
+                UserDetail userDetail = userDetailRepository.getUserDetailByBuildingAndUserId(currentUser.getId(), buildingId);
+
+                if (userDetail.isManagement() == true) {
+                    currentUser.getAuthorities().add(new Authority("ACCESS_DIRECTORY"));
+                    currentUser.getAuthorities().add(new Authority("ACCESS_NOTIFICATION"));
+                } else if (userDetail.isStaff() == true) {
+                    currentUser.getAuthorities().add(new Authority("ACCESS_NOTIFICATION"));
+                }
+            } catch (Exception e) {
+                log.debug("UserService getUserWithAuthoritiesAddMoreAuthrities no user detail found {}", currentUser.getLogin());
             }
-        }catch (Exception e){
-            log.debug("UserService getUserWithAuthoritiesAddMoreAuthrities no user detail found {}", currentUser.getLogin());
         }
 
         return currentUser;

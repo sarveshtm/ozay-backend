@@ -103,7 +103,7 @@ public class BuildingResource {
     @Timed
     public ResponseEntity<JsonResponse> create(@RequestBody Building building) {
         log.debug("REST request : Building create function");
-        User user = userRepository.findOne(SecurityUtils.getCurrentLogin());
+        User user = userRepository.findOneByLogin(SecurityUtils.getCurrentLogin());
         building.setCreatedBy(user.getId());
         building.setLastModifiedBy(user.getId());
         Integer insertedId = buildingRepository.create(building);

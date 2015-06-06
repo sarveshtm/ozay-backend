@@ -77,10 +77,10 @@ public class AccountResource {
                                              HttpServletResponse response) {
         // Email is username
         userDTO.setLogin(userDTO.getEmail());
-        return Optional.ofNullable(userRepository.findOne(userDTO.getLogin()))
+        return Optional.ofNullable(userRepository.findOneByLogin(userDTO.getLogin()))
             .map(user -> new ResponseEntity<>("login already in use", HttpStatus.BAD_REQUEST))
             .orElseGet(() -> {
-                if (userRepository.findOneByEmail(userDTO.getEmail()) != null) {
+                if (userRepository.findOneByLogin(userDTO.getEmail()) != null) {
                     return new ResponseEntity<>("e-mail address already in use", HttpStatus.BAD_REQUEST);
                 }
                 User user = userService.createUserInformation(userDTO.getLogin(), userDTO.getPassword(),
@@ -103,7 +103,7 @@ public class AccountResource {
                                              HttpServletResponse response) {
         // Email is username
         userDetail.setLogin(userDetail.getEmail());
-        return Optional.ofNullable(userRepository.findOneByEmail(userDetail.getLogin()))
+        return Optional.ofNullable(userRepository.findOneByLogin(userDetail.getLogin()))
             .map(user -> new ResponseEntity<>("login already in use", HttpStatus.BAD_REQUEST))
             .orElseGet(() -> {
                 String SALTCHARS = "OZAYTEAM1124ORG";
@@ -115,7 +115,7 @@ public class AccountResource {
                 }
                 String randomPassword = salt.toString();
 
-                if (userRepository.findOneByEmail(userDetail.getEmail()) != null) {
+                if (userRepository.findOneByLogin(userDetail.getEmail()) != null) {
                     return new ResponseEntity<>("e-mail address already in use", HttpStatus.BAD_REQUEST);
                 }
                 User user = userService.createUserInformation(userDetail.getEmail().toLowerCase(), randomPassword,
@@ -212,7 +212,7 @@ public class AccountResource {
             produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
     public ResponseEntity<?> saveAccount(@RequestBody UserDTO userDTO) {
-        User userHavingThisEmail = userRepository.findOneByEmail(userDTO.getEmail());
+        User userHavingThisEmail = userRepository.findOneByLogin(userDTO.getEmail());
         if (userHavingThisEmail != null && !userHavingThisEmail.getLogin().equals(SecurityUtils.getCurrentLogin())) {
             return new ResponseEntity<String>("e-mail address already in use", HttpStatus.BAD_REQUEST);
         }
@@ -243,7 +243,7 @@ public class AccountResource {
             produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
     public ResponseEntity<List<PersistentToken>> getCurrentSessions() {
-        return Optional.ofNullable(userRepository.findOne(SecurityUtils.getCurrentLogin()))
+        return Optional.ofNullable(userRepository.findOneByLogin(SecurityUtils.getCurrentLogin()))
             .map(user -> new ResponseEntity<>(
                 persistentTokenRepository.findByUser(user),
                 HttpStatus.OK))
@@ -268,7 +268,7 @@ public class AccountResource {
     @Timed
     public void invalidateSession(@PathVariable String series) throws UnsupportedEncodingException {
         String decodedSeries = URLDecoder.decode(series, "UTF-8");
-        User user = userRepository.findOne(SecurityUtils.getCurrentLogin());
+        User user = userRepository.findOneByLogin(SecurityUtils.getCurrentLogin());
         if (persistentTokenRepository.findByUser(user).stream()
                 .filter(persistentToken -> StringUtils.equals(persistentToken.getSeries(), decodedSeries))
                 .count() > 0) {

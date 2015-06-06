@@ -226,8 +226,7 @@ ozayApp.factory('AuthenticationSharedService', function ($rootScope, $http, auth
 
                     if($rootScope.account == undefined || $rootScope.account == false || $rootScope.selectedBuilding == undefined){
                         Building.query(function(result) {
-                        console.log(result);
-                            if(result.lenght > 0){
+                            if(result.length > 0){
                                 var building = $rootScope.selectedBuilding;
                                 if(building === undefined){
                                     // Check if building in cookie can be accessible to user
