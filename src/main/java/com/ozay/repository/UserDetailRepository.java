@@ -110,11 +110,19 @@ public class UserDetailRepository {
     }
 
 
-    public UserDetail getUserByBuilding(int id, int buildingId){
+    public UserDetail getUserByBuilding(int user_id, int buildingId){
         return (UserDetail)jdbcTemplate.queryForObject("Select * FROM user_detail WHERE building_id = ? AND id = ?",
+            new Object[]{buildingId, user_id}, new UserDetailRowMapper(){
+            });
+    }
+
+    public UserDetail getUserDetailByBuildingAndUserId(int id, int buildingId){
+        return (UserDetail)jdbcTemplate.queryForObject("Select * FROM user_detail WHERE building_id = ? AND user_id = ?",
             new Object[]{buildingId, id}, new UserDetailRowMapper(){
             });
     }
+
+
 
     public UserDetail getUserByBuilding(String login, int buildingId){
         return (UserDetail)jdbcTemplate.queryForObject("Select * FROM user_detail WHERE building_id = ? AND login = ?",
@@ -141,6 +149,7 @@ public class UserDetailRepository {
     public boolean create(UserDetail userDetail){
         String insert = "INSERT INTO user_detail(" +
             "login, " +
+            "user_id, " +
             "first_name," +
             "last_name," +
             "email," +
@@ -155,8 +164,9 @@ public class UserDetailRepository {
             "staff, " +
             "board, " +
             "resident ) " +
-            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         Object[] params = new Object[] { userDetail.getLogin(),
+            userDetail.getUserId(),
             userDetail.getFirstName(),
             userDetail.getLastName(),
             userDetail.getEmail(),

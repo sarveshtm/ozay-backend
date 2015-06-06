@@ -117,7 +117,7 @@ public class UserService {
         User currentUser = userRepository.findOne(SecurityUtils.getCurrentLogin());
         currentUser.getAuthorities().size(); // eagerly load the association
         try{
-            UserDetail userDetail = userDetailRepository.getUserByBuilding(currentUser.getLogin(), buildingId);
+            UserDetail userDetail = userDetailRepository.getUserDetailByBuildingAndUserId(currentUser.getId(), buildingId);
 
             if(userDetail.isManagement() == true){
                 currentUser.getAuthorities().add(new Authority("ACCESS_DIRECTORY"));

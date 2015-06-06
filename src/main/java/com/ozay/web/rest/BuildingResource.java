@@ -112,12 +112,12 @@ public class BuildingResource {
         if(insertedId > 0){
             UserDetail userDetail = new UserDetail();
             userDetail.setUserId(user.getId());
-            userDetail.setLogin(SecurityUtils.getCurrentLogin());
+            userDetail.setFirstName(user.getFirstName());
+            userDetail.setLastName(user.getLastName());
             userDetail.setBuildingId(insertedId);
             userDetail.setManagement(true);
             userDetailRepository.create(userDetail);
             userBuildingRepository.create(userDetail);
-
         }
         json.setResponse(insertedId);
 
