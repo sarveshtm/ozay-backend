@@ -229,13 +229,21 @@ ozayApp
 			authorizedRoles: [USER_ROLES.user]
 		}
 	})
+	.state('change_password', {
+    		url : '/password',
+    		templateUrl: 'views/password.html',
+    		controller: 'PasswordController',
+    		access: {
+    			authorizedRoles: [USER_ROLES.user]
+    		}
+    	})
 	.state('register', {
 		url: "/register",
 		templateUrl: "views/login.html",
 		templateUrl: 'views/register.html',
 		controller: 'RegisterController',
 		access: {
-			authorizedRoles: [USER_ROLES.all]
+			authorizedRoles: [USER_ROLES.admin]
 		}
 	})
 	.state('home', {
@@ -395,6 +403,11 @@ ozayApp
 	// Call when the the client is confirmed
 	$rootScope.$on('event:auth-loginConfirmed', function(data) {
 		$rootScope.authenticated = true;
+console.log($rootScope.account);
+		if($rootScope.account.passwordChangeRequired == true){
+		    $state.go("change_password");
+		    return;
+		}
 		if ($location.path() === "/login") {
 			var search = $location.search();
 			if (search.redirect !== undefined) {

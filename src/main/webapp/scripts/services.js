@@ -132,11 +132,12 @@ ozayApp.factory('AuditsService', function ($http) {
 });
 
 ozayApp.factory('Session', function () {
-	this.create = function (login, firstName, lastName, email, userRoles) {
+	this.create = function (login, firstName, lastName, email, passwordChangeRequired, userRoles) {
 		this.login = login;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.email = email;
+		this.passwordChangeRequired = passwordChangeRequired;
 		this.userRoles = userRoles;
 	};
 	this.invalidate = function () {
@@ -144,12 +145,13 @@ ozayApp.factory('Session', function () {
 		this.firstName = null;
 		this.lastName = null;
 		this.email = null;
+		this.passwordChangeRequired = null;
 		this.userRoles = null;
 	};
 	return this;
 });
 
-ozayApp.factory('AuthenticationSharedService', function ($rootScope, $http, authService, Session, Account, Base64Service, AccessToken, $location, $cookieStore) {
+ozayApp.factory('AuthenticationSharedService', function ($rootScope, $http, authService, Session, Account, Building, Base64Service, AccessToken, $location, $cookieStore) {
 	return {
 		login: function (param) {
 			$rootScope.authenticationError = false;
@@ -166,10 +168,13 @@ ozayApp.factory('AuthenticationSharedService', function ($rootScope, $http, auth
 				AccessToken.set(data);
 
 				Account.get(function(data) {
-					Session.create(data.login, data.firstName, data.lastName, data.email, data.roles);
+				    var buildingId =  $rootScope.selectedBuilding;
+				    if(buildingId == undefined){
+				        buildingId = null;
+				    }
+					Session.create(data.login, data.firstName, data.lastName, data.email, data.passwordChangeRequired, data.roles);
 
 					$rootScope.account = Session;
-
 
 					authService.loginConfirmed(data);
 				});
@@ -181,7 +186,6 @@ ozayApp.factory('AuthenticationSharedService', function ($rootScope, $http, auth
 				AccessToken.remove();
 				delete httpHeaders.common['Authorization'];
 				$rootScope.$broadcast('event:auth-loginRequired', data);
-
 			});
 		},
 		valid: function (authorizedRoles) {
@@ -195,33 +199,66 @@ ozayApp.factory('AuthenticationSharedService', function ($rootScope, $http, auth
 				if (!Session.login || AccessToken.get() != undefined) {
 					if (AccessToken.get() == undefined || AccessToken.expired()) {
 						$rootScope.$broadcast("event:auth-loginRequired");
-						$rootScope.sessionAuthenticated = false;
 						return;
 					}
-					$rootScope.sessionAuthenticated = true;
-					$rootScope.$watch('buildingReady', function(){
-						if($rootScope.buildingReady == true){
-							var method = null;
-							var buildingId =  $rootScope.selectedBuilding;
 
-							if(buildingId === undefined || buildingId == false){
-								buildingId = null
-							} else {
-								method = 'building';
-							}
-							Account.get({method: method, buildingId:buildingId},function(data) {
-								Session.create(data.login, data.firstName, data.lastName, data.email, data.roles);
-								$rootScope.account = Session;
-								if (!$rootScope.isAuthorized(authorizedRoles)) {
-									// user is not allowed
-									$rootScope.$broadcast("event:auth-notAuthorized");
-								} else {
-									$rootScope.$broadcast("event:auth-loginConfirmed");
-								}
-							});
-						}
-					});
+					$rootScope.getAccountInfo = function(){
+					    var method = null;
+                        var buildingId =  $rootScope.selectedBuilding;
 
+                        if(buildingId === undefined || buildingId == false){
+                            buildingId = null
+                        } else {
+                            method = 'building';
+                        }
+
+                        Account.get({method: method, buildingId:buildingId},function(data) {
+                            Session.create(data.login, data.firstName, data.lastName, data.email, data.passwordChangeRequired , data.roles);
+                            $rootScope.account = Session;
+                            if (!$rootScope.isAuthorized(authorizedRoles)) {
+                                // user is not allowed
+                                $rootScope.$broadcast("event:auth-notAuthorized");
+                            } else {
+                                $rootScope.$broadcast("event:auth-loginConfirmed");
+                            }
+                        });
+					}
+
+                    if($rootScope.account == undefined || $rootScope.account == false || $rootScope.selectedBuilding == undefined){
+                        Building.query(function(result) {
+                        console.log(result);
+                            if(result.lenght > 0){
+                                var building = $rootScope.selectedBuilding;
+                                if(building === undefined){
+                                    // Check if building in cookie can be accessible to user
+                                    var tempBuilding = $cookieStore.get('selectedBuilding');
+                                    if(tempBuilding !== undefined || tempBuilding == false){
+                                        var accessible = false;
+                                        for(var i = 0; i< result.length; i++){
+                                            if(result[i].id == tempBuilding){
+                                                accessible = true;
+                                                break;
+                                            }
+                                        }
+                                        if(accessible === true){
+                                            building = tempBuilding;
+                                        }
+                                    }
+                                }
+                                if(building === undefined){
+                                    $cookieStore.put('selectedBuilding', result[0].id);
+                                    building = result[0].id;
+                                }
+                                $rootScope.buildingList = result;
+                                $rootScope.selectedBuilding = building;
+                            }
+                            $rootScope.getAccountInfo();
+                        });
+                    }
+
+                    if($rootScope.buildingList !== undefined){
+                        $rootScope.getAccountInfo();
+                    }
 
 				}else{
 					if (!$rootScope.isAuthorized(authorizedRoles)) {

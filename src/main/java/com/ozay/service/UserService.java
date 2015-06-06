@@ -4,10 +4,7 @@ import com.ozay.domain.Authority;
 import com.ozay.domain.PersistentToken;
 import com.ozay.domain.User;
 import com.ozay.model.UserDetail;
-import com.ozay.repository.AuthorityRepository;
-import com.ozay.repository.PersistentTokenRepository;
-import com.ozay.repository.UserDetailRepository;
-import com.ozay.repository.UserRepository;
+import com.ozay.repository.*;
 import com.ozay.security.SecurityUtils;
 import com.ozay.service.util.RandomUtil;
 import org.joda.time.DateTime;
@@ -49,6 +46,9 @@ public class UserService {
     @Inject
     private UserDetailRepository userDetailRepository;
 
+    @Inject
+    private AccountRepository accountRepository;
+
     public User activateRegistration(String key) {
         log.debug("Activating user for activation key {}", key);
         return Optional.ofNullable(userRepository.getUserByActivationKey(key))
@@ -62,15 +62,16 @@ public class UserService {
             })
             .orElse(null);
     }
-
+    @Transactional
     public User createUserInformation(String login, String password, String firstName, String lastName, String email,
                                       String langKey) {
         User newUser = new User();
         Authority authority = authorityRepository.findOne("ROLE_USER");
         Set<Authority> authorities = new HashSet<>();
         String encryptedPassword = passwordEncoder.encode(password);
+        User currentLoginUser = userRepository.findOne(SecurityUtils.getCurrentLogin());
         newUser.setLogin(login);
-        newUser.setCreatedBy(SecurityUtils.getCurrentLogin());
+        newUser.setCreatedBy(currentLoginUser.getId().toString());
         // new user gets initially a generated password
         newUser.setPassword(encryptedPassword);
         newUser.setFirstName(firstName);
@@ -83,9 +84,14 @@ public class UserService {
         newUser.setActivationKey(RandomUtil.generateActivationKey());
         authorities.add(authority);
         newUser.setAuthorities(authorities);
-        userRepository.save(newUser);
+
+        accountRepository.insertUser(newUser);
+        for(Authority authority1 : newUser.getAuthorities()){
+            accountRepository.insertAuthority(authority1, newUser.getLogin());
+        }
+        User createdUser = userRepository.findOne(newUser.getLogin());
         log.debug("Created Information for User: {}", newUser);
-        return newUser;
+        return createdUser;
     }
 
     public void updateUserInformation(String firstName, String lastName, String email) {
@@ -99,6 +105,7 @@ public class UserService {
 
     public void changePassword(String password) {
         User currentUser = userRepository.findOne(SecurityUtils.getCurrentLogin());
+        currentUser.setPasswordChageRequired(false);
         String encryptedPassword = passwordEncoder.encode(password);
         currentUser.setPassword(encryptedPassword);
         userRepository.save(currentUser);

@@ -236,7 +236,7 @@
                         <a href="#/dashboard">DASHBOARD</a>
                     </li>
 
-                    <li ng-show="isAuthorized(userRoles.access_notification)">
+                    <li ng-show="isAuthorized(userRoles.access_notification) || isAuthorized(userRoles.admin)">
                         <a href="#">NOTIFICATION<span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
                             <li>
@@ -266,7 +266,7 @@
                     <li>
                         <a href="#/">EVENTS</a>
                     </li>
-                    <li ng-show="isAuthorized(userRoles.access_directory)">
+                    <li ng-show="isAuthorized(userRoles.access_directory) || isAuthorized(userRoles.admin)">
                         <a href="#">DIRECTORY<span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
                             <li>

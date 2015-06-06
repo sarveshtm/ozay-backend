@@ -1,8 +1,10 @@
 package com.ozay.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.validator.constraints.Email;
 
+import javax.annotation.Generated;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -18,8 +20,9 @@ import java.util.Set;
 @Table(name = "T_USER")
 public class User extends AbstractAuditingEntity implements Serializable {
 
-    @NotNull
-    @GeneratedValue(strategy=GenerationType.AUTO)
+    @GenericGenerator(name="generator", strategy="increment")
+    @GeneratedValue(generator="generator")
+    @Column(name="ID", columnDefinition = "serial")
     private Integer id;
 
     @NotNull
@@ -47,6 +50,9 @@ public class User extends AbstractAuditingEntity implements Serializable {
     private String email;
 
     private boolean activated = false;
+
+    @Column(name = "password_change_required")
+    private boolean passwordChangeRequired = true;
 
     @Size(min = 2, max = 5)
     @Column(name = "lang_key", length = 5)
@@ -159,6 +165,14 @@ public class User extends AbstractAuditingEntity implements Serializable {
 
     public boolean isActivated() {
         return activated;
+    }
+
+    public boolean isPasswordChageRequired() {
+        return passwordChangeRequired;
+    }
+
+    public void setPasswordChageRequired(boolean passwordChageRequired) {
+        this.passwordChangeRequired = passwordChageRequired;
     }
 
     @Override

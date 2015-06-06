@@ -62,6 +62,7 @@ public class OAuth2ServerConfiguration {
                 .antMatchers("/api/register").permitAll()
                 .antMatchers("/api/logs/**").hasAnyAuthority(AuthoritiesConstants.ADMIN)
                 .antMatchers("/api/**").authenticated()
+                .antMatchers("/app/rest/account/invitation").authenticated()
                 .antMatchers("/metrics/**").hasAuthority(AuthoritiesConstants.ADMIN)
                 .antMatchers("/health/**").hasAuthority(AuthoritiesConstants.ADMIN)
                 .antMatchers("/trace/**").hasAuthority(AuthoritiesConstants.ADMIN)

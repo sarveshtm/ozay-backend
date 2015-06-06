@@ -14,6 +14,9 @@ angular.module('ozayApp')
 		'getUser' : {
 			method: 'GET',
 		},
+		'invite' : {
+   			method: 'POST',
+        },
 		'update': { method:'PUT' }
 	});
 });

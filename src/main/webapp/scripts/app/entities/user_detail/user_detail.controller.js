@@ -16,7 +16,7 @@ angular.module('ozayApp')
 	}
 
 	$scope.getAll('building', building);
-    $scope.predicate = 'lastName';
+	$scope.predicate = 'lastName';
 	$scope.isResident = function(renter){
 		if(renter === true){
 			return true;
@@ -26,13 +26,13 @@ angular.module('ozayApp')
 	}
 
 })
-.controller('DirectoryDetailController', function ($scope, $cookieStore, $routeParams, $location, $state, $stateParams, UserDetail, $rootScope) {
+.controller('DirectoryDetailController', function ($scope, $cookieStore, $routeParams, $location, $state, $stateParams, UserDetail, $rootScope, Account) {
 	if($stateParams.method != 'edit' && $stateParams.method != 'new'){
 		$location.path('/error').replace();
 	}
 
 	$scope.goBack = function(){
-	    $state.go('home.directory');
+		$state.go('home.directory');
 	}
 
 	$scope.submitted = false;
@@ -54,44 +54,66 @@ angular.module('ozayApp')
 		$scope.UserDetail.resident = false;
 	}
 
+	$scope.invite = function(){
+		$scope.button = false;
+		if($scope.type == 'EDIT'){
+		    var result = confirm("Would like to invite this user?");
+		    if(result == true){
+		        Account.save({method:"invitation"},$scope.UserDetail,
+		        function(data){
+		            $scope.showSuccessAlert = true;
+                    $scope.successTextAlert = "Successfully Invited";
+		        },
+		        function(error){
+		            $scope.errorTextAlert = "Error occurred. Please try later";
+		        });
+		    }
 
+		    $scope.button = true;
+		} else {
+			$scope.showErrorAlert = true;
+			$scope.errorTextAlert = "INVALID OPERATION";
+			$scope.button = true;
+		}
+
+	}
 
 
 	$scope.create = function () {
 		$scope.showSuccessAlert = false;
 		$scope.showErrorAlert = false;
 		$scope.button = false;
-        if($scope.type == 'EDIT'){
-            UserDetail.update($scope.UserDetail,
-            				function (data) {
-            			$scope.showSuccessAlert = true;
-            			$scope.successTextAlert = "Successfully Saved";
-            			$scope.button = true;
-            		}, function (error){
-            			$scope.showErrorAlert = true;
-                                    			$scope.errorTextAlert = "";
-                                                for(var i =0; i< error.data.fieldErrorDTOs.length;i++){
-                                                console.log(error.data.fieldErrorDTOs[i]);
-                                                    $scope.errorTextAlert += error.data.fieldErrorDTOs[i].field + ": " + error.data.fieldErrorDTOs[i].message;
-                                                }
-            			$scope.button = true;
-            		});
-        } else {
-            UserDetail.save($scope.UserDetail,
-            				function (data) {
-            			$scope.showSuccessAlert = true;
-            			$scope.successTextAlert = "Successfully Saved";
-            		}, function (error){
-            			$scope.showErrorAlert = true;
-            			$scope.errorTextAlert = "";
-                        for(var i =0; i< error.data.fieldErrorDTOs.length;i++){
-                        console.log(error.data.fieldErrorDTOs[i]);
-                            $scope.errorTextAlert += error.data.fieldErrorDTOs[i].field + ": " + error.data.fieldErrorDTOs[i].message;
-                        }
+		if($scope.type == 'EDIT'){
+			UserDetail.update($scope.UserDetail,
+					function (data) {
+				$scope.showSuccessAlert = true;
+				$scope.successTextAlert = "Successfully Saved";
+				$scope.button = true;
+			}, function (error){
+				$scope.showErrorAlert = true;
+				$scope.errorTextAlert = "";
+				for(var i =0; i< error.data.fieldErrorDTOs.length;i++){
+					console.log(error.data.fieldErrorDTOs[i]);
+					$scope.errorTextAlert += error.data.fieldErrorDTOs[i].field + ": " + error.data.fieldErrorDTOs[i].message;
+				}
+				$scope.button = true;
+			});
+		} else {
+			UserDetail.save($scope.UserDetail,
+					function (data) {
+				$scope.showSuccessAlert = true;
+				$scope.successTextAlert = "Successfully Saved";
+			}, function (error){
+				$scope.showErrorAlert = true;
+				$scope.errorTextAlert = "";
+				for(var i =0; i< error.data.fieldErrorDTOs.length;i++){
+					console.log(error.data.fieldErrorDTOs[i]);
+					$scope.errorTextAlert += error.data.fieldErrorDTOs[i].field + ": " + error.data.fieldErrorDTOs[i].message;
+				}
 
-            			$scope.button = true;
-            		});
-        }
+				$scope.button = true;
+			});
+		}
 	};
 
 
@@ -130,7 +152,7 @@ angular.module('ozayApp')
 			$scope.model.radioBox = result.renter;
 		}, function(){
 
-		    $state.go("home.directory");
+			$state.go("home.directory");
 
 		});
 	}

@@ -4,7 +4,9 @@ import com.codahale.metrics.annotation.Timed;
 import com.ozay.domain.Authority;
 import com.ozay.domain.PersistentToken;
 import com.ozay.domain.User;
+import com.ozay.model.UserDetail;
 import com.ozay.repository.PersistentTokenRepository;
+import com.ozay.repository.UserDetailRepository;
 import com.ozay.repository.UserRepository;
 import com.ozay.security.SecurityUtils;
 import com.ozay.service.MailService;
@@ -61,6 +63,9 @@ public class AccountResource {
     @Inject
     private MailService mailService;
 
+    @Inject
+    private UserDetailRepository userDetailRepository;
+
     /**
      * POST  /rest/register -> register the user.
      */
@@ -70,11 +75,13 @@ public class AccountResource {
     @Timed
     public ResponseEntity<?> registerAccount(@RequestBody UserDTO userDTO, HttpServletRequest request,
                                              HttpServletResponse response) {
+        // Email is username
+        userDTO.setLogin(userDTO.getEmail());
         return Optional.ofNullable(userRepository.findOne(userDTO.getLogin()))
-            .map(user -> new ResponseEntity<String>("login already in use", HttpStatus.BAD_REQUEST))
+            .map(user -> new ResponseEntity<>("login already in use", HttpStatus.BAD_REQUEST))
             .orElseGet(() -> {
                 if (userRepository.findOneByEmail(userDTO.getEmail()) != null) {
-                    return new ResponseEntity<String>("e-mail address already in use", HttpStatus.BAD_REQUEST);
+                    return new ResponseEntity<>("e-mail address already in use", HttpStatus.BAD_REQUEST);
                 }
                 User user = userService.createUserInformation(userDTO.getLogin(), userDTO.getPassword(),
                         userDTO.getFirstName(), userDTO.getLastName(), userDTO.getEmail().toLowerCase(),
@@ -84,6 +91,47 @@ public class AccountResource {
                 mailService.sendActivationEmail(user.getEmail(), content, locale);
                 return new ResponseEntity<>(HttpStatus.CREATED);});
     }
+
+    /**
+     * POST  /rest/register -> register the user.
+     */
+    @RequestMapping(value = "/rest/account/invitation",
+        method = RequestMethod.POST,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    public ResponseEntity<?> sendInvitation(@RequestBody UserDetail userDetail, HttpServletRequest request,
+                                             HttpServletResponse response) {
+        // Email is username
+        userDetail.setLogin(userDetail.getEmail());
+        return Optional.ofNullable(userRepository.findOneByEmail(userDetail.getLogin()))
+            .map(user -> new ResponseEntity<>("login already in use", HttpStatus.BAD_REQUEST))
+            .orElseGet(() -> {
+                String SALTCHARS = "OZAYTEAM1124ORG";
+                StringBuilder salt = new StringBuilder();
+                Random rnd = new Random();
+                while (salt.length() < 8) {
+                    int index = (int) (rnd.nextFloat() * SALTCHARS.length());
+                    salt.append(SALTCHARS.charAt(index));
+                }
+                String randomPassword = salt.toString();
+
+                if (userRepository.findOneByEmail(userDetail.getEmail()) != null) {
+                    return new ResponseEntity<>("e-mail address already in use", HttpStatus.BAD_REQUEST);
+                }
+                User user = userService.createUserInformation(userDetail.getEmail().toLowerCase(), randomPassword,
+                    userDetail.getFirstName(), userDetail.getLastName(), userDetail.getEmail().toLowerCase(),
+                    "EN");
+                userDetail.setId(user.getId());
+                userDetailRepository.update(userDetail);
+
+                final Locale locale = Locale.forLanguageTag(user.getLangKey());
+                String content = createInvitationFromTemplate(user, locale, request, response, salt.toString());
+                mailService.sendActivationEmail(user.getEmail(), content, locale);
+                return new ResponseEntity<>(HttpStatus.CREATED);});
+    }
+
+
+
     /**
      * GET  /rest/activate -> activate the registered user.
      */
@@ -126,6 +174,7 @@ public class AccountResource {
                     user.getLastName(),
                     user.getEmail(),
                     user.getLangKey(),
+                    user.isPasswordChageRequired(),
                     user.getAuthorities().stream().map(Authority::getName).collect(Collectors.toList())),
                 HttpStatus.OK))
             .orElse(new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
@@ -149,6 +198,7 @@ public class AccountResource {
                     user.getLastName(),
                     user.getEmail(),
                     user.getLangKey(),
+                    user.isPasswordChageRequired(),
                     user.getAuthorities().stream().map(Authority::getName).collect(Collectors.toList())),
                 HttpStatus.OK))
             .orElse(new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
@@ -237,5 +287,18 @@ public class AccountResource {
         IWebContext context = new SpringWebContext(request, response, servletContext,
                 locale, variables, applicationContext);
         return templateEngine.process("activationEmail", context);
+    }
+
+    private String createInvitationFromTemplate(final User user, final Locale locale, final HttpServletRequest request,
+                                                 final HttpServletResponse response, String password) {
+        Map<String, Object> variables = new HashMap<>();
+        variables.put("user", user);
+        variables.put("password", password);
+        variables.put("baseUrl", request.getScheme() + "://" +   // "http" + "://
+            request.getServerName() +       // "myhost"
+            ":" + request.getServerPort());
+        IWebContext context = new SpringWebContext(request, response, servletContext,
+            locale, variables, applicationContext);
+        return templateEngine.process("invitationEmail", context);
     }
 }
