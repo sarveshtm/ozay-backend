@@ -18,12 +18,10 @@ public class UserDTO {
 
     private List<String> roles;
 
-    private boolean passwordChangeRequired;
-
     public UserDTO() {
     }
 
-    public UserDTO(String login, String password, String firstName, String lastName, String email, String langKey, boolean passwordChangeRequired,
+    public UserDTO(String login, String password, String firstName, String lastName, String email, String langKey,
                    List<String> roles) {
         this.login = login;
         this.password = password;
@@ -31,7 +29,6 @@ public class UserDTO {
         this.lastName = lastName;
         this.email = email;
         this.langKey = langKey;
-        this.passwordChangeRequired = passwordChangeRequired;
         this.roles = roles;
     }
 
@@ -67,13 +64,6 @@ public class UserDTO {
         this.login = login;
     }
 
-    public boolean isPasswordChangeRequired() {
-        return passwordChangeRequired;
-    }
-
-    public void setPasswordChangeRequired(boolean passwordChangeRequired) {
-        this.passwordChangeRequired = passwordChangeRequired;
-    }
 
     public void setPassword(String password) {
         this.password = password;

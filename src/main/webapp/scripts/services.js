@@ -44,8 +44,7 @@ ozayApp.factory('Activate', function ($resource) {
 
 ozayApp.factory('InvitationActivation', function ($resource) {
 	return $resource('app/rest/invitation-activate', {}, {
-		'get': { method: 'GET', params: {}, isArray: false}
-	});
+    	});
 });
 
 ozayApp.factory('Account', function ($resource) {
@@ -138,12 +137,11 @@ ozayApp.factory('AuditsService', function ($http) {
 });
 
 ozayApp.factory('Session', function () {
-	this.create = function (login, firstName, lastName, email, passwordChangeRequired, userRoles) {
+	this.create = function (login, firstName, lastName, email, userRoles) {
 		this.login = login;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.email = email;
-		this.passwordChangeRequired = passwordChangeRequired;
 		this.userRoles = userRoles;
 	};
 	this.invalidate = function () {
@@ -151,7 +149,6 @@ ozayApp.factory('Session', function () {
 		this.firstName = null;
 		this.lastName = null;
 		this.email = null;
-		this.passwordChangeRequired = null;
 		this.userRoles = null;
 	};
 	return this;
@@ -178,7 +175,7 @@ ozayApp.factory('AuthenticationSharedService', function ($rootScope, $http, auth
 				    if(buildingId == undefined){
 				        buildingId = null;
 				    }
-					Session.create(data.login, data.firstName, data.lastName, data.email, data.passwordChangeRequired, data.roles);
+					Session.create(data.login, data.firstName, data.lastName, data.email, data.roles);
 
 					$rootScope.account = Session;
 
@@ -219,7 +216,7 @@ ozayApp.factory('AuthenticationSharedService', function ($rootScope, $http, auth
                         }
 
                         Account.get({method: method, buildingId:buildingId},function(data) {
-                            Session.create(data.login, data.firstName, data.lastName, data.email, data.passwordChangeRequired , data.roles);
+                            Session.create(data.login, data.firstName, data.lastName, data.email, data.roles);
                             $rootScope.account = Session;
                             if (!$rootScope.isAuthorized(authorizedRoles)) {
                                 // user is not allowed

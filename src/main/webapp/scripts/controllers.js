@@ -102,17 +102,54 @@ ozayApp.controller('RegisterController', function ($scope, $translate, Register)
 	}
 });
 
-ozayApp.controller('InvitationActivationController', function ($scope, InvitationActivation, $stateParams) {
-	InvitationActivation.get({key: $stateParams.key},
+ozayApp.controller('InvitationActivationController', function ($scope, InvitationActivation, $stateParams, $translate) {
+
+InvitationActivation.get({key: $stateParams.key},
 			function (value, responseHeaders) {
 			console.log(responseHeaders);
 		$scope.error = null;
-		$scope.success = 'OK';
+		$scope.validateKey = true;
+
 	},
 	function (httpResponse) {
 		$scope.success = null;
 		$scope.error = "ERROR";
+		$scope.invalidateKey = true;
 	});
+
+
+	$scope.success = null;
+    	$scope.error = null;
+    	$scope.doNotMatch = null;
+    	$scope.errorUserExists = null;
+    	$scope.register = function () {
+
+    		if ($scope.registerAccount.password != $scope.confirmPassword) {
+    			$scope.doNotMatch = "ERROR";
+    		} else {
+    			$scope.registerAccount.langKey = $translate.use();
+    			$scope.doNotMatch = null;
+    			$scope.success = null;
+    			$scope.error = null;
+    			$scope.errorUserExists = null;
+    			$scope.errorEmailExists = null;
+    			InvitationActivation.save({key: $stateParams.key}, $scope.registerAccount,
+    					function (value, responseHeaders) {
+    				$scope.success = 'OK';
+    			},
+    			function (httpResponse) {
+    				if (httpResponse.status === 400 && httpResponse.data === "login already in use") {
+    					$scope.error = null;
+    					$scope.errorUserExists = "ERROR";
+    				} else if (httpResponse.status === 400 && httpResponse.data === "e-mail address already in use") {
+    					$scope.error = null;
+    					$scope.errorEmailExists = "ERROR";
+    				} else {
+    					$scope.error = "ERROR";
+    				}
+    			});
+    		}
+    	}
 });
 
 

@@ -115,4 +115,11 @@ public class MailService {
         String subject = messageSource.getMessage("email.activation.title", null, locale);
         sendEmail(email, subject, content, false, true);
     }
+
+    @Async
+    public void sendActivationInvitationEmail(final String email, String content, Locale locale) {
+        log.debug("Sending activation e-mail to '{}'", email);
+        String subject = messageSource.getMessage("email.activation.invitation", null, locale);
+        sendEmail(email, subject, content, false, true);
+    }
 }

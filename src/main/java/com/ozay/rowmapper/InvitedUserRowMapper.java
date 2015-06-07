@@ -24,7 +24,6 @@ public class InvitedUserRowMapper implements RowMapper {
         invitedUser.setCreatedDate(new DateTime(rs.getTimestamp("created_date")));
         invitedUser.setActivatedDate(new DateTime(rs.getTimestamp("activated_date")));
         invitedUser.setUpdatedDate(new DateTime(rs.getTimestamp("updated_date")));
-        invitedUser.setPassword(rs.getString("password"));
         return invitedUser;
     }
 }

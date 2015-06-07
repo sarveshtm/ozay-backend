@@ -20,10 +20,11 @@ import java.util.Set;
 @Table(name = "T_USER")
 public class User extends AbstractAuditingEntity implements Serializable {
 
-    @Id
+
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
+    @Id
     @NotNull
     @Size(min = 0, max = 50)
     @Column(length = 50)
@@ -48,9 +49,6 @@ public class User extends AbstractAuditingEntity implements Serializable {
     private String email;
 
     private boolean activated = false;
-
-    @Column(name = "password_change_required")
-    private boolean passwordChangeRequired = true;
 
     @Size(min = 2, max = 5)
     @Column(name = "lang_key", length = 5)
@@ -165,13 +163,6 @@ public class User extends AbstractAuditingEntity implements Serializable {
         return activated;
     }
 
-    public boolean isPasswordChageRequired() {
-        return passwordChangeRequired;
-    }
-
-    public void setPasswordChageRequired(boolean passwordChageRequired) {
-        this.passwordChangeRequired = passwordChageRequired;
-    }
 
     @Override
     public boolean equals(Object o) {

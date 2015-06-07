@@ -77,7 +77,11 @@ public class UserService {
         String encryptedPassword = passwordEncoder.encode(password);
         User currentLoginUser = userRepository.findOneByLogin(SecurityUtils.getCurrentLogin());
         newUser.setLogin(login);
-        newUser.setCreatedBy(currentLoginUser.getId().toString());
+        String createdBy = SecurityUtils.getCurrentLogin();
+        if(createdBy == null){
+            createdBy = "System";
+        }
+        newUser.setCreatedBy(createdBy);
         // new user gets initially a generated password
         newUser.setPassword(encryptedPassword);
         newUser.setFirstName(firstName);
@@ -91,14 +95,14 @@ public class UserService {
         authorities.add(authority);
         newUser.setAuthorities(authorities);
 
-//        accountRepository.insertUser(newUser);
-//        for(Authority authority1 : newUser.getAuthorities()){
-//            accountRepository.insertAuthority(authority1, newUser.getLogin());
-//        }
-//        User createdUser = userRepository.findOneByLogin(newUser.getLogin());
-        userRepository.save(newUser);
+        accountRepository.insertUser(newUser);
+        for(Authority authority1 : newUser.getAuthorities()){
+            accountRepository.insertAuthority(authority1, newUser.getLogin());
+        }
+        User createdUser = userRepository.findOneByLogin(newUser.getLogin());
+//        userRepository.save(newUser);
         log.debug("Created Information for User: {}", newUser);
-        return newUser;
+        return createdUser;
     }
 
 
@@ -113,7 +117,6 @@ public class UserService {
 
     public void changePassword(String password) {
         User currentUser = userRepository.findOneByLogin(SecurityUtils.getCurrentLogin());
-        currentUser.setPasswordChageRequired(false);
         String encryptedPassword = passwordEncoder.encode(password);
         currentUser.setPassword(encryptedPassword);
         userRepository.save(currentUser);

@@ -58,44 +58,17 @@ public class InvitedUserService {
 
 
 
-    public User activateInvitation(String key) {
-        log.debug("Activating user for activation key {}", key);
-        return Optional.ofNullable(invitedUserRepository.getOne(key))
-            .map(invited_user -> {
-                User newUser = new User();
-                Authority authority = authorityRepository.findOne("ROLE_USER");
-                Set<Authority> authorities = new HashSet<>();
-                authorities.add(authority);
-                newUser.setAuthorities(authorities);
-                UserDetail userDetail = userDetailRepository.getOne(invited_user.getUserDetailId());
-                newUser.setFirstName(userDetail.getFirstName());
-                newUser.setLangKey(invited_user.getLangKey());
-                newUser.setActivationKey(invited_user.getActivationKey());
-                newUser.setEmail(userDetail.getEmail());
-                newUser.setLogin(userDetail.getEmail());
-                newUser.setPassword(invited_user.getPassword());
-                newUser.setActivated(true);
-                newUser.setActivationKey(invited_user.getActivationKey());
-                userRepository.save(newUser);
-                userDetail.setUserId(newUser.getId());
-                userDetailRepository.update(userDetail);
-                invited_user.setActivated(true);
-                invited_user.setActivatedDate(new DateTime());
-                invitedUserRepository.activateInvitedUser(invited_user);
-                userBuildingRepository.create(userDetail);
-                return newUser;
-            })
-            .orElse(null);
+    public InvitedUser getDataByKey(String key) {
+        log.debug("Get invited user by key {}", key);
+        return invitedUserRepository.getOne(key);
     }
 
 
     @Transactional
-    public InvitedUser createInvitedUserInformation(UserDetail userDetail, String password, String langKey) {
+    public InvitedUser createInvitedUserInformation(UserDetail userDetail, String langKey) {
         User currentLoginUser = userRepository.findOneByLogin(SecurityUtils.getCurrentLogin());
         InvitedUser invitedUser = new InvitedUser();
-        String encryptedPassword = passwordEncoder.encode(password);
 
-        invitedUser.setPassword(encryptedPassword);
         invitedUser.setCreatedBy(currentLoginUser.getLogin());
         invitedUser.setUserDetailId(userDetail.getId());
         invitedUser.setLangKey(langKey);

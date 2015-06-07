@@ -22,7 +22,7 @@ public class InvitedUserRepository {
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     public InvitedUser getOne(String activationKey){
-        String query = "SELECT * FROM invited_user WHERE activation_key = :activation_key";
+        String query = "SELECT * FROM invited_user WHERE activation_key = :activation_key and activated = false";
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("activation_key", activationKey);
 
@@ -31,12 +31,11 @@ public class InvitedUserRepository {
 
     public void create(InvitedUser invitedUser){
         String query = "INSERT INTO invited_user" +
-            "(user_detail_id, lang_key, password, activation_key, created_by) "
-            + "VALUES(:user_detail_id, :lang_key, :password, :activation_key, :created_by)";
+            "(user_detail_id, lang_key, activation_key, created_by) "
+            + "VALUES(:user_detail_id, :lang_key, :activation_key, :created_by)";
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("user_detail_id", invitedUser.getUserDetailId());
         params.addValue("lang_key", invitedUser.getLangKey());
-        params.addValue("password", invitedUser.getPassword());
         params.addValue("activation_key", invitedUser.getActivationKey());
         params.addValue("created_by", invitedUser.getCreatedBy());
 
