@@ -10,6 +10,7 @@ public class InvitedUser {
     private Integer userDetailId;
     private String langKey;
     private String activationKey;
+    private String password;
     private boolean activated;
     private String createdBy;
     private DateTime createdDate;
@@ -95,5 +96,13 @@ public class InvitedUser {
 
     public void setActivated(boolean activated) {
         this.activated = activated;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

@@ -67,28 +67,6 @@ public class UserService {
             })
             .orElse(null);
     }
-    public User activateInvitation(String key) {
-        log.debug("Activating user for activation key {}", key);
-        return Optional.ofNullable(invitedUserRepository.getOne(key))
-            .map(invited_user -> {
-                User newUser = new User();
-                UserDetail userDetail = userDetailRepository.getOne(invited_user.getUserDetailId());
-
-                newUser.setFirstName(userDetail.getFirstName());
-                newUser.setLangKey(invited_user.getLangKey());
-                newUser.setActivationKey(invited_user.getActivationKey());
-                newUser.setEmail(userDetail.getEmail());
-                newUser.setLogin(newUser.getEmail());
-                newUser.setPassword(null);
-
-                newUser.setActivated(true);
-                newUser.setActivationKey(null);
-                userRepository.save(newUser);
-                return newUser;
-            })
-            .orElse(null);
-
-    }
 
     @Transactional
     public User createUserInformation(String login, String password, String firstName, String lastName, String email,
@@ -113,14 +91,16 @@ public class UserService {
         authorities.add(authority);
         newUser.setAuthorities(authorities);
 
-        accountRepository.insertUser(newUser);
-        for(Authority authority1 : newUser.getAuthorities()){
-            accountRepository.insertAuthority(authority1, newUser.getLogin());
-        }
-        User createdUser = userRepository.findOneByLogin(newUser.getLogin());
+//        accountRepository.insertUser(newUser);
+//        for(Authority authority1 : newUser.getAuthorities()){
+//            accountRepository.insertAuthority(authority1, newUser.getLogin());
+//        }
+//        User createdUser = userRepository.findOneByLogin(newUser.getLogin());
+        userRepository.save(newUser);
         log.debug("Created Information for User: {}", newUser);
-        return createdUser;
+        return newUser;
     }
+
 
     public void updateUserInformation(String firstName, String lastName, String email) {
         User currentUser = userRepository.findOneByLogin(SecurityUtils.getCurrentLogin());

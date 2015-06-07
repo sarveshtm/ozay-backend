@@ -36,6 +36,10 @@ ozayApp.controller('LoginController', function ($scope, $location, Authenticatio
 ozayApp.controller('LogoutController', function ($location, $cookieStore, AuthenticationSharedService, $rootScope, $state) {
 	AuthenticationSharedService.logout();
 	$rootScope.authenticated = false;
+	$rootScope.buildingList = null;
+    $rootScope.selectedBuilding = null;
+    delete $rootScope.buildingList;
+    delete $rootScope.selectedBuilding;
 	$state.go('login');
 });
 
@@ -98,8 +102,23 @@ ozayApp.controller('RegisterController', function ($scope, $translate, Register)
 	}
 });
 
-ozayApp.controller('ActivationController', function ($scope, $routeParams, Activate, $stateParams) {
+ozayApp.controller('InvitationActivationController', function ($scope, InvitationActivation, $stateParams) {
+    AuthenticationSharedService.logout();
+	InvitationActivation.get({key: $stateParams.key},
+			function (value, responseHeaders) {
+			console.log(responseHeaders);
+		$scope.error = null;
+		$scope.success = 'OK';
+	},
+	function (httpResponse) {
+		$scope.success = null;
+		$scope.error = "ERROR";
+	});
+});
 
+
+ozayApp.controller('ActivationController', function ($scope, $routeParams, Activate, $stateParams) {
+    AuthenticationSharedService.logout();
 	Activate.get({key: $stateParams.key},
 			function (value, responseHeaders) {
 			console.log(responseHeaders);

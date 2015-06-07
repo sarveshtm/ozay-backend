@@ -10,6 +10,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import javax.inject.Inject;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,31 +31,29 @@ public class InvitedUserRepository {
 
     public void create(InvitedUser invitedUser){
         String query = "INSERT INTO invited_user" +
-            "(user_detail_id, lang_key, activation_key, created_by) "
-            + "VALUES(:user_detail_id, :lang_key, :activation_key, :created_by)";
+            "(user_detail_id, lang_key, password, activation_key, created_by) "
+            + "VALUES(:user_detail_id, :lang_key, :password, :activation_key, :created_by)";
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("user_detail_id", invitedUser.getUserDetailId());
         params.addValue("lang_key", invitedUser.getLangKey());
+        params.addValue("password", invitedUser.getPassword());
         params.addValue("activation_key", invitedUser.getActivationKey());
         params.addValue("created_by", invitedUser.getCreatedBy());
 
         namedParameterJdbcTemplate.update(query, params);
     }
 
-    public void update(InvitedUser invitedUser){
+    public void activateInvitedUser(InvitedUser invitedUser){
         String query = "UPDATE invited_user " +
-            "SET updated_by = :updated_by, " +
-            "updated_date =:updated_date, " +
-            "activated =:activated, " +
+            "SET activated =:activated, " +
             "activation_key = :activation_key, " +
-            "activated_date = :activated_date" +
+            "activated_date = :activated_date " +
             "WHERE id = :id";
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("id", invitedUser.getId());
-        params.addValue("updated_by", invitedUser.getUpdatedBy());
-        params.addValue("updated_date", invitedUser.getUpdatedDate());
+
         params.addValue("activated", invitedUser.isActivated());
-        params.addValue("activated_date", invitedUser.getActivatedDate());
+        params.addValue("activated_date",  new Timestamp(invitedUser.getActivatedDate().getMillis()));
         params.addValue("activation_key", invitedUser.getActivationKey());
 
         namedParameterJdbcTemplate.update(query, params);

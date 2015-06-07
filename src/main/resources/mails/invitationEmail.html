@@ -5,15 +5,15 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     </head>
     <body>
-        <p th:text="#{email.activation.greeting(${user.login})}">
+        <p th:text="#{email.activation.greeting(${userDetail.firstName})}">
             Dear
         </p>
         <p th:text="#{email.activation.text1}">
             Your JHipster account has been created, please click on the URL below to activate it:
         </p>
         <p>
-            <a th:href="@{|${baseUrl}/#/activate?key=${user.activationKey}|}"
-               th:text="|${user.login}|">Activation Link</a>
+            <a th:href="@{|${baseUrl}/#/accept-invitation?key=${invitedUser.activationKey}|}"
+               >Activation Link</a>
         </p>
         <p th:text="#{email.activation.password(${password})}">
             Your temporary password is

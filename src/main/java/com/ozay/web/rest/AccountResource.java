@@ -4,11 +4,14 @@ import com.codahale.metrics.annotation.Timed;
 import com.ozay.domain.Authority;
 import com.ozay.domain.PersistentToken;
 import com.ozay.domain.User;
+import com.ozay.model.InvitedUser;
 import com.ozay.model.UserDetail;
+import com.ozay.repository.InvitedUserRepository;
 import com.ozay.repository.PersistentTokenRepository;
 import com.ozay.repository.UserDetailRepository;
 import com.ozay.repository.UserRepository;
 import com.ozay.security.SecurityUtils;
+import com.ozay.service.InvitedUserService;
 import com.ozay.service.MailService;
 import com.ozay.service.UserService;
 import com.ozay.web.rest.dto.UserDTO;
@@ -66,6 +69,12 @@ public class AccountResource {
     @Inject
     private UserDetailRepository userDetailRepository;
 
+    @Inject
+    private InvitedUserRepository invitedUserRepository;
+
+    @Inject
+    private InvitedUserService invitedUserService;
+
     /**
      * POST  /rest/register -> register the user.
      */
@@ -80,7 +89,7 @@ public class AccountResource {
         return Optional.ofNullable(userRepository.findOneByLogin(userDTO.getLogin()))
             .map(user -> new ResponseEntity<>("login already in use", HttpStatus.BAD_REQUEST))
             .orElseGet(() -> {
-                if (userRepository.findOneByLogin(userDTO.getEmail()) != null) {
+                if (userRepository.findOneByEmail(userDTO.getEmail()) != null) {
                     return new ResponseEntity<>("e-mail address already in use", HttpStatus.BAD_REQUEST);
                 }
                 User user = userService.createUserInformation(userDTO.getLogin(), userDTO.getPassword(),
@@ -115,18 +124,11 @@ public class AccountResource {
                 }
                 String randomPassword = salt.toString();
 
-                if (userRepository.findOneByLogin(userDetail.getEmail()) != null) {
-                    return new ResponseEntity<>("e-mail address already in use", HttpStatus.BAD_REQUEST);
-                }
-                User user = userService.createUserInformation(userDetail.getEmail().toLowerCase(), randomPassword,
-                    userDetail.getFirstName(), userDetail.getLastName(), userDetail.getEmail().toLowerCase(),
-                    "EN");
-                userDetail.setId(user.getId());
-                userDetailRepository.update(userDetail);
+                InvitedUser invitedUser = invitedUserService.createInvitedUserInformation(userDetail, randomPassword, "en");
 
-                final Locale locale = Locale.forLanguageTag(user.getLangKey());
-                String content = createInvitationFromTemplate(user, locale, request, response, salt.toString());
-                mailService.sendActivationEmail(user.getEmail(), content, locale);
+                final Locale locale = Locale.forLanguageTag(invitedUser.getLangKey());
+                String content = createInvitationFromTemplate(userDetail, invitedUser,  locale, request, response, salt.toString());
+                mailService.sendActivationEmail(userDetail.getEmail(), content, locale);
                 return new ResponseEntity<>(HttpStatus.CREATED);});
     }
 
@@ -144,6 +146,21 @@ public class AccountResource {
             .map(user -> new ResponseEntity<String>(HttpStatus.OK))
             .orElse(new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
     }
+
+    /**
+     * GET  /rest/invitation/activate -> activate the invited user.
+     */
+    @RequestMapping(value = "/rest/invitation-activate",
+        method = RequestMethod.GET,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    public ResponseEntity<String> activateInvitedUser(@RequestParam(value = "key") String key) {
+        return Optional.ofNullable(invitedUserService.activateInvitation(key))
+            .map(user -> new ResponseEntity<String>(HttpStatus.OK))
+            .orElse(new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
+    }
+
+
 
     /**
      * GET  /rest/authenticate -> check if the user is authenticated, and return its login.
@@ -289,11 +306,12 @@ public class AccountResource {
         return templateEngine.process("activationEmail", context);
     }
 
-    private String createInvitationFromTemplate(final User user, final Locale locale, final HttpServletRequest request,
+    private String createInvitationFromTemplate(final UserDetail userDetail, final InvitedUser invitedUser,  final Locale locale, final HttpServletRequest request,
                                                  final HttpServletResponse response, String password) {
         Map<String, Object> variables = new HashMap<>();
-        variables.put("user", user);
+        variables.put("userDetail", userDetail);
         variables.put("password", password);
+        variables.put("invitedUser", invitedUser);
         variables.put("baseUrl", request.getScheme() + "://" +   // "http" + "://
             request.getServerName() +       // "myhost"
             ":" + request.getServerPort());

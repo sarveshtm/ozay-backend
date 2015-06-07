@@ -20,14 +20,12 @@ import java.util.Set;
 @Table(name = "T_USER")
 public class User extends AbstractAuditingEntity implements Serializable {
 
-    @GenericGenerator(name="generator", strategy="increment")
-    @GeneratedValue(generator="generator")
-    @Column(name="ID", columnDefinition = "serial")
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
     @NotNull
     @Size(min = 0, max = 50)
-    @Id
     @Column(length = 50)
     private String login;
 

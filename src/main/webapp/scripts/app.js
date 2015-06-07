@@ -198,6 +198,14 @@ ozayApp
     			authorizedRoles: [USER_ROLES.all]
     		}
     	})
+        .state('accept-invitation', {
+                url: "/accept-invitation?key",
+                templateUrl: "views/activate_invitation.html",
+                controller: 'InvitationActivationController',
+                access: {
+                    authorizedRoles: [USER_ROLES.all]
+                }
+            })
 	.state('loginRedirect', {
     		url: "/login?redirect",
     		templateUrl: "views/login.html",
@@ -403,7 +411,6 @@ ozayApp
 	// Call when the the client is confirmed
 	$rootScope.$on('event:auth-loginConfirmed', function(data) {
 		$rootScope.authenticated = true;
-console.log($rootScope.account);
 		if($rootScope.account.passwordChangeRequired == true){
 		    $state.go("change_password");
 		    return;

@@ -209,7 +209,8 @@ public class UserDetailRepository {
             "management = ?, " +
             "staff = ?, " +
             "board = ?, " +
-            "resident = ? " +
+            "resident = ?, " +
+            "user_id = ? " +
             "WHERE building_id = ? " +
             "AND id = ?";
 
@@ -227,9 +228,9 @@ public class UserDetailRepository {
             userDetail.isStaff(),
             userDetail.isBoard(),
             userDetail.isResident(),
+            userDetail.getUserId(),
             userDetail.getBuildingId(),
             userDetail.getId()
-
         };
 
         int count = jdbcTemplate.update(update, params);

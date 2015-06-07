@@ -42,6 +42,12 @@ ozayApp.factory('Activate', function ($resource) {
 	});
 });
 
+ozayApp.factory('InvitationActivation', function ($resource) {
+	return $resource('app/rest/invitation-activate', {}, {
+		'get': { method: 'GET', params: {}, isArray: false}
+	});
+});
+
 ozayApp.factory('Account', function ($resource) {
 	return $resource('app/rest/account/:method/:buildingId', {}, {
 	});
