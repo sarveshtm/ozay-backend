@@ -33,7 +33,6 @@ public class UserDetail {
     private boolean board;
     private boolean resident;
 
-    private User user;
 
     public String getLogin() {
         return login;
@@ -123,14 +122,6 @@ public class UserDetail {
         this.resident = resident;
     }
 
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
     public Integer getId() {
         return id;
     }
@@ -177,5 +168,18 @@ public class UserDetail {
 
     public void setUserId(Integer userId) {
         this.userId = userId;
+    }
+
+    @Override
+    public String toString() {
+        return "UserDetail{" +
+            "id='" + id + '\'' +
+            "login='" + login + '\'' +
+            ", firstName='" + firstName + '\'' +
+            ", lastName='" + lastName + '\'' +
+            ", email='" + email + '\'' +
+
+            ", user_id='" + userId + '\'' +
+            "}";
     }
 }

@@ -97,7 +97,6 @@ public class Building {
         this.createdBy = createdBy;
     }
 
-
     public String getEmail() {
         return email;
     }
