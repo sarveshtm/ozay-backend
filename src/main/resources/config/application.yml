@@ -32,7 +32,7 @@ authentication:
         clientid: ozayapp
         secret: mySecretOAuthSecret
         # Token is valid 3 hours
-        tokenValidityInSeconds: 10800
+        tokenValidityInSeconds: 28800
 
 swagger:
     title: ozay API

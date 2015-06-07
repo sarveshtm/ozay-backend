@@ -134,7 +134,7 @@ public class UserService {
 
         boolean isAdmin = false;
         for(Authority authority : currentUser.getAuthorities()){
-            if(authority.getName() == "ROLE_ADMIN"){
+            if(authority.getName().equals("ROLE_ADMIN")){
                 isAdmin = true;
                 break;
             }
