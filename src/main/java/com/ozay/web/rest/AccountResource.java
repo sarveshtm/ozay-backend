@@ -115,16 +115,12 @@ public class AccountResource {
         return Optional.ofNullable(userRepository.findOneByEmail(userDetail.getEmail()))
             .map(user -> new ResponseEntity<>("login already in use", HttpStatus.BAD_REQUEST))
             .orElseGet(() -> {
-
-
                 InvitedUser invitedUser = invitedUserService.createInvitedUserInformation(userDetail, "en");
-
                 final Locale locale = Locale.forLanguageTag(invitedUser.getLangKey());
                 String content = createInvitationFromTemplate(userDetail, invitedUser,  locale, request, response);
-                mailService.sendActivationInvitationEmail(userDetail.getEmail(), content, locale);
+                mailService.sendActivationInvitationCompleteEmail(userDetail.getEmail(), content, locale);
                 return new ResponseEntity<>(HttpStatus.CREATED);});
     }
-
 
 
     /**
@@ -139,8 +135,6 @@ public class AccountResource {
             .map(user -> new ResponseEntity<String>(HttpStatus.OK))
             .orElse(new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
     }
-
-
 
     /**
      * GET  /rest/invitation/activate -> activate the invited user.
