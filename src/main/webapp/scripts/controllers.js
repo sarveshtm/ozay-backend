@@ -103,7 +103,6 @@ ozayApp.controller('RegisterController', function ($scope, $translate, Register)
 });
 
 ozayApp.controller('InvitationActivationController', function ($scope, InvitationActivation, $stateParams) {
-    AuthenticationSharedService.logout();
 	InvitationActivation.get({key: $stateParams.key},
 			function (value, responseHeaders) {
 			console.log(responseHeaders);
@@ -118,7 +117,6 @@ ozayApp.controller('InvitationActivationController', function ($scope, Invitatio
 
 
 ozayApp.controller('ActivationController', function ($scope, $routeParams, Activate, $stateParams) {
-    AuthenticationSharedService.logout();
 	Activate.get({key: $stateParams.key},
 			function (value, responseHeaders) {
 			console.log(responseHeaders);
