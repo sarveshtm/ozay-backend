@@ -74,10 +74,12 @@ public class BuildingResource {
             }
         }
 
-        List<Building> buildingList = buildingRepository.getBuildings();
+        List<Building> buildingList = null;
         if(isAdmin == true){
+            log.debug("REST GET get buildings admin");
             buildingList=  buildingRepository.getBuildings();
         } else {
+            log.debug("REST GET get buildings getBuildingsByUser");
             buildingList = buildingRepository.getBuildingsByUser(user.getId());
         }
 
