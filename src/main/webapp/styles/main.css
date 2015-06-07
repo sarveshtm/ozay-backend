@@ -92,6 +92,9 @@ only screen and (                min-resolution: 2dppx) {
 .voffset9 { margin-top: 150px; }
 
 /* start Password strength bar style */
+body {
+    font-size:16px;
+}
 ul#strength {
     display:inline;
     list-style:none;
@@ -254,6 +257,9 @@ select#building_list {
   border-radius: 0;
   width: 100%;
   background-color:white;
+}
+ul#side-menu li a{
+    font-size:15px;
 }
 body, html{
     height:100%;
