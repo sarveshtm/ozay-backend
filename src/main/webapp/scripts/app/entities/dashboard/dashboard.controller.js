@@ -3,8 +3,9 @@
 angular.module('ozayApp')
 .controller('DashboardController', function ($rootScope, $scope, $cookieStore, Dashboard) {
     $scope.dashboard = [];
-	$rootScope.$watch('buildingReady', function(){
-		if($rootScope.buildingReady == true){
+
+	$rootScope.$watch('selectedBuilding', function(){
+		if($rootScope.selectedBuilding !== undefined){
 			var buildingId = $rootScope.selectedBuilding;
 			Dashboard.get({buildingId:buildingId},function(data) {
                 $scope.dashboard = data;
