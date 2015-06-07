@@ -14,7 +14,11 @@ ozayApp.controller('MainController', function ($scope, $location, $rootScope, $s
 
 	// Search functions
 	$scope.search_open = function(){
-		$('#navbar-search-form').addClass('open');
+	    if($('#navbar-search-form').hasClass('open')){
+	    $('#navbar-search-form').removeClass('open');
+	    } else {
+	        $('#navbar-search-form').addClass('open');
+	    }
 	}
 	$scope.search_close = function(){
 		$('#navbar-search-form').removeClass('open');

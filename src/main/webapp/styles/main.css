@@ -515,4 +515,6 @@ display: flex; /* add */
     vertical-align: middle;
     display: inline-block;
 }
-
+.navbar-right li{
+    float:right;
+}
