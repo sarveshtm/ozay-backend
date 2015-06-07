@@ -385,7 +385,12 @@ body, html{
   background-color: #E7E3E4;
 }
 
-
+input{
+    font-size:16px;
+}
+.form-control {
+  font-size:16px;
+}
 /* Login */
 #logo {
   max-width: 340px;
@@ -400,9 +405,7 @@ body, html{
     position: fixed;
     font-size:18px;
 }
-#login_wrapper input{
-    font-size:18px;
-}
+
 #login_wrapper img{
 display: block;
     margin-left: auto;
