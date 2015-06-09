@@ -49,7 +49,7 @@ public class MemberResource {
 
 
     /**
-     * GET  /rest/userdetails/:login -> get the "Building" ID
+     * GET  /rest/member/:login -> get the "Building" ID
      */
     @RequestMapping(value = "/member/building/{buildingId}",
         method = RequestMethod.GET,
@@ -61,7 +61,7 @@ public class MemberResource {
     }
 
     /**
-     * GET  /rest/userdetails/building/{buildingId}/{id} -> get the "Building" by bu
+     * GET  /rest/member/building/{buildingId}/{id} -> get the "Building" by bu
      */
     @RequestMapping(value = "/member/building/{buildingId}/{id}",
         method = RequestMethod.GET,
@@ -77,7 +77,7 @@ public class MemberResource {
 
 
     /**
-     * GET  "/userdetails/building_user_count/{buildingId}", -> get number of members in the building
+     * GET  "/member/building_user_count/{buildingId}", -> get number of members in the building
      */
     @RequestMapping(value = "/member/building_user_count/{buildingId}",
         method = RequestMethod.GET,
@@ -92,7 +92,7 @@ public class MemberResource {
     }
 
     /**
-     * POST  /notifications -> Create a new notification.
+     * POST  /member -> Create a new member.
      */
     @RequestMapping(value = "/member",
         method = RequestMethod.POST,
@@ -170,6 +170,26 @@ public class MemberResource {
         boolean result = memberRepository.update(member);
         log.debug("User Detail update success {}", result);
 
+        return new ResponseEntity<JsonResponse>(json,  new HttpHeaders(), HttpStatus.OK);
+    }
+
+    /**
+     * POST  /member -> delete members.
+     */
+    @RequestMapping(value = "/member/delete",
+        method = RequestMethod.POST,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    public ResponseEntity<JsonResponse> deleteMembers(@RequestBody List<Member> members) throws URISyntaxException {
+        log.debug("REST request :delete  record : {}", members);
+        JsonResponse json = new JsonResponse();
+
+        for(Member member : members){
+            if(member.isDeleted() == true){
+                log.debug("REST request :delete  record : {}", member);
+                memberRepository.update(member);
+            }
+        }
         return new ResponseEntity<JsonResponse>(json,  new HttpHeaders(), HttpStatus.OK);
     }
 }

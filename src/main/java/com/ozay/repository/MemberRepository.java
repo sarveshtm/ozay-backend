@@ -208,6 +208,7 @@ public class MemberRepository {
             "staff = ?, " +
             "board = ?, " +
             "resident = ?, " +
+            "deleted = ?, " +
             "user_id = ? " +
             "WHERE building_id = ? " +
             "AND id = ?";
@@ -226,6 +227,7 @@ public class MemberRepository {
             member.isStaff(),
             member.isBoard(),
             member.isResident(),
+            member.isDeleted(),
             member.getUserId(),
             member.getBuildingId(),
             member.getId()

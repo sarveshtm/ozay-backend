@@ -32,6 +32,7 @@ public class Member {
 
     private boolean board;
     private boolean resident;
+    private boolean deleted;
 
 
     public String getLogin() {
@@ -168,6 +169,14 @@ public class Member {
 
     public void setUserId(Integer userId) {
         this.userId = userId;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 
     @Override

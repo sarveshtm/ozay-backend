@@ -17,6 +17,9 @@ angular.module('ozayApp')
 		'invite' : {
    			method: 'POST',
         },
-		'update': { method:'PUT' }
+		'update': { method:'PUT' },
+		'deleteMembers': {
+		url:'api/member/delete',
+		method:'POST' }
 	});
 });

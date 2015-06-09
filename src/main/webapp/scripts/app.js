@@ -229,22 +229,15 @@ ozayApp
 			authorizedRoles: [USER_ROLES.all]
 		}
 	})
-	.state('password', {
-		url : '/password',
-		templateUrl: 'views/password.html',
-		controller: 'PasswordController',
-		access: {
-			authorizedRoles: [USER_ROLES.user]
-		}
-	})
-	.state('change_password', {
-    		url : '/password',
-    		templateUrl: 'views/password.html',
-    		controller: 'PasswordController',
-    		access: {
-    			authorizedRoles: [USER_ROLES.user]
-    		}
-    	})
+//
+//	.state('change_password', {
+//    		url : '/password',
+//    		templateUrl: 'views/password.html',
+//    		controller: 'PasswordController',
+//    		access: {
+//    			authorizedRoles: [USER_ROLES.user]
+//    		}
+//    	})
 	.state('register', {
 		url: "/register",
 		templateUrl: "views/login.html",
@@ -333,10 +326,18 @@ ozayApp
 			authorizedRoles: [USER_ROLES.admin, USER_ROLES.access_directory]
 		}
 	})
+	.state('home.password', {
+    		url : '/password',
+    		templateUrl: 'views/password.html',
+    		controller: 'PasswordController',
+    		access: {
+    			authorizedRoles: [USER_ROLES.user]
+    		}
+    	})
 	.state('home.director_details_new', {
 		url: "/directory/:method",
 		templateUrl: 'views/directory_details.html',
-		controller: 'DirectoryDetailController',
+		controller: 'MemberDetailController',
 		access: {
 			authorizedRoles: [USER_ROLES.user]
 		}
