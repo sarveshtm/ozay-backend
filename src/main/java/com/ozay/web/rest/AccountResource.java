@@ -5,7 +5,7 @@ import com.ozay.domain.Authority;
 import com.ozay.domain.PersistentToken;
 import com.ozay.domain.User;
 import com.ozay.model.InvitedUser;
-import com.ozay.model.UserDetail;
+import com.ozay.model.Member;
 import com.ozay.repository.*;
 import com.ozay.security.SecurityUtils;
 import com.ozay.service.InvitedUserService;
@@ -65,7 +65,7 @@ public class AccountResource {
     private MailService mailService;
 
     @Inject
-    private UserDetailRepository userDetailRepository;
+    private MemberRepository memberRepository;
 
     @Inject
     private InvitedUserRepository invitedUserRepository;
@@ -108,17 +108,17 @@ public class AccountResource {
         method = RequestMethod.POST,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public ResponseEntity<?> sendInvitation(@RequestBody UserDetail userDetail, HttpServletRequest request,
+    public ResponseEntity<?> sendInvitation(@RequestBody Member member, HttpServletRequest request,
                                              HttpServletResponse response) {
         // Email is username
-        userDetail.setLogin(userDetail.getEmail());
-        return Optional.ofNullable(userRepository.findOneByEmail(userDetail.getEmail()))
+        member.setLogin(member.getEmail());
+        return Optional.ofNullable(userRepository.findOneByEmail(member.getEmail()))
             .map(user -> new ResponseEntity<>("login already in use", HttpStatus.BAD_REQUEST))
             .orElseGet(() -> {
-                InvitedUser invitedUser = invitedUserService.createInvitedUserInformation(userDetail, "en");
+                InvitedUser invitedUser = invitedUserService.createInvitedUserInformation(member, "en");
                 final Locale locale = Locale.forLanguageTag(invitedUser.getLangKey());
-                String content = createInvitationFromTemplate(userDetail, invitedUser,  locale, request, response);
-                mailService.sendActivationInvitationCompleteEmail(userDetail.getEmail(), content, locale);
+                String content = createInvitationFromTemplate(member, invitedUser,  locale, request, response);
+                mailService.sendActivationInvitationCompleteEmail(member.getEmail(), content, locale);
                 return new ResponseEntity<>(HttpStatus.CREATED);});
     }
 
@@ -167,11 +167,11 @@ public class AccountResource {
                     return new ResponseEntity<>("Key is not set", HttpStatus.BAD_REQUEST);
                 }
                 InvitedUser invitedUser = invitedUserService.getDataByKey(key);
-                UserDetail userDetail = userDetailRepository.getOne(invitedUser.getUserDetailId());
-                log.debug("User detail info {}", userDetail );
-                userDTO.setEmail(userDetail.getEmail());
-                userDTO.setFirstName(userDetail.getFirstName());
-                userDTO.setLastName(userDetail.getLastName());
+                Member member = memberRepository.getOne(invitedUser.getMemberId());
+                log.debug("User detail info {}", member );
+                userDTO.setEmail(member.getEmail());
+                userDTO.setFirstName(member.getFirstName());
+                userDTO.setLastName(member.getLastName());
                 if (userRepository.findOneByEmail(userDTO.getEmail()) != null) {
                     return new ResponseEntity<>("e-mail address already in use", HttpStatus.BAD_REQUEST);
                 }
@@ -182,9 +182,9 @@ public class AccountResource {
                     userDTO.getFirstName(), userDTO.getLastName(), userDTO.getEmail().toLowerCase(),
                     userDTO.getLangKey());
 
-                userDetail.setUserId(user.getId());
-                userDetailRepository.update(userDetail);
-                userBuildingRepository.create(userDetail);
+                member.setUserId(user.getId());
+                memberRepository.update(member);
+                userBuildingRepository.create(member);
                 user.setActivated(true);
                 invitedUser.setActivated(true);
                 invitedUserRepository.activateInvitedUser(invitedUser);
@@ -341,10 +341,10 @@ public class AccountResource {
         return templateEngine.process("activationEmail", context);
     }
 
-    private String createInvitationFromTemplate(final UserDetail userDetail, final InvitedUser invitedUser,  final Locale locale, final HttpServletRequest request,
+    private String createInvitationFromTemplate(final Member member, final InvitedUser invitedUser,  final Locale locale, final HttpServletRequest request,
                                                  final HttpServletResponse response) {
         Map<String, Object> variables = new HashMap<>();
-        variables.put("userDetail", userDetail);
+        variables.put("member", member);
         variables.put("invitedUser", invitedUser);
         variables.put("baseUrl", request.getScheme() + "://" +   // "http" + "://
             request.getServerName() +       // "myhost"

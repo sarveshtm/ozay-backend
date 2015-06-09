@@ -1,11 +1,11 @@
-<form name="form" novalidate="" class="simple-form" ng-submit="roleValidationCheck() && form.$valid && create(UserDetail)">
+<form name="form" novalidate="" class="simple-form" ng-submit="roleValidationCheck() && form.$valid && create(Member)">
     <div class="row">
     <div class="col-lg-12">
         <div class="panel panel-default page_content">
             <div id="page_content_title" class="panel-heading">
                 DIRECTORY | {{type}}
                 <div class="button_group">
-                    <button class="btn btn-default" type="button" ng-click="invite()" ng-show="type =='EDIT' && UserDetail.userId ==0 "ng-disabled="!button">Invite</button>
+                    <button class="btn btn-default" type="button" ng-click="invite()" ng-show="type =='EDIT' && Member.userId ==0 "ng-disabled="!button">Invite</button>
                     <button class="btn btn-default" type="submit" ng-click="submitted=true" ng-disabled="!button">Submit</button>
                     <button class="btn btn-default" type="button" ng-click="goBack()">Cancel</button>
                 </div>
@@ -28,22 +28,22 @@
                         <div class="form-group">
                             <div class="col-lg-12" ng-class="{ 'has-error' : submitted && form.first_name.$invalid}">
                                 <label class="control-label">First Name</label>
-                                <input ng-model="UserDetail.firstName" name="first_name" class="form-control" type="text" value="{{UserDetail.firstName}}" required>
-                                <input type="hidden" ng-model="UserDetail.buildingId" value="{{rootScope.selectedBuilding}}">
+                                <input ng-model="Member.firstName" name="first_name" class="form-control" type="text" value="{{Member.firstName}}" required>
+                                <input type="hidden" ng-model="Member.buildingId" value="{{rootScope.selectedBuilding}}">
                                 <p ng-show="submitted && form.first_name.$error.required" class="help-block has-error">Required</p>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="col-lg-12" ng-class="{ 'has-error' : submitted &&  form.last_name.$invalid}">
                                 <label class="control-label">Last Name</label>
-                                <input ng-model="UserDetail.lastName" name="last_name" required class="form-control" type="text" value="{{UserDetail.lastName}}">
+                                <input ng-model="Member.lastName" name="last_name" required class="form-control" type="text" value="{{Member.lastName}}">
                                 <p ng-show="submitted && form.last_name.$error.required" class="help-block has-error">Required</p>
                             </div>
                         </div>
                         <div class="col-lg-6" ng-class="{ 'has-error' : submitted && form.unit.$invalid}">
                             <div class="form-group">
                                 <label class="control-label">Apt #:</label>
-                                <input ng-model="UserDetail.unit" name="unit" class="form-control" type="text" value="{{UserDetail.unit}}" unitvalidation management="{{UserDetail.management}}" staff="{{UserDetail.staff}}">
+                                <input ng-model="Member.unit" name="unit" class="form-control" type="text" value="{{Member.unit}}" unitvalidation management="{{Member.management}}" staff="{{Member.staff}}">
                                 <p ng-show="submitted && form.unit.$error.unitvalidation" class="help-block has-error">Required</p>
                             </div>
                         </div>
@@ -52,7 +52,7 @@
                         <div class="col-lg-6">
                             <div class="form-group">
                                 <label class="control-label"># Parking:</label>
-                                <input ng-model="UserDetail.parking" class="form-control" type="text" value="{{UserDetail.parking}}">
+                                <input ng-model="Member.parking" class="form-control" type="text" value="{{Member.parking}}">
                             </div>
 
                         </div>
@@ -60,14 +60,14 @@
                         <div class="form-group">
                             <div class="col-lg-12">
                                 <label class="control-label">% Ownership</label>
-                                <input ng-model="UserDetail.ownership" class="form-control" type="text" value="{{UserDetail.ownership}}">
+                                <input ng-model="Member.ownership" class="form-control" type="text" value="{{Member.ownership}}">
                             </div>
                         </div>
 
                         <div class="form-group">
                             <div class="col-lg-12" ng-class="{ 'has-error' : submitted &&  form.email.$invalid}">
                                 <label class="control-label">Email</label>
-                                <input ng-model="UserDetail.email"  name="email" class="form-control" type="email"  required>
+                                <input ng-model="Member.email"  name="email" class="form-control" type="email"  required>
                                 <p ng-show="submitted && form.email.$error.required" class="help-block">Required</p>
                                 <p ng-show="submitted && form.email.$error.email" class="help-block">Enter Email Address</p>
                             </div>
@@ -79,14 +79,14 @@
                         <div class="form-group">
                             <div class="col-lg-12">
                                 <label class="control-label">Phone#</label>
-                                <input ng-model="UserDetail.phone" class="form-control" type="text" value="{{UserDetail.phone}}" ng-change="roleValidation()">
+                                <input ng-model="Member.phone" class="form-control" type="text" value="{{Member.phone}}" ng-change="roleValidation()">
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="col-lg-12" ng-class="{ 'has-error' : submitted && roleValidation == false}">
                                 <label class="control-label">Role</label>
                                 <ul class="ozay-checkbox_ul block_4">
-                                    <li ng-class="{'active': UserDetail[obj.name],'inactive': !UserDetail[obj.name]}" ng-repeat="obj in roleList"><a ng-click="UserDetail[obj.name] = !UserDetail[obj.name]"><input ng-model="UserDetail[obj.name]"  type="checkbox" value='1' name="{{obj.name}}" >{{obj.label}}</a></li>
+                                    <li ng-class="{'active': Member[obj.name],'inactive': !Member[obj.name]}" ng-repeat="obj in roleList"><a ng-click="Member[obj.name] = !Member[obj.name]"><input ng-model="Member[obj.name]"  type="checkbox" value='1' name="{{obj.name}}" >{{obj.label}}</a></li>
                                 </ul>
                                 <p ng-show="submitted && roleValidation == false" style="position:absolute;" class="help-block">Required</p>
                             </div>
@@ -95,7 +95,7 @@
                             <div class="col-lg-12">
                                 <label class="control-label">Renter</label>
                                 <ul class="ozay-checkbox_ul block_4">
-                                    <li ng-class="{'active': UserDetail.renter == obj.value, 'inactive': UserDetail.renter != obj.value}" ng-repeat="obj in renterList"><a ng-click="UserDetail.renter = obj.value">{{obj.label}}</a><input ng-model="UserDetail.renter" type="radio" name="model.name" value="{{obj.value}}" ng-value="{{obj.name}}"></li>
+                                    <li ng-class="{'active': Member.renter == obj.value, 'inactive': Member.renter != obj.value}" ng-repeat="obj in renterList"><a ng-click="Member.renter = obj.value">{{obj.label}}</a><input ng-model="Member.renter" type="radio" name="model.name" value="{{obj.value}}" ng-value="{{obj.name}}"></li>
                                 </ul>
                             </div>
                         </div>

@@ -9,7 +9,7 @@ import org.joda.time.DateTime;
 
 import java.sql.Date;
 
-public class UserDetail {
+public class Member {
     private Integer id;
     private String firstName;
     private String lastName;
@@ -172,7 +172,7 @@ public class UserDetail {
 
     @Override
     public String toString() {
-        return "UserDetail{" +
+        return "Member{" +
             "id='" + id + '\'' +
             "login='" + login + '\'' +
             ", firstName='" + firstName + '\'' +

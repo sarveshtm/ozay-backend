@@ -1,15 +1,15 @@
 package com.ozay.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
-import com.ozay.model.UserDetail;
+import com.ozay.model.Member;
 import com.ozay.repository.UserBuildingRepository;
-import com.ozay.repository.UserDetailRepository;
+import com.ozay.repository.MemberRepository;
 import com.ozay.repository.UserRepository;
-import com.ozay.service.UserDetailService;
+import com.ozay.service.MemberService;
 import com.ozay.service.UserService;
 import com.ozay.web.rest.dto.FieldErrorDTO;
 import com.ozay.web.rest.dto.JsonResponse;
-import com.ozay.web.rest.dto.UserDetailListDTO;
+import com.ozay.web.rest.dto.MemberListDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -28,12 +28,12 @@ import java.util.Optional;
  */
 @RestController
 @RequestMapping("/api")
-public class UserDetailResource {
+public class MemberResource {
 
-    private final Logger log = LoggerFactory.getLogger(UserDetailResource.class);
+    private final Logger log = LoggerFactory.getLogger(MemberResource.class);
 
     @Inject
-    private UserDetailRepository userDetailRepository;
+    private MemberRepository memberRepository;
 
     @Inject
     private UserService userService;
@@ -45,33 +45,33 @@ public class UserDetailResource {
     private UserBuildingRepository userBuildingRepository;
 
     @Inject
-    private UserDetailService userDetailService;
+    private MemberService memberService;
 
 
     /**
      * GET  /rest/userdetails/:login -> get the "Building" ID
      */
-    @RequestMapping(value = "/userdetails/building/{buildingId}",
+    @RequestMapping(value = "/member/building/{buildingId}",
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public List<UserDetailListDTO> getAll(@PathVariable int buildingId) {
+    public List<MemberListDTO> getAll(@PathVariable int buildingId) {
         log.debug("REST request to get all Notifications");
-        return userDetailService.createUserDetailListByRole(userDetailRepository.getAllUsersByBuilding(buildingId));
+        return memberService.createMemberListByRole(memberRepository.getAllUsersByBuilding(buildingId));
     }
 
     /**
      * GET  /rest/userdetails/building/{buildingId}/{id} -> get the "Building" by bu
      */
-    @RequestMapping(value = "/userdetails/building/{buildingId}/{id}",
+    @RequestMapping(value = "/member/building/{buildingId}/{id}",
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public ResponseEntity<UserDetail> getUserDetail(@PathVariable int buildingId, @PathVariable int id) {
+    public ResponseEntity<Member> getMemberDetail(@PathVariable int buildingId, @PathVariable int id) {
         log.debug("REST request to get Building ID : {}", buildingId);
         log.debug("REST request to get Building login: {}", id);
-        return Optional.ofNullable(userDetailRepository.getUserByBuilding(id, buildingId))
-            .map(userDetail -> new ResponseEntity<>(userDetail, HttpStatus.OK))
+        return Optional.ofNullable(memberRepository.getUserByBuilding(id, buildingId))
+            .map(member -> new ResponseEntity<>(member, HttpStatus.OK))
             .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
@@ -79,14 +79,14 @@ public class UserDetailResource {
     /**
      * GET  "/userdetails/building_user_count/{buildingId}", -> get number of members in the building
      */
-    @RequestMapping(value = "/userdetails/building_user_count/{buildingId}",
+    @RequestMapping(value = "/member/building_user_count/{buildingId}",
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
     public ResponseEntity<JsonResponse> getNumberOfResidents(@PathVariable int buildingId) {
         JsonResponse jsonResponse = new JsonResponse();
         log.debug("REST request to get all User Details");
-        Integer num = userDetailRepository.getAllUsersByBuilding(buildingId).size();
+        Integer num = memberRepository.getAllUsersByBuilding(buildingId).size();
         jsonResponse.setResponse(num.toString());
         return new ResponseEntity<JsonResponse>(jsonResponse,  new HttpHeaders(), HttpStatus.OK);
     }
@@ -94,25 +94,25 @@ public class UserDetailResource {
     /**
      * POST  /notifications -> Create a new notification.
      */
-    @RequestMapping(value = "/userdetails",
+    @RequestMapping(value = "/member",
         method = RequestMethod.POST,
         consumes = "application/json",
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public ResponseEntity<JsonResponse> create(@RequestBody UserDetail userDetail) {
+    public ResponseEntity<JsonResponse> create(@RequestBody Member member) {
         JsonResponse json = new JsonResponse();
 
-        if(userDetail.getBuildingId() == null || userDetail.getBuildingId() == 0){
-            log.error("REST request : user detail create bad request {} ", userDetail);
+        if(member.getBuildingId() == null || member.getBuildingId() == 0){
+            log.error("REST request : user detail create bad request {} ", member);
             return new ResponseEntity<JsonResponse>(json,  new HttpHeaders(), HttpStatus.BAD_REQUEST);
         }
 
-        if(userDetail.isManagement() == false && userDetail.isStaff() == false && userDetail.isBoard() == false){
-            userDetail.setResident(true);
+        if(member.isManagement() == false && member.isStaff() == false && member.isBoard() == false){
+            member.setResident(true);
         }
-        userDetail.setUnit(userDetail.getUnit().toUpperCase());
+        member.setUnit(member.getUnit().toUpperCase());
 
-        if(this.checkIfUserAlreadyExistInUnit(userDetail) == true){
+        if(this.checkIfUserAlreadyExistInUnit(member) == true){
             log.debug("User already exists");
             FieldErrorDTO fieldErrorDTO = new FieldErrorDTO("Email", "Already exists");
             json.setSuccess(false);
@@ -120,20 +120,20 @@ public class UserDetailResource {
             return new ResponseEntity<JsonResponse>(json,  new HttpHeaders(), HttpStatus.BAD_REQUEST);
         }
 
-        log.debug("REST request :create function : {}", userDetail);
+        log.debug("REST request :create function : {}", member);
 
         // get only username before @ (email)
-        userDetailRepository.create(userDetail);
+        memberRepository.create(member);
         log.debug("User Detail create success");
         return new ResponseEntity<JsonResponse>(json,  new HttpHeaders(), HttpStatus.OK);
     }
 
-    private boolean checkIfUserAlreadyExistInUnit(UserDetail userDetail){
-        List<UserDetail> userDetails = userDetailRepository.getUserByBuildingEmailUnit(userDetail.getBuildingId(), userDetail.getEmail(), userDetail.getUnit());
-        if(userDetails.size() > 0){
-            if(userDetail.getId() != null || userDetail.getId() != 0 ){
-                for(UserDetail userDetail1 : userDetails){
-                    if(userDetail1.getId() == userDetail.getId() || userDetail1.getId().equals(userDetail.getId())){
+    private boolean checkIfUserAlreadyExistInUnit(Member member){
+        List<Member> members = memberRepository.getUserByBuildingEmailUnit(member.getBuildingId(), member.getEmail(), member.getUnit());
+        if(members.size() > 0){
+            if(member.getId() != null || member.getId() != 0 ){
+                for(Member member1 : members){
+                    if(member1.getId() == member.getId() || member1.getId().equals(member.getId())){
                         return false;
                     }
                 }
@@ -145,21 +145,21 @@ public class UserDetailResource {
     }
 
     /**
-     * PUT  /collaborates -> Updates an existing userDetail.
+     * PUT  /collaborates -> Updates an existing member.
      */
-    @RequestMapping(value = "/userdetails",
+    @RequestMapping(value = "/member",
         method = RequestMethod.PUT,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public ResponseEntity<JsonResponse> update(@RequestBody UserDetail userDetail) throws URISyntaxException {
-        log.debug("REST request :update  record : {}", userDetail);
-        userDetail.setUnit(userDetail.getUnit().toUpperCase());
+    public ResponseEntity<JsonResponse> update(@RequestBody Member member) throws URISyntaxException {
+        log.debug("REST request :update  record : {}", member);
+        member.setUnit(member.getUnit().toUpperCase());
         JsonResponse json = new JsonResponse();
-        if(userDetail.getId() == null || userDetail.getBuildingId() == null || userDetail.getBuildingId() == 0) {
-            log.error("REST request : user detail update bad request {} ", userDetail);
+        if(member.getId() == null || member.getBuildingId() == null || member.getBuildingId() == 0) {
+            log.error("REST request : user detail update bad request {} ", member);
             return new ResponseEntity<JsonResponse>(json,  new HttpHeaders(), HttpStatus.BAD_REQUEST);
         }
-        if(this.checkIfUserAlreadyExistInUnit(userDetail) == true){
+        if(this.checkIfUserAlreadyExistInUnit(member) == true){
             log.debug("User already exists");
             FieldErrorDTO fieldErrorDTO = new FieldErrorDTO("Email", "Already exists");
             json.setSuccess(false);
@@ -167,7 +167,7 @@ public class UserDetailResource {
             return new ResponseEntity<JsonResponse>(json,  new HttpHeaders(), HttpStatus.BAD_REQUEST);
         }
 
-        boolean result = userDetailRepository.update(userDetail);
+        boolean result = memberRepository.update(member);
         log.debug("User Detail update success {}", result);
 
         return new ResponseEntity<JsonResponse>(json,  new HttpHeaders(), HttpStatus.OK);

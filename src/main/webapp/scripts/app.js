@@ -320,7 +320,7 @@ ozayApp
 	.state('home.directory', {
 		url: "/directory",
 		templateUrl: 'views/directory.html',
-        controller: 'UserDetailController',
+        controller: 'MemberController',
 		access: {
 			authorizedRoles: [USER_ROLES.admin, USER_ROLES.access_directory]
 		}
@@ -328,7 +328,7 @@ ozayApp
 	.state('home.director_details', {
 		url: "/directory/:method/:memberId",
 		templateUrl: 'views/directory_details.html',
-		controller: 'DirectoryDetailController',
+		controller: 'MemberDetailController',
 		access: {
 			authorizedRoles: [USER_ROLES.admin, USER_ROLES.access_directory]
 		}

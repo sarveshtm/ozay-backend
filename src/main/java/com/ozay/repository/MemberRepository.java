@@ -1,7 +1,7 @@
 package com.ozay.repository;
 
-import com.ozay.model.UserDetail;
-import com.ozay.rowmapper.UserDetailRowMapper;
+import com.ozay.model.Member;
+import com.ozay.rowmapper.MemberRowMapper;
 import com.ozay.web.rest.dto.NotificationDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,14 +12,12 @@ import org.springframework.stereotype.Repository;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 
 @Repository
-public class UserDetailRepository {
-    private final Logger log = LoggerFactory.getLogger(UserDetail.class);
+public class MemberRepository {
+    private final Logger log = LoggerFactory.getLogger(Member.class);
     @Inject
     private JdbcTemplate jdbcTemplate;
 
@@ -27,33 +25,33 @@ public class UserDetailRepository {
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 
-    public UserDetail getOne(int id){
-        return (UserDetail)jdbcTemplate.queryForObject("SELECT * FROM user_detail WHERE id =?",new Object[]{id}, new UserDetailRowMapper());
+    public Member getOne(int id){
+        return (Member)jdbcTemplate.queryForObject("SELECT * FROM member WHERE id =?",new Object[]{id}, new MemberRowMapper());
     }
 
-    public List<UserDetail> getAllUsersByBuilding(int buildingId){
-        return jdbcTemplate.query("Select * FROM user_detail WHERE building_id =?",
+    public List<Member> getAllUsersByBuilding(int buildingId){
+        return jdbcTemplate.query("Select * FROM member WHERE building_id =?",
 
-            new Object[]{buildingId}, new UserDetailRowMapper() {
+            new Object[]{buildingId}, new MemberRowMapper() {
 
             });
     }
 
     public Integer countActiveUnits(int buildingId){
-        return jdbcTemplate.queryForObject("SELECT COUNT(DISTINCT unit) FROM USER_DETAIL WHERE building_id = ?", Integer.class, new Object[]{buildingId});
+        return jdbcTemplate.queryForObject("SELECT COUNT(DISTINCT unit) FROM member WHERE building_id = ?", Integer.class, new Object[]{buildingId});
     }
 
-    public List<UserDetail> getUserByBuildingEmailUnit(int buildingId, String email, String unit){
-        return jdbcTemplate.query("Select * FROM user_detail WHERE building_id = ? AND email = ? AND UPPER(unit) = ?",
-            new Object[]{buildingId, email, unit}, new UserDetailRowMapper() {
+    public List<Member> getUserByBuildingEmailUnit(int buildingId, String email, String unit){
+        return jdbcTemplate.query("Select * FROM member WHERE building_id = ? AND email = ? AND UPPER(unit) = ?",
+            new Object[]{buildingId, email, unit}, new MemberRowMapper() {
             });
     }
 
 
 
-    public List<UserDetail> getUserEmailsForNotification(NotificationDTO notificationDTO){
+    public List<Member> getUserEmailsForNotification(NotificationDTO notificationDTO){
 
-        String query = "Select * FROM user_detail WHERE building_id = :buildingId ";
+        String query = "Select * FROM member WHERE building_id = :buildingId ";
 
         MapSqlParameterSource parameterSource = new MapSqlParameterSource();
 
@@ -111,33 +109,33 @@ public class UserDetailRepository {
 
 
         return namedParameterJdbcTemplate.query(query + restQuery,
-            parameterSource ,  new UserDetailRowMapper() );
+            parameterSource ,  new MemberRowMapper() );
     }
 
 
-    public UserDetail getUserByBuilding(int user_id, int buildingId){
-        return (UserDetail)jdbcTemplate.queryForObject("Select * FROM user_detail WHERE building_id = ? AND id = ?",
-            new Object[]{buildingId, user_id}, new UserDetailRowMapper(){
+    public Member getUserByBuilding(int user_id, int buildingId){
+        return (Member)jdbcTemplate.queryForObject("Select * FROM member WHERE building_id = ? AND id = ?",
+            new Object[]{buildingId, user_id}, new MemberRowMapper(){
             });
     }
 
-    public UserDetail getUserDetailByBuildingAndUserId(int id, int buildingId){
-        return (UserDetail)jdbcTemplate.queryForObject("Select * FROM user_detail WHERE building_id = ? AND user_id = ?",
-            new Object[]{buildingId, id}, new UserDetailRowMapper(){
+    public Member getMemberDetailByBuildingAndUserId(int id, int buildingId){
+        return (Member)jdbcTemplate.queryForObject("Select * FROM member WHERE building_id = ? AND user_id = ?",
+            new Object[]{buildingId, id}, new MemberRowMapper(){
             });
     }
 
 
 
-    public UserDetail getUserByBuilding(String login, int buildingId){
-        return (UserDetail)jdbcTemplate.queryForObject("Select * FROM user_detail WHERE building_id = ? AND login = ?",
-            new Object[]{buildingId, login}, new UserDetailRowMapper(){
+    public Member getUserByBuilding(String login, int buildingId){
+        return (Member)jdbcTemplate.queryForObject("Select * FROM member WHERE building_id = ? AND login = ?",
+            new Object[]{buildingId, login}, new MemberRowMapper(){
             });
     }
 
-    public List<UserDetail> searchUsers(int buildingId, String item){
+    public List<Member> searchUsers(int buildingId, String item){
         String likeItem = "%" + item.toLowerCase() + "%";
-        return jdbcTemplate.query("Select * FROM user_detail " +
+        return jdbcTemplate.query("Select * FROM member " +
                 "WHERE building_id =? AND " +
                 "(LOWER(first_name) LIKE ? " +
                 "OR LOWER(last_name) LIKE ? " +
@@ -146,13 +144,13 @@ public class UserDetailRepository {
                 "OR LOWER(unit) LIKE ? " +
                 "OR LOWER(parking) LIKE ?)",
 
-            new Object[]{buildingId, item, likeItem, likeItem, likeItem, likeItem, likeItem}, new UserDetailRowMapper(){
+            new Object[]{buildingId, item, likeItem, likeItem, likeItem, likeItem, likeItem}, new MemberRowMapper(){
 
             });
     }
 
-    public boolean create(UserDetail userDetail){
-        String insert = "INSERT INTO user_detail(" +
+    public boolean create(Member member){
+        String insert = "INSERT INTO member(" +
             "login, " +
             "user_id, " +
             "first_name," +
@@ -170,22 +168,22 @@ public class UserDetailRepository {
             "board, " +
             "resident ) " +
             "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        Object[] params = new Object[] { userDetail.getLogin(),
-            userDetail.getUserId(),
-            userDetail.getFirstName(),
-            userDetail.getLastName(),
-            userDetail.getEmail(),
-            userDetail.getPhone(),
-            userDetail.getBuildingId(),
-            userDetail.getOwnership(),
-            userDetail.isRenter(),
-            userDetail.getUnit(),
-            userDetail.getExpirationDate(),
-            userDetail.getParking(),
-            userDetail.isManagement(),
-            userDetail.isStaff(),
-            userDetail.isBoard(),
-            userDetail.isResident() };
+        Object[] params = new Object[] { member.getLogin(),
+            member.getUserId(),
+            member.getFirstName(),
+            member.getLastName(),
+            member.getEmail(),
+            member.getPhone(),
+            member.getBuildingId(),
+            member.getOwnership(),
+            member.isRenter(),
+            member.getUnit(),
+            member.getExpirationDate(),
+            member.getParking(),
+            member.isManagement(),
+            member.isStaff(),
+            member.isBoard(),
+            member.isResident() };
 
         int count = jdbcTemplate.update(insert, params);
         if(count > 0){
@@ -195,8 +193,8 @@ public class UserDetailRepository {
         }
 
     }
-    public boolean update(UserDetail userDetail){
-        String update = "UPDATE user_detail SET " +
+    public boolean update(Member member){
+        String update = "UPDATE member SET " +
             "first_name = ?, " +
             "last_name = ?, " +
             "email = ?, " +
@@ -215,22 +213,22 @@ public class UserDetailRepository {
             "AND id = ?";
 
         Object[] params = new Object[] {
-            userDetail.getFirstName(),
-            userDetail.getLastName(),
-            userDetail.getEmail(),
-            userDetail.getPhone(),
-            userDetail.getOwnership(),
-            userDetail.isRenter(),
-            userDetail.getUnit(),
-            userDetail.getExpirationDate(),
-            userDetail.getParking(),
-            userDetail.isManagement(),
-            userDetail.isStaff(),
-            userDetail.isBoard(),
-            userDetail.isResident(),
-            userDetail.getUserId(),
-            userDetail.getBuildingId(),
-            userDetail.getId()
+            member.getFirstName(),
+            member.getLastName(),
+            member.getEmail(),
+            member.getPhone(),
+            member.getOwnership(),
+            member.isRenter(),
+            member.getUnit(),
+            member.getExpirationDate(),
+            member.getParking(),
+            member.isManagement(),
+            member.isStaff(),
+            member.isBoard(),
+            member.isResident(),
+            member.getUserId(),
+            member.getBuildingId(),
+            member.getId()
         };
 
         int count = jdbcTemplate.update(update, params);

@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('ozayApp')
-.controller('NotificationController', function ($scope, $filter, $rootScope, $cookieStore, Notification, UserDetail) {
+.controller('NotificationController', function ($scope, $filter, $rootScope, $cookieStore, Notification, Member) {
 	// initial settings
 	$scope.button = true;
 	$scope.showSuccessAlert = false;
@@ -14,13 +14,13 @@ angular.module('ozayApp')
 
 	// Get people in the building
 	$scope.getAll = function (method, id) {
-		UserDetail.get({method:method, id: id}, function(result) {
+		Member.get({method:method, id: id}, function(result) {
 			$scope.individualList = [];
 
-			managementList = result[0].userDetailList;
-			staffList = result[1].userDetailList;
-			boardList = result[2].userDetailList;
-			residentList = result[3].userDetailList;
+			managementList = result[0].memberList;
+			staffList = result[1].memberList;
+			boardList = result[2].memberList;
+			residentList = result[3].memberList;
 
 			for(var i = 0; i<managementList.length; i++){
 				$scope.individualList.push({id: managementList[i].id, label: managementList[i].unit + " " + managementList[i].firstName + " " + managementList[i].lastName, role: '1'});
@@ -267,7 +267,7 @@ angular.module('ozayApp')
 	$scope.selectedUsers = [];
 
 
-}).controller('NotificationArchiveController', function ($scope, $filter, $rootScope, $cookieStore, Notification, UserDetail) {
+}).controller('NotificationArchiveController', function ($scope, $filter, $rootScope, $cookieStore, Notification, Member) {
 
 	$scope.predicate = '-createdDate';
 	$scope.notifications = [];

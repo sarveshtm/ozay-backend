@@ -1,7 +1,6 @@
 package com.ozay.service;
 
-import com.ozay.model.UserDetail;
-import com.ozay.repository.UserDetailRepository;
+import com.ozay.repository.MemberRepository;
 import org.apache.commons.lang.CharEncoding;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,7 +41,7 @@ public class MailService {
     private MessageSource messageSource;
 
     @Inject
-    private UserDetailRepository userDetailRepository;
+    private MemberRepository memberRepository;
 
     /**
      * System default email address that sends the e-mails.

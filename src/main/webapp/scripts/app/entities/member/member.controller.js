@@ -1,13 +1,13 @@
 'use strict';
 
 angular.module('ozayApp')
-.controller('UserDetailController', function ($scope, $filter, UserDetail, $cookieStore, $rootScope) {
+.controller('MemberController', function ($scope, $filter, Member, $cookieStore, $rootScope) {
 	$scope.getAll = function (method, id) {
-		UserDetail.get({method:method, id: id}, function(result) {
-			$scope.managementList = result[0].userDetailList;
-			$scope.staffList = result[1].userDetailList;
-			$scope.boardList = result[2].userDetailList;
-			$scope.residentList = result[3].userDetailList;
+		Member.get({method:method, id: id}, function(result) {
+			$scope.managementList = result[0].memberList;
+			$scope.staffList = result[1].memberList;
+			$scope.boardList = result[2].memberList;
+			$scope.residentList = result[3].memberList;
 		});
 	};
 	var building = $rootScope.selectedBuilding;
@@ -26,7 +26,7 @@ angular.module('ozayApp')
 	}
 
 })
-.controller('DirectoryDetailController', function ($scope, $cookieStore, $routeParams, $location, $state, $stateParams, UserDetail, $rootScope, Account) {
+.controller('MemberDetailController', function ($scope, $cookieStore, $routeParams, $location, $state, $stateParams, Member, $rootScope, Account) {
 	if($stateParams.method != 'edit' && $stateParams.method != 'new'){
 		$location.path('/error').replace();
 	}
@@ -36,8 +36,8 @@ angular.module('ozayApp')
 	}
 
 	$scope.submitted = false;
-	$scope.UserDetail = {};
-	$scope.UserDetail.user = {};
+	$scope.Member = {};
+	$scope.Member.user = {};
 
 	$scope.type = 'EDIT';
 	if($stateParams.method == 'new'){
@@ -47,11 +47,11 @@ angular.module('ozayApp')
 		if(building === undefined){
 			building = $cookieStore.get('selectedBuilding');
 		}
-		$scope.UserDetail.buildingId = building;
-		$scope.UserDetail.management = false;
-		$scope.UserDetail.staff = false;
-		$scope.UserDetail.board = false;
-		$scope.UserDetail.resident = false;
+		$scope.Member.buildingId = building;
+		$scope.Member.management = false;
+		$scope.Member.staff = false;
+		$scope.Member.board = false;
+		$scope.Member.resident = false;
 	}
 
 	$scope.invite = function(){
@@ -59,7 +59,7 @@ angular.module('ozayApp')
 		if($scope.type == 'EDIT'){
 		    var result = confirm("Would like to invite this user?");
 		    if(result == true){
-		        Account.save({method:"invitation"},$scope.UserDetail,
+		        Account.save({method:"invitation"},$scope.Member,
 		        function(data){
 		            $scope.showSuccessAlert = true;
                     $scope.successTextAlert = "Successfully Invited";
@@ -84,7 +84,7 @@ angular.module('ozayApp')
 		$scope.showErrorAlert = false;
 		$scope.button = false;
 		if($scope.type == 'EDIT'){
-			UserDetail.update($scope.UserDetail,
+			Member.update($scope.Member,
 					function (data) {
 				$scope.showSuccessAlert = true;
 				$scope.successTextAlert = "Successfully Saved";
@@ -99,7 +99,7 @@ angular.module('ozayApp')
 				$scope.button = true;
 			});
 		} else {
-			UserDetail.save($scope.UserDetail,
+			Member.save($scope.Member,
 					function (data) {
 				$scope.showSuccessAlert = true;
 				$scope.successTextAlert = "Successfully Saved";
@@ -142,13 +142,13 @@ angular.module('ozayApp')
 	                    	 label : 'No'
 	                     }];
 
-	$scope.getUser = function(method, id, login){
-		UserDetail.getUser({method:method, id: id, login:login}, function(result) {
+	$scope.getMember = function(method, id, login){
+		Member.getMember({method:method, id: id, login:login}, function(result) {
 
 			if(result.unit == null){
 				result.unit = "";
 			}
-			$scope.UserDetail = result;
+			$scope.Member = result;
 			$scope.model.radioBox = result.renter;
 		}, function(){
 
@@ -158,7 +158,7 @@ angular.module('ozayApp')
 	}
 	if($stateParams.method == 'edit'){
 		var selectedBuildingId = $cookieStore.get('selectedBuilding');
-		$scope.getUser('building', selectedBuildingId, $stateParams.memberId);
+		$scope.getMember('building', selectedBuildingId, $stateParams.memberId);
 	}
 
 
@@ -178,7 +178,7 @@ angular.module('ozayApp')
 
 	$scope.roleValidationCheck = function(){
 
-		if($scope.UserDetail.management == false && $scope.UserDetail.staff == false && $scope.UserDetail.board == false && $scope.UserDetail.resident == false){
+		if($scope.Member.management == false && $scope.Member.staff == false && $scope.Member.board == false && $scope.Member.resident == false){
 			$scope.roleValidation = false;
 			return false;
 		} else{
@@ -187,16 +187,16 @@ angular.module('ozayApp')
 		}
 	}
 
-	$scope.$watch('UserDetail.management', function() {
+	$scope.$watch('Member.management', function() {
 		$scope.roleValidationCheck();
 	});
-	$scope.$watch('UserDetail.staff', function() {
+	$scope.$watch('Member.staff', function() {
 		$scope.roleValidationCheck();
 	});
-	$scope.$watch('UserDetail.board', function() {
+	$scope.$watch('Member.board', function() {
 		$scope.roleValidationCheck();
 	});
-	$scope.$watch('UserDetail.resident', function() {
+	$scope.$watch('Member.resident', function() {
 		$scope.roleValidationCheck();
 	});
 

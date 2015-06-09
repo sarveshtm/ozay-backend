@@ -1,6 +1,6 @@
 package com.ozay.repository;
 
-import com.ozay.model.UserDetail;
+import com.ozay.model.Member;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -14,13 +14,13 @@ public class UserBuildingRepository {
     private JdbcTemplate jdbcTemplate;
 
 
-    public boolean create(UserDetail userDetail){
+    public boolean create(Member member){
         String insert = "INSERT INTO user_building(" +
             "user_id, " +
             "building_id )" +
             "VALUES(?, ?)";
-        Object[] params = new Object[] {userDetail.getUserId(),
-            userDetail.getBuildingId()
+        Object[] params = new Object[] {member.getUserId(),
+            member.getBuildingId()
         };
 
         int count = jdbcTemplate.update(insert, params);

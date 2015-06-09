@@ -3,8 +3,7 @@ package com.ozay.service;
 import com.ozay.domain.Authority;
 import com.ozay.domain.PersistentToken;
 import com.ozay.domain.User;
-import com.ozay.model.InvitedUser;
-import com.ozay.model.UserDetail;
+import com.ozay.model.Member;
 import com.ozay.repository.*;
 import com.ozay.security.SecurityUtils;
 import com.ozay.service.util.RandomUtil;
@@ -45,7 +44,7 @@ public class UserService {
     private AuthorityRepository authorityRepository;
 
     @Inject
-    private UserDetailRepository userDetailRepository;
+    private MemberRepository memberRepository;
 
     @Inject
     private AccountRepository accountRepository;
@@ -77,11 +76,8 @@ public class UserService {
         String encryptedPassword = passwordEncoder.encode(password);
         User currentLoginUser = userRepository.findOneByLogin(SecurityUtils.getCurrentLogin());
         newUser.setLogin(login);
-        String createdBy = SecurityUtils.getCurrentLogin();
-        if(createdBy == null){
-            createdBy = "System";
-        }
-        newUser.setCreatedBy(createdBy);
+
+        newUser.setCreatedBy(SecurityUtils.getCurrentLogin());
         // new user gets initially a generated password
         newUser.setPassword(encryptedPassword);
         newUser.setFirstName(firstName);
@@ -144,12 +140,12 @@ public class UserService {
         }
         if(isAdmin == false) {
             try {
-                UserDetail userDetail = userDetailRepository.getUserDetailByBuildingAndUserId(currentUser.getId(), buildingId);
+                Member member = memberRepository.getMemberDetailByBuildingAndUserId(currentUser.getId(), buildingId);
 
-                if (userDetail.isManagement() == true) {
+                if (member.isManagement() == true) {
                     currentUser.getAuthorities().add(new Authority("ACCESS_DIRECTORY"));
                     currentUser.getAuthorities().add(new Authority("ACCESS_NOTIFICATION"));
-                } else if (userDetail.isStaff() == true) {
+                } else if (member.isStaff() == true) {
                     currentUser.getAuthorities().add(new Authority("ACCESS_NOTIFICATION"));
                 }
             } catch (Exception e) {

@@ -2,21 +2,17 @@ package com.ozay.service;
 
 import com.ozay.domain.Notification;
 import com.ozay.domain.User;
-import com.ozay.model.UserDetail;
+import com.ozay.model.Member;
 import com.ozay.repository.BuildingRepository;
 import com.ozay.repository.NotificationRepository;
-import com.ozay.repository.UserDetailRepository;
+import com.ozay.repository.MemberRepository;
 import com.ozay.repository.UserRepository;
 import com.ozay.security.SecurityUtils;
 import com.ozay.web.rest.dto.JsonResponse;
 import com.ozay.web.rest.dto.NotificationDTO;
-import com.ozay.web.rest.dto.UserDetailListDTO;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -48,7 +44,7 @@ public class NotificationService {
     private BuildingRepository buildingRepository;
 
     @Inject
-    private UserDetailRepository userDetailRepository;
+    private MemberRepository memberRepository;
 
     public int sendNotice(NotificationDTO notificationDto){
         Notification notification = new Notification();
@@ -62,11 +58,11 @@ public class NotificationService {
         String subject = buildingName + " Notice : " + notificationDto.getSubject();
         notification.setSubject(notificationDto.getSubject());
 
-        List<UserDetail>userDetails = userDetailRepository.getUserEmailsForNotification(notificationDto);
-        log.debug("Notification : size of user details {}", userDetails.size());
+        List<Member>members = memberRepository.getUserEmailsForNotification(notificationDto);
+        log.debug("Notification : size of user details {}", members.size());
         List<String> emailList = new ArrayList<String>();
-        for (UserDetail userDetail : userDetails){
-            emailList.add(userDetail.getEmail());
+        for (Member member : members){
+            emailList.add(member.getEmail());
         }
 
         int emailCount = mailService.sendGrid(subject, notification.getNotice(), emailList);

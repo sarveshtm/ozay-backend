@@ -34,7 +34,7 @@ public class InvitedUserRepository {
             "(user_detail_id, lang_key, activation_key, created_by) "
             + "VALUES(:user_detail_id, :lang_key, :activation_key, :created_by)";
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("user_detail_id", invitedUser.getUserDetailId());
+        params.addValue("user_detail_id", invitedUser.getMemberId());
         params.addValue("lang_key", invitedUser.getLangKey());
         params.addValue("activation_key", invitedUser.getActivationKey());
         params.addValue("created_by", invitedUser.getCreatedBy());

@@ -15,7 +15,7 @@ public class InvitedUserRowMapper implements RowMapper {
     public InvitedUser mapRow(ResultSet rs, int rowNum) throws SQLException {
         InvitedUser invitedUser = new InvitedUser();
         invitedUser.setId(rs.getInt("id"));
-        invitedUser.setUserDetailId(rs.getInt("user_detail_id"));
+        invitedUser.setMemberId(rs.getInt("member_id"));
         invitedUser.setLangKey(rs.getString("lang_key"));
         invitedUser.setActivated(rs.getBoolean("activated"));
         invitedUser.setActivationKey(rs.getString("activation_key"));

@@ -7,7 +7,7 @@ import org.joda.time.DateTime;
  */
 public class InvitedUser {
     private Integer id;
-    private Integer userDetailId;
+    private Integer memberId;
     private String langKey;
     private String activationKey;
     private boolean activated;
@@ -25,12 +25,12 @@ public class InvitedUser {
         this.id = id;
     }
 
-    public Integer getUserDetailId() {
-        return userDetailId;
+    public Integer getMemberId() {
+        return memberId;
     }
 
-    public void setUserDetailId(Integer userDetailId) {
-        this.userDetailId = userDetailId;
+    public void setMemberId(Integer memberId) {
+        this.memberId = memberId;
     }
 
     public String getLangKey() {

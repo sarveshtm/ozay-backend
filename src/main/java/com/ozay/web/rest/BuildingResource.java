@@ -4,17 +4,16 @@ import com.codahale.metrics.annotation.Timed;
 import com.ozay.domain.Authority;
 import com.ozay.domain.User;
 import com.ozay.model.Building;
-import com.ozay.model.UserDetail;
+import com.ozay.model.Member;
 import com.ozay.repository.BuildingRepository;
 import com.ozay.repository.UserBuildingRepository;
-import com.ozay.repository.UserDetailRepository;
+import com.ozay.repository.MemberRepository;
 import com.ozay.repository.UserRepository;
 import com.ozay.security.SecurityUtils;
-import com.ozay.service.UserDetailService;
+import com.ozay.service.MemberService;
 import com.ozay.service.UserService;
 import com.ozay.web.rest.dto.BuildingDTO;
 import com.ozay.web.rest.dto.JsonResponse;
-import com.ozay.web.rest.dto.UserDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -39,11 +38,11 @@ import java.util.List;
 public class BuildingResource {
 
     @Inject
-    private UserDetailRepository userDetailRepository;
+    private MemberRepository memberRepository;
     @Inject
     private BuildingRepository buildingRepository;
     @Inject
-    private UserDetailService userDetailService;
+    private MemberService memberService;
     @Inject
     private UserBuildingRepository userBuildingRepository;
     @Inject
@@ -112,14 +111,14 @@ public class BuildingResource {
         log.debug("REST request : Building insertedId " + insertedId);
         JsonResponse json = new JsonResponse();
         if(insertedId > 0){
-            UserDetail userDetail = new UserDetail();
-            userDetail.setUserId(user.getId());
-            userDetail.setFirstName(user.getFirstName());
-            userDetail.setLastName(user.getLastName());
-            userDetail.setBuildingId(insertedId);
-            userDetail.setManagement(true);
-            userDetailRepository.create(userDetail);
-            userBuildingRepository.create(userDetail);
+            Member member = new Member();
+            member.setUserId(user.getId());
+            member.setFirstName(user.getFirstName());
+            member.setLastName(user.getLastName());
+            member.setBuildingId(insertedId);
+            member.setManagement(true);
+            memberRepository.create(member);
+            userBuildingRepository.create(member);
         }
         json.setResponse(insertedId);
 
