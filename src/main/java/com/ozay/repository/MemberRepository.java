@@ -30,7 +30,7 @@ public class MemberRepository {
     }
 
     public List<Member> getAllUsersByBuilding(int buildingId){
-        return jdbcTemplate.query("Select * FROM member WHERE building_id =?",
+        return jdbcTemplate.query("Select * FROM member WHERE building_id =? AND deleted = false",
 
             new Object[]{buildingId}, new MemberRowMapper() {
 
@@ -42,7 +42,7 @@ public class MemberRepository {
     }
 
     public List<Member> getUserByBuildingEmailUnit(int buildingId, String email, String unit){
-        return jdbcTemplate.query("Select * FROM member WHERE building_id = ? AND email = ? AND UPPER(unit) = ?",
+        return jdbcTemplate.query("Select * FROM member WHERE building_id = ? AND email = ? AND UPPER(unit) = ? AND deleted = false",
             new Object[]{buildingId, email, unit}, new MemberRowMapper() {
             });
     }
@@ -51,7 +51,7 @@ public class MemberRepository {
 
     public List<Member> getUserEmailsForNotification(NotificationDTO notificationDTO){
 
-        String query = "Select * FROM member WHERE building_id = :buildingId ";
+        String query = "Select * FROM member WHERE building_id = :buildingId AND deleted = false ";
 
         MapSqlParameterSource parameterSource = new MapSqlParameterSource();
 
