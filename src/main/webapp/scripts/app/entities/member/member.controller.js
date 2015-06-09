@@ -44,6 +44,7 @@ angular.module('ozayApp')
         				$scope.showSuccessAlert = true;
         				$scope.successTextAlert = "Successfully Deleted";
         				$scope.button = true;
+        				$scope.getAll('building', building);
         			}, function (error){
 
         			});
