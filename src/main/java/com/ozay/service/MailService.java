@@ -1,5 +1,7 @@
 package com.ozay.service;
 
+import com.ozay.model.Notification;
+import com.ozay.model.NotificationRecord;
 import com.ozay.repository.MemberRepository;
 import org.apache.commons.lang.CharEncoding;
 import org.slf4j.Logger;
@@ -57,34 +59,40 @@ public class MailService {
         this.from = env.getProperty("spring.mail.from");
     }
 
-    public int sendGrid(String subject, String text, List<String> emailList){
+    public int sendGrid(Notification notification, List<NotificationRecord> notificationRecords){
         SendGrid sendgrid = new SendGrid("OzayOrg", "OzayOrg1124");
 
         int sentCount = 0;
 
         SendGrid.Email sendGrid = new SendGrid.Email();
 
-        for(String memberEmail : emailList){
-            if(memberEmail != null){
-                if(memberEmail.matches(EMAIL_PATTERN)){
-                    sendGrid.addSmtpApiTo(memberEmail);
+        for(NotificationRecord notificationRecord : notificationRecords){
+            if(notificationRecord.getEmail() != null){
+                if(notificationRecord.getEmail().matches(EMAIL_PATTERN)){
+                    sendGrid.addSmtpApiTo(notificationRecord.getEmail());
                     sentCount++;
+                } else {
+                    notificationRecord.setSuccess(false);
+                    notificationRecord.setNote("INVALID Email address");
                 }
             }
         }
 
         sendGrid.setFrom("noreply@ozay.us");
-        sendGrid.setSubject(subject);
-        sendGrid.setText(text);
+        sendGrid.setSubject(notification.getSubject());
+        sendGrid.setText(notification.getNotice());
 
         try {
             SendGrid.Response response = sendgrid.send(sendGrid);
             log.debug("Send email with sendgrid count {}", sentCount);
             System.out.println(response.getMessage());
+            notification.setSuccess(true);
         }
         catch (SendGridException e) {
             System.err.println(e);
+            notification.setSuccess(false);
         }
+
         return sentCount;
     }
 

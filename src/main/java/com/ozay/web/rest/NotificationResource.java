@@ -1,18 +1,15 @@
 package com.ozay.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
-import com.ozay.domain.Notification;
-import com.ozay.domain.User;
+import com.ozay.model.Notification;
 import com.ozay.repository.BuildingRepository;
+import com.ozay.repository.NotificationRecordRepository;
 import com.ozay.repository.NotificationRepository;
 import com.ozay.repository.UserRepository;
 import com.ozay.security.AuthoritiesConstants;
-import com.ozay.security.SecurityUtils;
-import com.ozay.service.MailService;
 import com.ozay.service.NotificationService;
 import com.ozay.web.rest.dto.JsonResponse;
 import com.ozay.web.rest.dto.NotificationDTO;
-import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -47,6 +44,9 @@ public class NotificationResource {
     @Inject
     private BuildingRepository buildingRepository;
 
+    @Inject
+    private NotificationRecordRepository notificationRecordRepository;
+
     /**
      * POST  /notifications -> Create a new notification.
      */
@@ -70,15 +70,15 @@ public class NotificationResource {
     /**
      * GET  /notifications -> get all the notifications.
      */
-    @RequestMapping(value = "/notifications",
-        method = RequestMethod.GET,
-        produces = MediaType.APPLICATION_JSON_VALUE)
-    @Timed
-    @RolesAllowed(AuthoritiesConstants.ADMIN)
-    public List<Notification> getAll() {
-        log.debug("REST request to get all Notifications");
-        return notificationRepository.findAll();
-    }
+//    @RequestMapping(value = "/notifications",
+//        method = RequestMethod.GET,
+//        produces = MediaType.APPLICATION_JSON_VALUE)
+//    @Timed
+//    @RolesAllowed(AuthoritiesConstants.ADMIN)
+//    public List<Notification> getAll() {
+//        log.debug("REST request to get all Notifications");
+//        return notificationRepository.findAll();
+//    }
 
     /**
      * GET  /notifications -> get all the notifications.
@@ -102,21 +102,25 @@ public class NotificationResource {
     public ResponseEntity<Notification> get(@PathVariable Long id) {
         log.debug("REST request to get Notification : {}", id);
         return Optional.ofNullable(notificationRepository.findOne(id))
-            .map(notification -> new ResponseEntity<>(
-                notification,
-                HttpStatus.OK))
+            .map(notification -> {
+                notification.setNotificationRecordList(notificationRecordRepository.getAllByNotificationId(id));
+                return
+                new ResponseEntity<>(
+                    notification,
+                    HttpStatus.OK);
+            })
             .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     /**
      * DELETE  /notifications/:id -> delete the "id" notification.
      */
-    @RequestMapping(value = "/notifications/{id}",
-        method = RequestMethod.DELETE,
-        produces = MediaType.APPLICATION_JSON_VALUE)
-    @Timed
-    public void delete(@PathVariable Long id) {
-        log.debug("REST request to delete Notification : {}", id);
-        notificationRepository.delete(id);
-    }
+//    @RequestMapping(value = "/notifications/{id}",
+//        method = RequestMethod.DELETE,
+//        produces = MediaType.APPLICATION_JSON_VALUE)
+//    @Timed
+//    public void delete(@PathVariable Long id) {
+//        log.debug("REST request to delete Notification : {}", id);
+//        notificationRepository.delete(id);
+//    }
 }

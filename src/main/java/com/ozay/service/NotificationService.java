@@ -1,15 +1,14 @@
 package com.ozay.service;
 
-import com.ozay.domain.Notification;
+import com.ozay.model.Notification;
 import com.ozay.domain.User;
 import com.ozay.model.Member;
-import com.ozay.repository.BuildingRepository;
-import com.ozay.repository.NotificationRepository;
-import com.ozay.repository.MemberRepository;
-import com.ozay.repository.UserRepository;
+import com.ozay.model.NotificationRecord;
+import com.ozay.repository.*;
 import com.ozay.security.SecurityUtils;
 import com.ozay.web.rest.dto.JsonResponse;
 import com.ozay.web.rest.dto.NotificationDTO;
+import com.sendgrid.SendGridException;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,29 +45,51 @@ public class NotificationService {
     @Inject
     private MemberRepository memberRepository;
 
+    @Inject
+    private NotificationRecordRepository notificationRecordRepository;
+
     public int sendNotice(NotificationDTO notificationDto){
         Notification notification = new Notification();
         notification.setBuildingId(notificationDto.getBuildingId());
         notification.setNotice(notificationDto.getNotice());
         notification.setIssueDate(notificationDto.getIssueDate());
+
         User currentUser = userRepository.findOneByLogin(SecurityUtils.getCurrentLogin());
+
         notification.setCreatedBy(currentUser.getLogin());
         notification.setCreatedDate(new DateTime());
+
         String buildingName = buildingRepository.getBuilding(notification.getBuildingId()).getName();
         String subject = buildingName + " Notice : " + notificationDto.getSubject();
+
         notification.setSubject(notificationDto.getSubject());
 
         List<Member>members = memberRepository.getUserEmailsForNotification(notificationDto);
         log.debug("Notification : size of user details {}", members.size());
-        List<String> emailList = new ArrayList<String>();
+
+        List<NotificationRecord> notificationRecords = new ArrayList<NotificationRecord>();
+
         for (Member member : members){
-            emailList.add(member.getEmail());
+            NotificationRecord notificationRecord = new NotificationRecord();
+            notificationRecord.setNotificationId(notification.getId());
+            notificationRecord.setMemberId(member.getId());
+            notificationRecord.setEmail(member.getEmail());
+            notificationRecords.add(notificationRecord);
         }
 
-        int emailCount = mailService.sendGrid(subject, notification.getNotice(), emailList);
+        int emailCount = mailService.sendGrid(notification, notificationRecords);
+
+        Long newId =  notificationRepository.create(notification);
+
+        for(NotificationRecord notificationRecord : notificationRecords){
+            notificationRecord.setNotificationId(newId);
+            notificationRecordRepository.create(notificationRecord);
+        }
+
 
         log.debug("REST request to save Notification : {}", notification);
-        notificationRepository.save(notification);
+
+
         JsonResponse json = new JsonResponse();
 
         String message = "Notice is successfully scheduled to " + emailCount + " recipients";

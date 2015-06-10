@@ -1,4 +1,4 @@
-package com.ozay.domain;
+package com.ozay.model;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -9,41 +9,31 @@ import org.joda.time.DateTime;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 
-/**
- * A Notification.
- */
-@Entity
-@Table(name = "T_NOTIFICATION")
-public class Notification implements Serializable {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+
+
+public class Notification{
+
     private Long id;
 
-    @Column(name = "building_id")
     private Integer buildingId;
 
-    @Column(name = "notice")
     private String notice;
 
-    @Column(name="subject")
     private String subject;
 
-    @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
-    @JsonSerialize(using = CustomDateTimeSerializer.class)
-    @JsonDeserialize(using = CustomDateTimeDeserializer.class)
-    @Column(name = "issue_date", nullable = false)
     private DateTime issueDate;
 
-    @Column(name = "created_by")
+
     private String createdBy;
 
-    @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
-    @JsonSerialize(using = CustomDateTimeSerializer.class)
-    @JsonDeserialize(using = CustomDateTimeDeserializer.class)
-    @Column(name = "created_date", nullable = false)
     private DateTime createdDate;
+
+    private boolean success;
+
+    private List<NotificationRecord> notificationRecordList;
 
     public Long getId() {
         return id;
@@ -99,6 +89,22 @@ public class Notification implements Serializable {
 
     public void setSubject(String subject) {
         this.subject = subject;
+    }
+
+    public boolean isSuccess() {
+        return success;
+    }
+
+    public void setSuccess(boolean success) {
+        this.success = success;
+    }
+
+    public List<NotificationRecord> getNotificationRecordList() {
+        return notificationRecordList;
+    }
+
+    public void setNotificationRecordList(List<NotificationRecord> notificationRecordList) {
+        this.notificationRecordList = notificationRecordList;
     }
 
     @Override
