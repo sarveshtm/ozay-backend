@@ -89,7 +89,6 @@ public class BuildingResource {
             buildingDTO.setId(building.getId());
             buildingDTO.setName(building.getName());
             buildingDtoList.add(buildingDTO);
-
         }
         return buildingDtoList;
     }

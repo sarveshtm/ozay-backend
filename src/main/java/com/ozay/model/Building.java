@@ -10,10 +10,11 @@ import org.joda.time.DateTime;
 import javax.persistence.Column;
 
 public class Building {
-    private int id;
+    private Long id;
+    private Long accountId;
     private String name;
-    private String address_1;
-    private String address_2;
+    private String address1;
+    private String address2;
     private String state;
     private String zip;
     private String phone;
@@ -25,11 +26,11 @@ public class Building {
     private Integer lastModifiedBy;
 
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -49,20 +50,20 @@ public class Building {
         this.phone = phone;
     }
 
-    public String getAddress_1() {
-        return address_1;
+    public String getAddress1() {
+        return address1;
     }
 
-    public void setAddress_1(String address_1) {
-        this.address_1 = address_1;
+    public void setAddress1(String address1) {
+        this.address1 = address1;
     }
 
-    public String getAddress_2() {
-        return address_2;
+    public String getAddress2() {
+        return address2;
     }
 
-    public void setAddress_2(String address_2) {
-        this.address_2 = address_2;
+    public void setAddress2(String address2) {
+        this.address2 = address2;
     }
 
     public String getState() {
@@ -111,5 +112,22 @@ public class Building {
 
     public void setTotalUnits(int totalUnits) {
         this.totalUnits = totalUnits;
+    }
+
+    public Long getAccountId() {
+        return accountId;
+    }
+
+    public void setAccountId(Long accountId) {
+        this.accountId = accountId;
+    }
+
+    @Override
+    public String toString() {
+        return "Building{" +
+            "id='" + id + '\'' +
+            "accountId='" + accountId + '\'' +
+            "name='" + name + '\'' +
+            "}";
     }
 }

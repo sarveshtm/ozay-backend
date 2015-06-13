@@ -1,17 +1,17 @@
-package com.ozay.web.rest.dto;
+package com.ozay.model;
 
 /**
- * Created by naofumiezaki on 5/18/15.
+ * Created by naofumiezaki on 6/10/15.
  */
-public class BuildingDTO {
-    private Long id;
+public class Role {
+    private long id;
     private String name;
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Long Long) {
+    public void setId(long id) {
         this.id = id;
     }
 

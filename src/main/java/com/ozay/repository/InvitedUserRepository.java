@@ -31,10 +31,10 @@ public class InvitedUserRepository {
 
     public void create(InvitedUser invitedUser){
         String query = "INSERT INTO invited_user" +
-            "(user_detail_id, lang_key, activation_key, created_by) "
-            + "VALUES(:user_detail_id, :lang_key, :activation_key, :created_by)";
+            "(member_id, lang_key, activation_key, created_by) "
+            + "VALUES(:member_id, :lang_key, :activation_key, :created_by)";
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("user_detail_id", invitedUser.getMemberId());
+        params.addValue("member_id", invitedUser.getMemberId());
         params.addValue("lang_key", invitedUser.getLangKey());
         params.addValue("activation_key", invitedUser.getActivationKey());
         params.addValue("created_by", invitedUser.getCreatedBy());

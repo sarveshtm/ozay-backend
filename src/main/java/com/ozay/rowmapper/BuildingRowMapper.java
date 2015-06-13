@@ -12,10 +12,11 @@ public class BuildingRowMapper implements RowMapper {
 
     public Building mapRow(ResultSet rs, int rowNum) throws SQLException {
         Building building = new Building();
-        building.setId(rs.getInt("id"));
+        building.setId(rs.getLong("id"));
+        building.setAccountId(rs.getLong("account_id"));
         building.setName(rs.getString("name"));
-        building.setAddress_1("address_1");
-        building.setAddress_2("address_2");
+        building.setAddress1("address_1");
+        building.setAddress2("address_2");
         building.setState("state");
         building.setZip("zip");
         building.setPhone("phone");

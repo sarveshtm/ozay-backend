@@ -2,6 +2,7 @@ package com.ozay.repository;
 
 import com.ozay.domain.Authority;
 import com.ozay.domain.User;
+import com.ozay.model.Account;
 import com.ozay.model.Building;
 import com.ozay.rowmapper.BuildingRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -19,6 +20,33 @@ public class AccountRepository {
     @Inject
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
+    public List<Account> getAllByBuildingId(long buildingId){
+        String query = "SELECT * FROM account where building_id = :building_id";
+        MapSqlParameterSource parameterSource = new MapSqlParameterSource();
+
+        return null;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // These are for User and Authority due to Hibernate restriction
     public void insertUser(User user){
         String query = "INSERT INTO t_user (login, first_name, last_name, password, email, lang_key, created_by, activated, activation_key, created_date) " +
             "VALUES (:login, :firstName, :lastName, :password, :email, :lang_key, :createdBy, :activated, :activationKey, NOW())";

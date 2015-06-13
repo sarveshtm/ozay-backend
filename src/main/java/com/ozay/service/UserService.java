@@ -127,7 +127,7 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public User getUserWithAuthoritiesAndAddMoreAuthorities(int buildingId) {
+    public User getUserWithAuthorities(int buildingId) {
         User currentUser = userRepository.findOneByLogin(SecurityUtils.getCurrentLogin());
         currentUser.getAuthorities().size(); // eagerly load the association
 
@@ -145,7 +145,7 @@ public class UserService {
                 if (member.isManagement() == true) {
                     currentUser.getAuthorities().add(new Authority("ACCESS_DIRECTORY"));
                     currentUser.getAuthorities().add(new Authority("ACCESS_NOTIFICATION"));
-                } else if (member.isStaff() == true) {
+                } else if (member.isStaff() == true || member.isBoard()) {
                     currentUser.getAuthorities().add(new Authority("ACCESS_NOTIFICATION"));
                 }
             } catch (Exception e) {

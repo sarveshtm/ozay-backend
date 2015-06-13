@@ -52,7 +52,6 @@ angular.module('ozayApp')
 
 
 
-
 	var building = $rootScope.selectedBuilding;
 	if(building === undefined){
 		building = $cookieStore.get('selectedBuilding');
@@ -105,7 +104,7 @@ angular.module('ozayApp')
 		        Account.save({method:"invitation"},$scope.Member,
 		        function(data){
 		            $scope.showSuccessAlert = true;
-                    $scope.successTextAlert = "Successfully Invited";
+                    $scope.successTextAlert = "Invitation sent";
 		        },
 		        function(error){
 		            $scope.errorTextAlert = "Error occurred. Please try later";

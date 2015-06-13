@@ -35,6 +35,7 @@ public class BuildingRepository {
 
         String insert = "INSERT INTO building(" +
             "name, " +
+            "account_id, " +
             "email, " +
             "address_1, " +
             "address_2, " +
@@ -49,9 +50,10 @@ public class BuildingRepository {
             "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, now(), ?, now()) RETURNING id";
         Object[] params = new Object[] {
             building.getName(),
+            building.getAccountId(),
             building.getEmail(),
-            building.getAddress_1(),
-            building.getAddress_2(),
+            building.getAddress1(),
+            building.getAddress2(),
             building.getState(),
             building.getZip(),
             building.getPhone(),

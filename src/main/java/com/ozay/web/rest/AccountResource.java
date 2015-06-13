@@ -242,7 +242,7 @@ public class AccountResource {
     @Timed
     public ResponseEntity<UserDTO> getAccountWithBuildingId(@PathVariable int buildingId) {
 
-        return Optional.ofNullable(userService.getUserWithAuthoritiesAndAddMoreAuthorities(buildingId))
+        return Optional.ofNullable(userService.getUserWithAuthorities(buildingId))
             .map(user -> new ResponseEntity<>(
                 new UserDTO(
                     user.getLogin(),

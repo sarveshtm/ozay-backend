@@ -18,18 +18,13 @@ public class Member {
     private String login;
     private Integer buildingId;
     private Integer userId;
-
     private Double ownership;
     private boolean renter;
     private String parking;
     private String unit;
-    @JsonSerialize(using = CustomDateTimeSerializer.class)
-    @JsonDeserialize(using = CustomDateTimeDeserializer.class)
     private DateTime expirationDate;
-
     private boolean management;
     private boolean staff;
-
     private boolean board;
     private boolean resident;
     private boolean deleted;

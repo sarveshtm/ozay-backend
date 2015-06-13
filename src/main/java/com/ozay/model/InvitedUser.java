@@ -97,4 +97,14 @@ public class InvitedUser {
         this.activated = activated;
     }
 
+    @Override
+    public String toString() {
+        return "InvitedUser{" +
+            "id='" + id + '\'' +
+            "memberId='" + memberId + '\'' +
+            "activationKey='" + activationKey + '\'' +
+            "activated='" + activated + '\'' +
+            "}";
+    }
+
 }
