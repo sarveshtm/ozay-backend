@@ -58,9 +58,6 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @Column(name = "activation_key", length = 20)
     private String activationKey;
 
-    @Column(name = "account_id")
-    private Long accountId;
-
 
     @JsonIgnore
     @ManyToMany
@@ -164,14 +161,6 @@ public class User extends AbstractAuditingEntity implements Serializable {
 
     public boolean isActivated() {
         return activated;
-    }
-
-    public Long getAccountId() {
-        return accountId;
-    }
-
-    public void setAccountId(Long accountId) {
-        this.accountId = accountId;
     }
 
     @Override

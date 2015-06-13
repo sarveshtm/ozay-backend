@@ -13,7 +13,6 @@ public class BuildingRowMapper implements RowMapper {
     public Building mapRow(ResultSet rs, int rowNum) throws SQLException {
         Building building = new Building();
         building.setId(rs.getLong("id"));
-        building.setAccountId(rs.getLong("account_id"));
         building.setName(rs.getString("name"));
         building.setAddress1("address_1");
         building.setAddress2("address_2");
