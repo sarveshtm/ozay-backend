@@ -4,6 +4,16 @@
         <div class="panel panel-default page_content">
             <div id="page_content_title">
                 DIRECTORY
+                <div class="button_group">
+                    <button class="btn btn-default" type="button" ng-click="deleteBtnClicked()" ng-show="checkboxModel.deleteBtn" ng-disabled="!button">Delete</button>
+                    <input type="checkbox" ng-model="checkboxModel.deleteBtn">Delete
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="alert alert-success" ng-show="showSuccessAlert">
+                <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                <span class="sr-only">Success:</span>
+                {{successTextAlert}}
             </div>
 
             <!-- START table-responsive-->
@@ -19,6 +29,7 @@
                         <th><a href="" ng-click="predicate = 'renter'; reverse=!reverse">Renter</a></th>
                         <th><a href="" ng-click="predicate = 'phone'; reverse=!reverse">Phone</a></th>
                         <th><a href="" ng-click="predicate = 'email'; reverse=!reverse">Email</a></th>
+                        <th ng-show="checkboxModel.deleteBtn">DELETE</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -33,6 +44,7 @@
                         <td><span ng-if="isResident(directory.renter)">Yes</span><span ng-if="!isResident(directory.renter)">No</span></td>
                         <td>{{directory.phone}}</td>
                         <td>{{directory.email}}</td>
+                        <td ng-show="checkboxModel.deleteBtn"><input ng-model="directory.deleted" type="checkbox"></td>
                     </tr>
                     <tr ng-repeat="directory in staffList | orderBy:natural(predicate)">
 
@@ -44,6 +56,7 @@
                         <td><span ng-if="isResident(directory.renter)">Yes</span><span ng-if="!isResident(directory.renter)">No</span></td>
                         <td>{{directory.phone}}</td>
                         <td>{{directory.email}}</td>
+                        <td ng-show="checkboxModel.deleteBtn"><input ng-model="directory.deleted" type="checkbox"></td>
                     </tr>
                     <tr ng-repeat="directory in boardList| orderBy:natural(predicate)">
 
@@ -55,6 +68,7 @@
                         <td><span ng-if="isResident(directory.renter)">Yes</span><span ng-if="!isResident(directory.renter)">No</span></td>
                         <td>{{directory.phone}}</td>
                         <td>{{directory.email}}</td>
+                        <td ng-show="checkboxModel.deleteBtn"><input ng-model="directory.deleted" type="checkbox"></td>
                     </tr>
                     <tr ng-repeat="directory in residentList  | orderBy:natural(predicate)">
 
@@ -66,6 +80,7 @@
                         <td><span ng-if="isResident(directory.renter)">Yes</span><span ng-if="!isResident(directory.renter)">No</span></td>
                         <td>{{directory.phone}}</td>
                         <td>{{directory.email}}</td>
+                        <td ng-show="checkboxModel.deleteBtn"><input ng-model="directory.deleted" type="checkbox"></td>
                     </tr>
 
                     </tbody>
