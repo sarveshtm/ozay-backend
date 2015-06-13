@@ -16,7 +16,7 @@ angular.module('ozayApp')
 	}
 
 	$scope.getAll('building', building);
-	$scope.predicate = 'lastName';
+	$scope.predicate = 'unit';
 	$scope.isResident = function(renter){
 		if(renter === true){
 			return true;
