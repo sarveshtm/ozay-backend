@@ -3,6 +3,7 @@ package com.ozay.model;
 import com.ozay.domain.Authority;
 import org.joda.time.DateTime;
 
+import java.util.Collection;
 import java.util.Set;
 
 /**
@@ -17,7 +18,7 @@ public class Account {
     private DateTime dateTo;
     private String access;
 
-    Set<Authority> authorities;
+    Collection<Authority> authorities;
 
     public long getUserId() {
         return userId;
@@ -67,11 +68,12 @@ public class Account {
         this.dateTo = dateTo;
     }
 
-    public Set<Authority> getAuthorities() {
+
+    public Collection<Authority> getAuthorities() {
         return authorities;
     }
 
-    public void setAuthorities(Set<Authority> authorities) {
+    public void setAuthorities(Collection<Authority> authorities) {
         this.authorities = authorities;
     }
 

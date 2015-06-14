@@ -29,7 +29,7 @@ public class AccountRepository {
         return null;
     }
 
-    public List<Account> getLoginUserInformation(String login, long buildingId){
+    public Account getLoginUserInformation(String login, long buildingId){
         String query = "SELECT * FROM organization o" +
             "inner join building b on b.organization_id = o.id and b.id = :buildingId" +
             "inner join member m on m.building_id = b.id" +
@@ -59,9 +59,12 @@ public class AccountRepository {
                 map.put(account.getAccess(), authority);
             }
         }
-       // account.setAuthorities(map.values());
+        if(account!= null){
+            account.setAuthorities(map.values());
+        }
 
-        return null;
+
+        return account;
     }
 
 
