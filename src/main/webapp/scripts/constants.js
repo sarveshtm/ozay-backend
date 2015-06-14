@@ -8,6 +8,8 @@ ozayApp.constant('USER_ROLES', {
         'user': 'ROLE_USER',
         'access_directory': 'ACCESS_DIRECTORY',
         'access_notification': 'ACCESS_NOTIFICATION',
+        'access_management': 'ROLE_MANAGEMENT',
+        'subscriber': 'ROLE_SUBSCRIBER',
     });
 
 /*

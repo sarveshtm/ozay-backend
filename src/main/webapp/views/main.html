@@ -283,21 +283,12 @@
                         </ul>
                         <!-- /.nav-second-level -->
                     </li>
-                    <li ng-show="isAuthorized(userRoles.admin)">
-                        <a href="#">MANAGE<span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level">
-                            <li>
-                                <a href="#/building_create">ADD BUILDING</a>
-                            </li>
-                        </ul>
-                        <!-- /.nav-second-level -->
+                    <li ng-show="isAuthorized(userRoles.admin) || isAuthorized(userRoles.access_management)">
+                        <a href="#/management">MANAGE</a>
                     </li>
                     <li>
                         <a href="#">ACCOUNT<span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
-                            <li>
-                                <a href="#/building_create">SETTINGS</a>
-                            </li>
                             <li>
                                 <a href="#/password">PASSWORD</a>
                             </li>

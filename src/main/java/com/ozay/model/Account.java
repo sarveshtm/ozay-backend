@@ -10,78 +10,23 @@ import java.util.Set;
  * Created by naofumiezaki on 6/11/15.
  */
 public class Account {
-    private long userId;
-    private boolean owner;
-    private boolean organizationReady = true;
-    private DateTime createdDate;
-    private DateTime dateFrom;
-    private DateTime dateTo;
-    private String access;
+    private Long subscriberId;
 
-    Collection<Authority> authorities;
+    private Long organizationId;
 
-    public long getUserId() {
-        return userId;
+    public Long getSubscriberId() {
+        return subscriberId;
     }
 
-    public void setUserId(long userId) {
-        this.userId = userId;
+    public void setSubscriberId(Long subscriberId) {
+        this.subscriberId = subscriberId;
     }
 
-    public boolean isOwner() {
-        return owner;
+    public Long getOrganizationId() {
+        return organizationId;
     }
 
-    public void setOwner(boolean owner) {
-        this.owner = owner;
-    }
-
-    public boolean isOrganizationReady() {
-        return organizationReady;
-    }
-
-    public void setOrganizationReady(boolean organizationReady) {
-        this.organizationReady = organizationReady;
-    }
-
-    public DateTime getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(DateTime createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    public DateTime getDateFrom() {
-        return dateFrom;
-    }
-
-    public void setDateFrom(DateTime dateFrom) {
-        this.dateFrom = dateFrom;
-    }
-
-    public DateTime getDateTo() {
-        return dateTo;
-    }
-
-    public void setDateTo(DateTime dateTo) {
-        this.dateTo = dateTo;
-    }
-
-
-    public Collection<Authority> getAuthorities() {
-        return authorities;
-    }
-
-    public void setAuthorities(Collection<Authority> authorities) {
-        this.authorities = authorities;
-    }
-
-    public String getAccess() {
-        return access;
-    }
-
-    public void setAccess(String access) {
-        this.access = access;
+    public void setOrganizationId(Long organizationId) {
+        this.organizationId = organizationId;
     }
 }

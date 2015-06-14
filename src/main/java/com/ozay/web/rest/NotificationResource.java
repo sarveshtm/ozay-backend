@@ -6,7 +6,6 @@ import com.ozay.repository.BuildingRepository;
 import com.ozay.repository.NotificationRecordRepository;
 import com.ozay.repository.NotificationRepository;
 import com.ozay.repository.UserRepository;
-import com.ozay.security.AuthoritiesConstants;
 import com.ozay.service.NotificationService;
 import com.ozay.web.rest.dto.JsonResponse;
 import com.ozay.web.rest.dto.NotificationDTO;
@@ -18,7 +17,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import java.util.List;
 import java.util.Optional;

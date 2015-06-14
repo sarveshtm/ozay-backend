@@ -36,13 +36,13 @@ public class RoleResource {
 
 
     /**
-     * GET  /notifications -> get all the notifications.
+     * GET  /role/{buildingId} -> get all the roles by building.
      */
     @RequestMapping(value = "/role/{buildingId}",
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public List<Role> getAllByBuilding(@PathVariable Long buildingId) {
+    public List<Role> getAllRolesByBuilding(@PathVariable Long buildingId) {
         log.debug("REST request to get all roles by Building");
         return roleRepository.findAllByBuilding(buildingId);
     }

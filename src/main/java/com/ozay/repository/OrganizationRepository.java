@@ -2,6 +2,7 @@ package com.ozay.repository;
 
 import com.ozay.model.Organization;
 import com.ozay.model.Role;
+import com.ozay.rowmapper.OrganizationMapper;
 import com.ozay.rowmapper.RoleMapper;
 import org.joda.time.DateTime;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -19,12 +20,16 @@ public class OrganizationRepository {
     @Inject
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    public List<Organization> findAllByUserId(long buildingId){
+    public Organization findOneByUserId(long userId){
         String query = "SELECT * FROM organization where user_id = :user_id";
         MapSqlParameterSource params = new MapSqlParameterSource();
-
-        return namedParameterJdbcTemplate.query(query, params, new RoleMapper());
-
+        params.addValue("user_id", userId);
+        List<Organization> list = namedParameterJdbcTemplate.query(query, params, new OrganizationMapper());
+        if(list != null &&  list.size() > 0){
+            return list.get(0);
+        } else {
+            return null;
+        }
     }
 
     public void create(Organization organization){
@@ -41,7 +46,6 @@ public class OrganizationRepository {
         params.addValue("country", organization.getCountry());
         params.addValue("zip", organization.getZip());
         namedParameterJdbcTemplate.update(query,params);
-
     }
 
     public void update(Organization organization){

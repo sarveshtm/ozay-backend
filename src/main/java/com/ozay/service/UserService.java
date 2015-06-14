@@ -3,7 +3,9 @@ package com.ozay.service;
 import com.ozay.domain.Authority;
 import com.ozay.domain.PersistentToken;
 import com.ozay.domain.User;
+import com.ozay.model.Account;
 import com.ozay.model.Member;
+import com.ozay.model.Subscription;
 import com.ozay.repository.*;
 import com.ozay.security.SecurityUtils;
 import com.ozay.service.util.RandomUtil;
@@ -52,9 +54,12 @@ public class UserService {
     @Inject
     private InvitedUserRepository invitedUserRepository;
 
+    @Inject
+    private SubscriptionRepository subscriptionRepository;
 
     public User activateRegistration(String key) {
         log.debug("Activating user for activation key {}", key);
+
         return Optional.ofNullable(userRepository.getUserByActivationKey(key))
             .map(user -> {
                 // activate given user for the registration key.
@@ -62,6 +67,10 @@ public class UserService {
                 user.setActivationKey(null);
                 userRepository.save(user);
                 log.debug("Activated user: {}", user);
+                // TODO remove this in the future
+                Subscription subscription = new Subscription();
+                subscription.setUserId(user.getId());
+                subscriptionRepository.create(subscription);
                 return user;
             })
             .orElse(null);
@@ -78,6 +87,8 @@ public class UserService {
         newUser.setLogin(login);
 
         newUser.setCreatedBy(SecurityUtils.getCurrentLogin());
+
+
         // new user gets initially a generated password
         newUser.setPassword(encryptedPassword);
         newUser.setFirstName(firstName);
@@ -90,6 +101,10 @@ public class UserService {
         newUser.setActivationKey(RandomUtil.generateActivationKey());
         authorities.add(authority);
         newUser.setAuthorities(authorities);
+
+        if(newUser.getCreatedBy() == null){
+            newUser.setCreatedBy("System");
+        }
 
         accountRepository.insertUser(newUser);
         for(Authority authority1 : newUser.getAuthorities()){
@@ -119,15 +134,30 @@ public class UserService {
         log.debug("Changed password for User: {}", currentUser);
     }
 
+    private Account getUserInformation(User user, Long buildingId){
+        Account account = accountRepository.getLoginUserInformation(user, buildingId);
+
+        log.debug("Let's check Account: {}", account);
+        if(account != null && user.getId() == account.getSubscriberId()){
+            log.debug("This is subscriber then: {}", account);
+            user.getAuthorities().add(new Authority("ROLE_SUBSCRIBER"));
+            user.getAuthorities().add(new Authority("ROLE_MANAGEMENT"));
+        }
+        return account;
+    }
+
     @Transactional(readOnly = true)
     public User getUserWithAuthorities() {
         User currentUser = userRepository.findOneByLogin(SecurityUtils.getCurrentLogin());
         currentUser.getAuthorities().size(); // eagerly load the association
+
+        Account account = this.getUserInformation(currentUser, null);
+
         return currentUser;
     }
 
     @Transactional(readOnly = true)
-    public User getUserWithAuthorities(int buildingId) {
+    public User getUserWithAuthorities(Long buildingId) {
         User currentUser = userRepository.findOneByLogin(SecurityUtils.getCurrentLogin());
         currentUser.getAuthorities().size(); // eagerly load the association
 
@@ -139,6 +169,7 @@ public class UserService {
             }
         }
         if(isAdmin == false) {
+            Account account = this.getUserInformation(currentUser, buildingId);
             try {
                 Member member = memberRepository.getMemberDetailByBuildingAndUserId(currentUser.getId(), buildingId);
 

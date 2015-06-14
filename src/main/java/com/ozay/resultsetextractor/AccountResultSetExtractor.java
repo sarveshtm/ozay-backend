@@ -15,24 +15,19 @@ import java.util.List;
  */
 public class AccountResultSetExtractor implements ResultSetExtractor {
 
-    public Account extractData(ResultSet rs) throws SQLException{
+    public Object extractData(ResultSet rs) throws SQLException{
+        List<Account> list = new ArrayList<Account>();
         Account account = null;
         HashMap<String,Authority> map = new HashMap<String,Authority>();
         while(rs.next()){
             if(account == null){
                 account = new Account();
-                account.setUserId(rs.getLong("id"));
-            }
-            if(!map.containsKey(account.getAccess())){
-                Authority authority = new Authority();
-                authority.setName(rs.getString("name"));
-            }
-            if(!map.containsKey(account.getAccess())){
-                Authority authority = new Authority();
-                authority.setName(rs.getString("name"));
+                account.setSubscriberId(rs.getLong("s_user_id"));
+                account.setOrganizationId(rs.getLong("organization_id"));
             }
         }
+        list.add(account);
 
-        return account;
+        return list;
     }
 }

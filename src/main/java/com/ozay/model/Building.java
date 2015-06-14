@@ -18,12 +18,12 @@ public class Building {
     private String state;
     private String zip;
     private String phone;
-    private Integer createdBy;
+    private Long createdBy;
     private String email;
     private int totalUnits;
 
 
-    private Integer lastModifiedBy;
+    private Long lastModifiedBy;
 
 
     public Long getId() {
@@ -82,19 +82,19 @@ public class Building {
         this.zip = zip;
     }
 
-    public Integer getLastModifiedBy() {
+    public Long getLastModifiedBy() {
         return lastModifiedBy;
     }
 
-    public void setLastModifiedBy(Integer lastModifiedBy) {
+    public void setLastModifiedBy(Long lastModifiedBy) {
         this.lastModifiedBy = lastModifiedBy;
     }
 
-    public Integer getCreatedBy() {
+    public Long getCreatedBy() {
         return createdBy;
     }
 
-    public void setCreatedBy(Integer createdBy) {
+    public void setCreatedBy(Long createdBy) {
         this.createdBy = createdBy;
     }
 

@@ -17,8 +17,8 @@ public class Organization {
     private String state;
     private String zip;
     private String country;
-    private boolean ready;
     private DateTime createdDate;
+    private Long subscriptionId;
     private Set<OrganizationAccess> organizationRoles;
     private Set<Role> roles;
 
@@ -94,14 +94,6 @@ public class Organization {
         this.country = country;
     }
 
-    public boolean isReady() {
-        return ready;
-    }
-
-    public void setReady(boolean ready) {
-        this.ready = ready;
-    }
-
     public DateTime getCreatedDate() {
         return createdDate;
     }
@@ -110,6 +102,13 @@ public class Organization {
         this.createdDate = createdDate;
     }
 
+    public Long getSubscriptionId() {
+        return subscriptionId;
+    }
+
+    public void setSubscriptionId(Long subscriptionId) {
+        this.subscriptionId = subscriptionId;
+    }
 
     public Set<OrganizationAccess> getOrganizationRoles() {
         return organizationRoles;

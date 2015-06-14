@@ -191,29 +191,29 @@ ozayApp
 		}
 	})
 	.state('activate', {
-    		url: "/activate?key",
-    		templateUrl: "views/activate.html",
-    		controller: 'ActivationController',
-    		access: {
-    			authorizedRoles: [USER_ROLES.all]
-    		}
-    	})
-        .state('accept-invitation', {
-                url: "/accept-invitation?key",
-                templateUrl: "views/activate_invitation.html",
-                controller: 'InvitationActivationController',
-                access: {
-                    authorizedRoles: [USER_ROLES.all]
-                }
-            })
+		url: "/activate?key",
+		templateUrl: "views/activate.html",
+		controller: 'ActivationController',
+		access: {
+			authorizedRoles: [USER_ROLES.all]
+		}
+	})
+	.state('accept-invitation', {
+		url: "/accept-invitation?key",
+		templateUrl: "views/activate_invitation.html",
+		controller: 'InvitationActivationController',
+		access: {
+			authorizedRoles: [USER_ROLES.all]
+		}
+	})
 	.state('loginRedirect', {
-    		url: "/login?redirect",
-    		templateUrl: "views/login.html",
-    		controller: 'LoginController',
-    		access: {
-    			authorizedRoles: [USER_ROLES.all]
-    		}
-    	})
+		url: "/login?redirect",
+		templateUrl: "views/login.html",
+		controller: 'LoginController',
+		access: {
+			authorizedRoles: [USER_ROLES.all]
+		}
+	})
 	.state('logout', {
 		url: "/logout",
 		templateUrl: "views/login.html",
@@ -229,15 +229,15 @@ ozayApp
 			authorizedRoles: [USER_ROLES.all]
 		}
 	})
-//
+
 //	.state('change_password', {
-//    		url : '/password',
-//    		templateUrl: 'views/password.html',
-//    		controller: 'PasswordController',
-//    		access: {
-//    			authorizedRoles: [USER_ROLES.user]
-//    		}
-//    	})
+//	url : '/password',
+//	templateUrl: 'views/password.html',
+//	controller: 'PasswordController',
+//	access: {
+//	authorizedRoles: [USER_ROLES.user]
+//	}
+//	})
 	.state('register', {
 		url: "/register",
 		templateUrl: "views/login.html",
@@ -313,7 +313,7 @@ ozayApp
 	.state('home.directory', {
 		url: "/directory",
 		templateUrl: 'views/directory.html',
-        controller: 'MemberController',
+		controller: 'MemberController',
 		access: {
 			authorizedRoles: [USER_ROLES.admin, USER_ROLES.access_directory]
 		}
@@ -327,13 +327,53 @@ ozayApp
 		}
 	})
 	.state('home.password', {
-    		url : '/password',
-    		templateUrl: 'views/password.html',
-    		controller: 'PasswordController',
+		url : '/password',
+		templateUrl: 'views/password.html',
+		controller: 'PasswordController',
+		access: {
+			authorizedRoles: [USER_ROLES.user]
+		}
+	})
+	.state('home.management', {
+		url : '/management',
+		templateUrl: 'views/management.html',
+		controller: 'ManagementController',
+		access: {
+			authorizedRoles: [USER_ROLES.access_management]
+		}
+	})
+	.state('home.group', {
+    		url : '/group',
+    		templateUrl: 'views/group.html',
+    		controller: 'OrganizationController',
     		access: {
-    			authorizedRoles: [USER_ROLES.user]
+    			authorizedRoles: [USER_ROLES.access_management]
     		}
     	})
+	.state('home.buildings', {
+    		url : '/buildings',
+    		templateUrl: 'views/building.html',
+    		controller: 'BuildingController',
+    		access: {
+    			authorizedRoles: [USER_ROLES.access_management]
+    		}
+    })
+    .state('home.team', {
+    		url : '/team',
+    		templateUrl: 'views/team.html',
+    		controller: 'TeamController',
+    		access: {
+    			authorizedRoles: [USER_ROLES.access_management]
+    		}
+    })
+    .state('home.role', {
+        		url : '/roles',
+        		templateUrl: 'views/role.html',
+        		controller: 'RoleController',
+        		access: {
+        			authorizedRoles: [USER_ROLES.access_management]
+        		}
+    })
 	.state('home.director_details_new', {
 		url: "/directory/:method",
 		templateUrl: 'views/directory_details.html',
@@ -342,13 +382,13 @@ ozayApp
 			authorizedRoles: [USER_ROLES.user]
 		}
 	}).state('home.search', {
-      		url: "/search/:item",
-      		templateUrl: 'views/search.html',
-      		controller: 'SearchController',
-      		access: {
-      			authorizedRoles: [USER_ROLES.admin, USER_ROLES.access_directory]
-      		}
-      	});
+		url: "/search/:item",
+		templateUrl: 'views/search.html',
+		controller: 'SearchController',
+		access: {
+			authorizedRoles: [USER_ROLES.admin, USER_ROLES.access_directory]
+		}
+	});
 
 
 
@@ -397,7 +437,7 @@ ozayApp
 	};
 })
 .factory('custom', function ($rootScope, $cookieStore) {
-    $rootScope.selectedBuilding = $cookieStore.selectedBuilding;
+	$rootScope.selectedBuilding = $cookieStore.selectedBuilding;
 })
 .run(function($rootScope, $cookieStore, $location, $http, $window, AuthenticationSharedService, Session, USER_ROLES, $state) {
 
@@ -432,11 +472,11 @@ ozayApp
 			var redirect = $location.path();
 //			$location.path('/login').search('redirect', redirect).replace();
 
-            if(redirect.length > 1 && redirect.charAt(0) == '/'){
-                    redirect = redirect.slice(1);
-            } else {
-                redirect = "";
-            }
+			if(redirect.length > 1 && redirect.charAt(0) == '/'){
+				redirect = redirect.slice(1);
+			} else {
+				redirect = "";
+			}
 			$state.transitionTo('loginRedirect', {redirect:redirect}, {'reload':true});
 		}
 	});

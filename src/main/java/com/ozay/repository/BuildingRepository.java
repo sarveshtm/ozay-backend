@@ -21,7 +21,7 @@ public class BuildingRepository {
         });
     }
 
-    public List<Building> getBuildingsByUser(int id){
+    public List<Building> getBuildingsByUser(long id){
         return jdbcTemplate.query("SELECT * FROM building b INNER JOIN user_building u ON b.id = u.building_id WHERE u.user_id = ? order by id", new Object[]{id}, new BuildingRowMapper(){
         });
     }

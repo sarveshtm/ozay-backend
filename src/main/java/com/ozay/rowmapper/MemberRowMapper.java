@@ -29,7 +29,7 @@ public class MemberRowMapper implements RowMapper {
         member.setBoard(rs.getBoolean("board"));
         member.setResident(rs.getBoolean("resident"));
         member.setDeleted(rs.getBoolean("deleted"));
-        member.setUserId(rs.getInt("user_id"));
+        member.setUserId(rs.getLong("user_id"));
 
         return member;
     }
