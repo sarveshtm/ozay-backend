@@ -1,46 +1,46 @@
 package com.ozay.model;
 
+import com.ozay.domain.Authority;
 import org.joda.time.DateTime;
+
+import java.util.Set;
 
 /**
  * Created by naofumiezaki on 6/11/15.
  */
 public class Account {
-    private Long id;
-    private long buildingId;
-    private String name;
+    private long userId;
+    private boolean owner;
+    private boolean organizationReady = true;
     private DateTime createdDate;
     private DateTime dateFrom;
     private DateTime dateTo;
-    private String address1;
-    private String address2;
-    private String phone;
-    private String state;
-    private String country;
-    private String zip;
+    private String access;
 
-    public Long getId() {
-        return id;
+    Set<Authority> authorities;
+
+    public long getUserId() {
+        return userId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setUserId(long userId) {
+        this.userId = userId;
     }
 
-    public long getBuildingId() {
-        return buildingId;
+    public boolean isOwner() {
+        return owner;
     }
 
-    public void setBuildingId(long buildingId) {
-        this.buildingId = buildingId;
+    public void setOwner(boolean owner) {
+        this.owner = owner;
     }
 
-    public String getName() {
-        return name;
+    public boolean isOrganizationReady() {
+        return organizationReady;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setOrganizationReady(boolean organizationReady) {
+        this.organizationReady = organizationReady;
     }
 
     public DateTime getCreatedDate() {
@@ -67,51 +67,19 @@ public class Account {
         this.dateTo = dateTo;
     }
 
-    public String getAddress1() {
-        return address1;
+    public Set<Authority> getAuthorities() {
+        return authorities;
     }
 
-    public void setAddress1(String address1) {
-        this.address1 = address1;
+    public void setAuthorities(Set<Authority> authorities) {
+        this.authorities = authorities;
     }
 
-    public String getAddress2() {
-        return address2;
+    public String getAccess() {
+        return access;
     }
 
-    public void setAddress2(String address2) {
-        this.address2 = address2;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public String getState() {
-        return state;
-    }
-
-    public void setState(String state) {
-        this.state = state;
-    }
-
-    public String getCountry() {
-        return country;
-    }
-
-    public void setCountry(String country) {
-        this.country = country;
-    }
-
-    public String getZip() {
-        return zip;
-    }
-
-    public void setZip(String zip) {
-        this.zip = zip;
+    public void setAccess(String access) {
+        this.access = access;
     }
 }

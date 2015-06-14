@@ -29,6 +29,24 @@ public class RoleRepository {
 
     }
 
+    public void create(Role role){
+        String query="INSERT INTO role (building_id, name, sort_order) VALUES(:buildingId, :name, :sortOrder)";
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("buildingId", role.getBuildingId());
+        params.addValue("name", role.getName());
+        params.addValue("sortOrder", role.getSortOrder());
+        namedParameterJdbcTemplate.update(query,params);
+    }
+
+    public void update(Role role){
+        String query="UPDATE role SET building_id=:buildingId, name=:name, sort_order=:sortOrder WHERE id=:id";
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("buildingId", role.getBuildingId());
+        params.addValue("name", role.getName());
+        params.addValue("sortOrder", role.getSortOrder());
+        params.addValue("id", role.getId());
+        namedParameterJdbcTemplate.update(query,params);
+    }
 
 
 
