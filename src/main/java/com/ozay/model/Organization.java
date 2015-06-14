@@ -19,8 +19,6 @@ public class Organization {
     private String country;
     private boolean ready;
     private DateTime createdDate;
-    private DateTime dateFrom;
-    private DateTime dateTo;
     private Set<OrganizationAccess> organizationRoles;
     private Set<Role> roles;
 
@@ -112,21 +110,6 @@ public class Organization {
         this.createdDate = createdDate;
     }
 
-    public DateTime getDateFrom() {
-        return dateFrom;
-    }
-
-    public void setDateFrom(DateTime dateFrom) {
-        this.dateFrom = dateFrom;
-    }
-
-    public DateTime getDateTo() {
-        return dateTo;
-    }
-
-    public void setDateTo(DateTime dateTo) {
-        this.dateTo = dateTo;
-    }
 
     public Set<OrganizationAccess> getOrganizationRoles() {
         return organizationRoles;

@@ -28,14 +28,12 @@ public class OrganizationRepository {
     }
 
     public void create(Organization organization){
-        String query = "INSERT INTO organization (user_id, name, created_date, date_from, date_to, address_1, address_2, phone, state, country, zip) " +
-            "VALUES(:userId, :name, :createdDate, :dateFrom, :dateTo, :address1, :address2, phone, state, country, zip)";
+        String query = "INSERT INTO organization (user_id, name, created_date, address_1, address_2, phone, state, country, zip) " +
+            "VALUES(:userId, :name, :createdDate, :address1, :address2, phone, state, country, zip)";
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("userId", organization.getUserId());
         params.addValue("name", organization.getName());
         params.addValue("createdDate", new Timestamp(organization.getCreatedDate().getMillis()));
-        params.addValue("dateFrom", new Timestamp(organization.getDateFrom().getMillis()));
-        params.addValue("dateTo", new Timestamp(organization.getDateTo().getMillis()));
         params.addValue("address1", organization.getAddress1());
         params.addValue("address2", organization.getAddress2());
         params.addValue("phone", organization.getPhone());
@@ -51,8 +49,6 @@ public class OrganizationRepository {
             "SET user_id=:userId, " +
             "name=:name, " +
             "created_date=:createdDate," +
-            "date_from=:dateFrom," +
-            "date_to=:dateTo," +
             "address_1=:address1," +
             "address_2=:address2," +
             "phone=:phone," +
@@ -64,8 +60,6 @@ public class OrganizationRepository {
         params.addValue("userId", organization.getUserId());
         params.addValue("name", organization.getName());
         params.addValue("createdDate", new Timestamp(organization.getCreatedDate().getMillis()));
-        params.addValue("dateFrom", new Timestamp(organization.getDateFrom().getMillis()));
-        params.addValue("dateTo", new Timestamp(organization.getDateTo().getMillis()));
         params.addValue("address1", organization.getAddress1());
         params.addValue("address2", organization.getAddress2());
         params.addValue("phone", organization.getPhone());
