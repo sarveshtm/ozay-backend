@@ -3,7 +3,7 @@ package com.ozay.service;
 import com.ozay.domain.Authority;
 import com.ozay.domain.PersistentToken;
 import com.ozay.domain.User;
-import com.ozay.model.Account;
+import com.ozay.model.AccountInformation;
 import com.ozay.model.Member;
 import com.ozay.model.Subscription;
 import com.ozay.repository.*;
@@ -134,16 +134,16 @@ public class UserService {
         log.debug("Changed password for User: {}", currentUser);
     }
 
-    private Account getUserInformation(User user, Long buildingId){
-        Account account = accountRepository.getLoginUserInformation(user, buildingId);
+    private AccountInformation getUserInformation(User user, Long buildingId){
+        AccountInformation accountInformation = accountRepository.getLoginUserInformation(user, buildingId);
 
-        log.debug("Let's check Account: {}", account);
-        if(account != null && user.getId() == account.getSubscriberId()){
-            log.debug("This is subscriber then: {}", account);
+        log.debug("Let's check Account: {}", accountInformation);
+        if(accountInformation != null && user.getId() == accountInformation.getSubscriberId()){
+            log.debug("This is subscriber then: {}", accountInformation);
             user.getAuthorities().add(new Authority("ROLE_SUBSCRIBER"));
             user.getAuthorities().add(new Authority("ROLE_MANAGEMENT"));
         }
-        return account;
+        return accountInformation;
     }
 
     @Transactional(readOnly = true)
@@ -151,7 +151,7 @@ public class UserService {
         User currentUser = userRepository.findOneByLogin(SecurityUtils.getCurrentLogin());
         currentUser.getAuthorities().size(); // eagerly load the association
 
-        Account account = this.getUserInformation(currentUser, null);
+        AccountInformation accountInformation = this.getUserInformation(currentUser, null);
 
         return currentUser;
     }
@@ -169,7 +169,7 @@ public class UserService {
             }
         }
         if(isAdmin == false) {
-            Account account = this.getUserInformation(currentUser, buildingId);
+            AccountInformation accountInformation = this.getUserInformation(currentUser, buildingId);
             try {
                 Member member = memberRepository.getMemberDetailByBuildingAndUserId(currentUser.getId(), buildingId);
 

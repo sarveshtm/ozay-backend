@@ -1,7 +1,7 @@
 package com.ozay.resultsetextractor;
 
 import com.ozay.domain.Authority;
-import com.ozay.model.Account;
+import com.ozay.model.AccountInformation;
 import org.springframework.jdbc.core.ResultSetExtractor;
 
 import java.sql.ResultSet;
@@ -16,18 +16,18 @@ import java.util.List;
 public class AccountResultSetExtractor implements ResultSetExtractor {
 
     public Object extractData(ResultSet rs) throws SQLException{
-        List<Account> list = new ArrayList<Account>();
-        Account account = null;
+        List<AccountInformation> list = new ArrayList<AccountInformation>();
+        AccountInformation accountInformation = null;
         HashMap<String,Authority> map = new HashMap<String,Authority>();
         while(rs.next()){
-            if(account == null){
-                account = new Account();
-                account.setSubscriberId(rs.getLong("s_user_id"));
-                account.setOrganizationId(rs.getLong("organization_id"));
-                account.setSubscriptionId(rs.getLong("s_id"));
+            if(accountInformation == null){
+                accountInformation = new AccountInformation();
+                accountInformation.setSubscriberId(rs.getLong("s_user_id"));
+                accountInformation.setOrganizationId(rs.getLong("organization_id"));
+                accountInformation.setSubscriptionId(rs.getLong("s_id"));
             }
         }
-        list.add(account);
+        list.add(accountInformation);
 
         return list;
     }

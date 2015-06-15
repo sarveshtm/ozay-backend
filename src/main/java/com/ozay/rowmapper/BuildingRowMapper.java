@@ -11,6 +11,7 @@ import org.springframework.jdbc.core.RowMapper;
 public class BuildingRowMapper implements RowMapper {
 
     public Building mapRow(ResultSet rs, int rowNum) throws SQLException {
+
         Building building = new Building();
         building.setId(rs.getLong("id"));
         building.setName(rs.getString("name"));
@@ -24,6 +25,7 @@ public class BuildingRowMapper implements RowMapper {
         building.setState(rs.getString("state"));
         building.setLastModifiedBy(rs.getLong("last_modified_by"));
         building.setTotalUnits(rs.getInt("total_units"));
+        building.setOrganizationId(rs.getLong("organization_id"));
 
         return building;
     }

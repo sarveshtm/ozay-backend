@@ -2,7 +2,7 @@ package com.ozay.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import com.ozay.domain.User;
-import com.ozay.model.Account;
+import com.ozay.model.AccountInformation;
 import com.ozay.model.Organization;
 import com.ozay.repository.*;
 import com.ozay.security.SecurityUtils;
@@ -60,8 +60,8 @@ public class OrganizationResource {
     public ResponseEntity<JsonResponse> create(@RequestBody Organization organization) {
         log.debug("REST request to create an organization, {}", organization);
         User user = userRepository.findOneByLogin(SecurityUtils.getCurrentLogin());
-        Account account = accountRepository.getLoginUserInformation(user, null);
-        organization.setSubscriptionId(account.getSubscriptionId());
+        AccountInformation accountInformation = accountRepository.getLoginUserInformation(user, null);
+        organization.setSubscriptionId(accountInformation.getSubscriptionId());
         organization.setCreatedBy(user.getId());
         organizationRepository.create(organization);
         JsonResponse json = new JsonResponse();
@@ -79,8 +79,8 @@ public class OrganizationResource {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         User user = userRepository.findOneByLogin(SecurityUtils.getCurrentLogin());
-        Account account = accountRepository.getLoginUserInformation(user, null);
-        organization.setSubscriptionId(account.getSubscriptionId());
+        AccountInformation accountInformation = accountRepository.getLoginUserInformation(user, null);
+        organization.setSubscriptionId(accountInformation.getSubscriptionId());
         organization.setModifiedBy(user.getId());
         organizationRepository.update(organization);
         JsonResponse json = new JsonResponse();

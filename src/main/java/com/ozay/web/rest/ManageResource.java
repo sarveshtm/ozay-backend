@@ -1,7 +1,7 @@
 package com.ozay.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
-import com.ozay.model.Account;
+import com.ozay.model.AccountInformation;
 import com.ozay.service.MemberService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,8 +33,8 @@ public class ManageResource {
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public List<Account> getAll(@PathVariable int id) {
-        List<Account> list = new ArrayList<Account>();
+    public List<AccountInformation> getAll(@PathVariable int id) {
+        List<AccountInformation> list = new ArrayList<AccountInformation>();
         return list;
     }
 }

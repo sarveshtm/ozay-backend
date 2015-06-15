@@ -1,7 +1,6 @@
 package com.ozay.rowmapper;
 
-import com.ozay.model.Account;
-import com.ozay.model.Role;
+import com.ozay.model.AccountInformation;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
@@ -12,9 +11,9 @@ import java.sql.SQLException;
  */
 public class AccountMapper implements RowMapper {
 
-    public Account mapRow(ResultSet rs, int rowNum) throws SQLException {
-        Account account = new Account();
+    public AccountInformation mapRow(ResultSet rs, int rowNum) throws SQLException {
+        AccountInformation accountInformation = new AccountInformation();
 
-        return account;
+        return accountInformation;
     }
 }

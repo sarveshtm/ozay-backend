@@ -11,7 +11,7 @@ import javax.persistence.Column;
 
 public class Building {
     private Long id;
-    private Long accountId;
+    private Long organizationId;
     private String name;
     private String address1;
     private String address2;
@@ -114,19 +114,19 @@ public class Building {
         this.totalUnits = totalUnits;
     }
 
-    public Long getAccountId() {
-        return accountId;
+    public Long getOrganizationId() {
+        return organizationId;
     }
 
-    public void setAccountId(Long accountId) {
-        this.accountId = accountId;
+    public void setOrganizationId(Long organizationId) {
+        this.organizationId = organizationId;
     }
 
     @Override
     public String toString() {
         return "Building{" +
             "id='" + id + '\'' +
-            "accountId='" + accountId + '\'' +
+            "organizationId='" + organizationId + '\'' +
             "name='" + name + '\'' +
             "}";
     }

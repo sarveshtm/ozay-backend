@@ -1,15 +1,9 @@
 package com.ozay.model;
 
-import com.ozay.domain.Authority;
-import org.joda.time.DateTime;
-
-import java.util.Collection;
-import java.util.Set;
-
 /**
  * Created by naofumiezaki on 6/11/15.
  */
-public class Account {
+public class AccountInformation {
     private Long subscriberId;
     private Long subscriptionId;
     private Long organizationId;
@@ -36,5 +30,14 @@ public class Account {
 
     public void setOrganizationId(Long organizationId) {
         this.organizationId = organizationId;
+    }
+
+    @Override
+    public String toString() {
+        return "Account{" +
+            "subscriberId='" + subscriberId + '\'' +
+            "subscriptionId='" + subscriptionId + '\'' +
+            "organizationId='" + organizationId + '\'' +
+            "}";
     }
 }

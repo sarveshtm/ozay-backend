@@ -1,8 +1,5 @@
 package com.ozay.repository;
 
-import com.ozay.domain.Authority;
-import com.ozay.domain.User;
-import com.ozay.model.Account;
 import com.ozay.model.Role;
 import com.ozay.rowmapper.RoleMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;

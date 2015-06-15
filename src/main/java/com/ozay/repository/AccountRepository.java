@@ -2,18 +2,13 @@ package com.ozay.repository;
 
 import com.ozay.domain.Authority;
 import com.ozay.domain.User;
-import com.ozay.model.Account;
-import com.ozay.model.Building;
+import com.ozay.model.AccountInformation;
 import com.ozay.resultsetextractor.AccountResultSetExtractor;
-import com.ozay.rowmapper.AccountMapper;
-import com.ozay.rowmapper.BuildingRowMapper;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import javax.inject.Inject;
-import java.util.HashMap;
 import java.util.List;
 
 
@@ -23,14 +18,14 @@ public class AccountRepository {
     @Inject
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    public List<Account> getAllByBuildingId(long buildingId){
+    public List<AccountInformation> getAllByBuildingId(long buildingId){
         String query = "SELECT * FROM account where building_id = :building_id";
         MapSqlParameterSource parameterSource = new MapSqlParameterSource();
 
         return null;
     }
 
-    public Account getLoginUserInformation(User user,Long buildingId){
+    public AccountInformation getLoginUserInformation(User user,Long buildingId){
 
         String query = "SELECT s.id as s_id, s.user_id as s_user_id, o.id as organization_id FROM t_user u LEFT JOIN subscription s ON s.user_id = u.id LEFT JOIN organization o ON o.user_id = s.user_id  WHERE u.id = :id";
 
@@ -39,17 +34,17 @@ public class AccountRepository {
         params.addValue("id", user.getId());
         //params.addValue("buildingId", buildingId);
 
-        List<Account> accounts = (List<Account>)namedParameterJdbcTemplate.query(query, params, new AccountResultSetExtractor());
-        Account account = null;
-        if(accounts.size() > 0){
-            account = accounts.get(0);
+        List<AccountInformation> accountInformations = (List<AccountInformation>)namedParameterJdbcTemplate.query(query, params, new AccountResultSetExtractor());
+        AccountInformation accountInformation = null;
+        if(accountInformations.size() > 0){
+            accountInformation = accountInformations.get(0);
         }
 
 ////        HashMap<String,Authority> map = new HashMap<String,Authority>();
 //        System.out.println(account);
 
 
-        return account;
+        return accountInformation;
     }
 
 

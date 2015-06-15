@@ -3,6 +3,8 @@ package com.ozay.repository;
 import com.ozay.model.Building;
 import com.ozay.rowmapper.BuildingRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import javax.inject.Inject;
@@ -13,21 +15,36 @@ import java.util.List;
 public class BuildingRepository {
 
     @Inject
-    private JdbcTemplate jdbcTemplate;
+    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     public List<Building> getBuildings(){
-        return jdbcTemplate.query("SELECT * FROM building order by id", new Object[]{}, new BuildingRowMapper(){
+
+        return namedParameterJdbcTemplate.query("SELECT * FROM building order by id", new BuildingRowMapper(){
 
         });
     }
 
     public List<Building> getBuildingsByUser(long id){
-        return jdbcTemplate.query("SELECT * FROM building b INNER JOIN user_building u ON b.id = u.building_id WHERE u.user_id = ? order by id", new Object[]{id}, new BuildingRowMapper(){
+        String query = "SELECT * FROM building b INNER JOIN user_building u ON b.id = u.building_id WHERE u.user_id = :userId order by id";
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("userId", id);
+        return namedParameterJdbcTemplate.query(query, params, new BuildingRowMapper(){
+        });
+    }
+
+    public List<Building> getBuildingsByOrganization(long organizationId){
+        String query = "SELECT * FROM building WHERE organization_id = :organizationId";
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("organizationId", organizationId);
+        return namedParameterJdbcTemplate.query(query, params, new BuildingRowMapper(){
         });
     }
 
     public Building getBuilding(int id){
-        return (Building)jdbcTemplate.queryForObject("SELECT * FROM building WHERE id = ?", new Object[]{id}, new BuildingRowMapper(){
+        String query = "SELECT * FROM building WHERE id = :id";
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("id", id);
+        return (Building)namedParameterJdbcTemplate.queryForObject(query, params, new BuildingRowMapper(){
         });
     }
 
@@ -35,7 +52,7 @@ public class BuildingRepository {
 
         String insert = "INSERT INTO building(" +
             "name, " +
-            "account_id, " +
+            "organization_id, " +
             "email, " +
             "address_1, " +
             "address_2, " +
@@ -44,25 +61,54 @@ public class BuildingRepository {
             "phone, " +
             "total_units, " +
             "created_by, " +
-            "created_date, " +
-            "last_modified_by," +
-            "last_modified_date )" +
-            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, now(), ?, now()) RETURNING id";
-        Object[] params = new Object[] {
-            building.getName(),
-            building.getAccountId(),
-            building.getEmail(),
-            building.getAddress1(),
-            building.getAddress2(),
-            building.getState(),
-            building.getZip(),
-            building.getPhone(),
-            building.getTotalUnits(),
-            building.getCreatedBy(),
-            building.getLastModifiedBy(),
-        };
+            "created_date)" +
+            "VALUES (:name, :organizationId, :email, :address1, :address2, :state, :zip, :phone, :totalUnits,:createdBy, now()) RETURNING id";
 
-        int id = jdbcTemplate.queryForObject(insert, Integer.class, params);
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("name", building.getName());
+        params.addValue("organizationId", building.getOrganizationId());
+        params.addValue("email", building.getEmail());
+        params.addValue("address1", building.getAddress1());
+        params.addValue("address2", building.getAddress2());
+        params.addValue("state", building.getState());
+        params.addValue("zip", building.getZip());
+        params.addValue("phone", building.getPhone());
+        params.addValue("totalUnits", building.getTotalUnits());
+        params.addValue("createdBy", building.getCreatedBy());
+        
+        int id = namedParameterJdbcTemplate.queryForObject(insert, params, Integer.class );
         return id;
+    }
+
+    public void update(Building building){
+
+        String query = "UPDATE building SET" +
+            "name =:name, " +
+            "organization_id = :organizationId, " +
+            "email =:email, " +
+            "address_1= address1, " +
+            "address_2 = address2, " +
+            "state=:state, " +
+            "zip=:zip, " +
+            "phone=:phone " +
+            "total_units=:totalUnits," +
+            "last_modified_by =:modifiedBy, " +
+            "last_modified_date=now() s" +
+            "WHERE id=:id";
+
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("name", building.getName());
+        params.addValue("organizationId", building.getOrganizationId());
+        params.addValue("email", building.getEmail());
+        params.addValue("address1", building.getAddress1());
+        params.addValue("address2", building.getAddress2());
+        params.addValue("state", building.getState());
+        params.addValue("zip", building.getZip());
+        params.addValue("phone", building.getPhone());
+        params.addValue("totalUnits", building.getTotalUnits());
+        params.addValue("modifiedBy", building.getLastModifiedBy());
+        params.addValue("id", building.getId());
+
+        namedParameterJdbcTemplate.update(query, params);
     }
 }
