@@ -337,7 +337,6 @@ ozayApp
 	.state('home.management', {
 		url : '/management',
 		templateUrl: 'views/management.html',
-		controller: 'ManagementController',
 		access: {
 			authorizedRoles: [USER_ROLES.access_management]
 		}

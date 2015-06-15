@@ -16,6 +16,7 @@ public class OrganizationMapper implements RowMapper {
         Organization organization = new Organization();
         organization.setId(rs.getLong("id"));
         organization.setUserId(rs.getLong("user_id"));
+        organization.setName(rs.getString("name"));
         organization.setAddress1(rs.getString("address_1"));
         organization.setAddress2(rs.getString("address_2"));
         organization.setPhone(rs.getString("phone"));

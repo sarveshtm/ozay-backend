@@ -2,6 +2,7 @@ package com.ozay.model;
 
 import org.joda.time.DateTime;
 
+import java.util.Date;
 import java.util.Set;
 
 /**
@@ -19,11 +20,17 @@ public class Organization {
     private String country;
     private DateTime createdDate;
     private Long subscriptionId;
-    private Set<OrganizationAccess> organizationRoles;
-    private Set<Role> roles;
+
+    private Long createdBy;
+    private Long modifiedBy;
+    private DateTime modifiedDate;
 
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public long getUserId() {
@@ -32,10 +39,6 @@ public class Organization {
 
     public void setUserId(long userId) {
         this.userId = userId;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getName() {
@@ -110,19 +113,40 @@ public class Organization {
         this.subscriptionId = subscriptionId;
     }
 
-    public Set<OrganizationAccess> getOrganizationRoles() {
-        return organizationRoles;
+    public Long getCreatedBy() {
+        return createdBy;
     }
 
-    public void setOrganizationRoles(Set<OrganizationAccess> organizationRoles) {
-        this.organizationRoles = organizationRoles;
+    public void setCreatedBy(Long createdBy) {
+        this.createdBy = createdBy;
     }
 
-    public Set<Role> getRoles() {
-        return roles;
+    public Long getModifiedBy() {
+        return modifiedBy;
     }
 
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
+    public void setModifiedBy(Long modifiedBy) {
+        this.modifiedBy = modifiedBy;
+    }
+
+    public DateTime getModifiedDate() {
+        return modifiedDate;
+    }
+
+    public void setModifiedDate(DateTime modifiedDate) {
+        this.modifiedDate = modifiedDate;
+    }
+
+    @Override
+    public String toString() {
+        return "Organization{" +
+            "id='" + id + '\'' +
+            "name='" + name + '\'' +
+            ", address1='" + address1 + '\'' +
+            ", address2='" + address2 + '\'' +
+            ", subscription ID='" + subscriptionId + '\'' +
+
+            ", user_id='" + userId + '\'' +
+            "}";
     }
 }

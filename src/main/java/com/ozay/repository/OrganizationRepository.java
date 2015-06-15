@@ -33,18 +33,20 @@ public class OrganizationRepository {
     }
 
     public void create(Organization organization){
-        String query = "INSERT INTO organization (user_id, name, created_date, address_1, address_2, phone, state, country, zip) " +
-            "VALUES(:userId, :name, :createdDate, :address1, :address2, phone, state, country, zip)";
+        String query = "INSERT INTO organization (user_id, name, created_date, address_1, address_2, phone, state, country, zip, subscription_id, created_by) " +
+            "VALUES(:userId, :name, now(), :address1, :address2, :phone, :state, :country, :zip, :subscriptionId, :createdBy" +
+            ")";
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("userId", organization.getUserId());
         params.addValue("name", organization.getName());
-        params.addValue("createdDate", new Timestamp(organization.getCreatedDate().getMillis()));
         params.addValue("address1", organization.getAddress1());
         params.addValue("address2", organization.getAddress2());
         params.addValue("phone", organization.getPhone());
         params.addValue("state", organization.getState());
         params.addValue("country", organization.getCountry());
         params.addValue("zip", organization.getZip());
+        params.addValue("subscriptionId", organization.getSubscriptionId());
+        params.addValue("createdBy", organization.getCreatedBy());
         namedParameterJdbcTemplate.update(query,params);
     }
 
@@ -52,24 +54,27 @@ public class OrganizationRepository {
         String query = "UPDATE organization " +
             "SET user_id=:userId, " +
             "name=:name, " +
-            "created_date=:createdDate," +
             "address_1=:address1," +
             "address_2=:address2," +
             "phone=:phone," +
             "state=:state," +
             "country=:country," +
-            "zip=:zip" +
+            "zip=:zip, " +
+            "modified_date=now(), " +
+            "modified_by=:modifiedBy, " +
+            "subscription_id=:subscriptionId " +
             "WHERE id=:id";
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("userId", organization.getUserId());
         params.addValue("name", organization.getName());
-        params.addValue("createdDate", new Timestamp(organization.getCreatedDate().getMillis()));
         params.addValue("address1", organization.getAddress1());
         params.addValue("address2", organization.getAddress2());
         params.addValue("phone", organization.getPhone());
         params.addValue("state", organization.getState());
         params.addValue("country", organization.getCountry());
         params.addValue("zip", organization.getZip());
+        params.addValue("modifiedBy", organization.getModifiedBy());
+        params.addValue("subscriptionId", organization.getSubscriptionId());
         params.addValue("id", organization.getId());
         namedParameterJdbcTemplate.update(query,params);
     }

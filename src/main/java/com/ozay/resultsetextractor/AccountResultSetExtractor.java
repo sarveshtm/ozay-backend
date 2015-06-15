@@ -24,6 +24,7 @@ public class AccountResultSetExtractor implements ResultSetExtractor {
                 account = new Account();
                 account.setSubscriberId(rs.getLong("s_user_id"));
                 account.setOrganizationId(rs.getLong("organization_id"));
+                account.setSubscriptionId(rs.getLong("s_id"));
             }
         }
         list.add(account);

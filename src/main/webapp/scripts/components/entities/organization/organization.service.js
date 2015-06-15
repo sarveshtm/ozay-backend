@@ -6,6 +6,7 @@ angular.module('ozayApp')
 		'query': { method: 'GET', isArray: true},
 		'get': {
 			method: 'GET'
-		}
+		},
+		'update': { method:'PUT' }
 	});
 });

@@ -11,8 +11,16 @@ import java.util.Set;
  */
 public class Account {
     private Long subscriberId;
-
+    private Long subscriptionId;
     private Long organizationId;
+
+    public Long getSubscriptionId() {
+        return subscriptionId;
+    }
+
+    public void setSubscriptionId(Long subscriptionId) {
+        this.subscriptionId = subscriptionId;
+    }
 
     public Long getSubscriberId() {
         return subscriberId;

@@ -62,7 +62,7 @@ public class NotificationResource {
         String message = "Notice is successfully scheduled to " + emailCount + " recipients";
         json.setResponse(message);
 
-        return new ResponseEntity<JsonResponse>(json,  new HttpHeaders(), HttpStatus.OK);
+        return new ResponseEntity<JsonResponse>(json,  new HttpHeaders(), HttpStatus.CREATED);
     }
 
     /**
