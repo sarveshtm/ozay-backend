@@ -3,12 +3,10 @@ package com.ozay.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import com.ozay.domain.Authority;
 import com.ozay.domain.User;
+import com.ozay.model.AccountInformation;
 import com.ozay.model.Building;
 import com.ozay.model.Member;
-import com.ozay.repository.BuildingRepository;
-import com.ozay.repository.UserBuildingRepository;
-import com.ozay.repository.MemberRepository;
-import com.ozay.repository.UserRepository;
+import com.ozay.repository.*;
 import com.ozay.security.SecurityUtils;
 import com.ozay.service.MemberService;
 import com.ozay.service.UserService;
@@ -19,10 +17,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -47,6 +42,8 @@ public class BuildingResource {
     private UserRepository userRepository;
     @Inject
     private UserService userService;
+    @Inject
+    private AccountRepository accountRepository;
 
     private final Logger log = LoggerFactory.getLogger(BuildingResource.class);
 
@@ -84,7 +81,25 @@ public class BuildingResource {
     }
 
     /**
-     * POST  /notifications -> Create a new notification.
+     * GET  /rest/building/:login -> get the "Building" ID
+     */
+    @RequestMapping(value = "/building/organization",
+        method = RequestMethod.GET,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    public List<Building> getAllByOrganization() {
+        log.debug("REST request to get building by user");
+        log.debug("REST GET LOGIN USER : {}", SecurityUtils.getCurrentLogin());
+        User user = userService.getUserWithAuthorities();
+        AccountInformation accountInformation = accountRepository.getLoginUserInformation(user, null);
+        List<Building> buildingList = buildingRepository.getBuildingsByOrganization(accountInformation.getOrganizationId());
+
+
+        return buildingList;
+    }
+
+    /**
+     * POST  /notifications -> Create a new building.
      */
     @RequestMapping(value = "/building",
         method = RequestMethod.POST,
@@ -96,21 +111,38 @@ public class BuildingResource {
         User user = userRepository.findOneByLogin(SecurityUtils.getCurrentLogin());
         building.setCreatedBy(user.getId());
         building.setLastModifiedBy(user.getId());
+        AccountInformation accountInformation = accountRepository.getLoginUserInformation(user, null);
+        building.setOrganizationId(accountInformation.getOrganizationId());
         Integer insertedId = buildingRepository.create(building);
         log.debug("REST request : Building insertedId " + insertedId);
         JsonResponse json = new JsonResponse();
-        if(insertedId > 0){
-            Member member = new Member();
-            member.setUserId(user.getId());
-            member.setFirstName(user.getFirstName());
-            member.setLastName(user.getLastName());
-            member.setBuildingId(insertedId);
-            member.setManagement(true);
-            memberRepository.create(member);
-            userBuildingRepository.create(member);
-        }
+//        if(insertedId > 0){
+//            Member member = new Member();
+//            member.setUserId(user.getId());
+//            member.setFirstName(user.getFirstName());
+//            member.setLastName(user.getLastName());
+//            member.setBuildingId(insertedId);
+//            member.setManagement(true);
+//            memberRepository.create(member);
+//            userBuildingRepository.create(member);
+//        }
         json.setResponse(insertedId);
 
+        return new ResponseEntity<JsonResponse>(json,  new HttpHeaders(), HttpStatus.OK);
+    }
+
+    /**
+     * POST  / building -> update building.
+     */
+    @RequestMapping(value = "/building",
+        method = RequestMethod.PUT,
+        consumes = "application/json",
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    public ResponseEntity<JsonResponse> update(@RequestBody Building building) {
+        log.debug("REST request : Building create function{}", building);
+        buildingRepository.update(building);
+        JsonResponse json = new JsonResponse();
         return new ResponseEntity<JsonResponse>(json,  new HttpHeaders(), HttpStatus.OK);
     }
 

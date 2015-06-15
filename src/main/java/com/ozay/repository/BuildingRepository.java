@@ -75,7 +75,7 @@ public class BuildingRepository {
         params.addValue("phone", building.getPhone());
         params.addValue("totalUnits", building.getTotalUnits());
         params.addValue("createdBy", building.getCreatedBy());
-        
+
         int id = namedParameterJdbcTemplate.queryForObject(insert, params, Integer.class );
         return id;
     }

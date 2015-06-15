@@ -352,7 +352,7 @@ ozayApp
 	.state('home.buildings', {
     		url : '/buildings',
     		templateUrl: 'views/building.html',
-    		controller: 'BuildingController',
+    		controller: 'BuildingManageController',
     		access: {
     			authorizedRoles: [USER_ROLES.access_management]
     		}

@@ -3,11 +3,31 @@
     <div class="col-lg-12">
         <div class="panel panel-default page_content">
             <div id="page_content_title">
-                BUILDING | TOP
+                BUILDINGS | LIST
+                <div class="button_group">
+                    <a href="#/building_create"><button class="btn btn-default" type="submit">ADD</button></a>
+                </div>
+                <div class="clear"></div>
             </div>
             <!-- START table-responsive-->
-            <div class=" page_content_item">
+            <div class="table-responsive page_content_item">
+                <table  class="dataTable">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th><a href="" ng-click="predicate = 'name'; reverse=!reverse">Name</a></th>
+                        <th><a href="" ng-click="predicate = 'total_units'; reverse=!reverse">Total Unit</a></th>
 
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="building in buildings | orderBy:predicate:reverse">
+                        <td></td>
+                        <td>{{building.name }}</td>
+                        <td>{{building.totalUnits}}</td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>

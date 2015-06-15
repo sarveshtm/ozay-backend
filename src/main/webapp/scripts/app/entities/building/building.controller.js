@@ -5,7 +5,6 @@ angular.module('ozayApp')
 
 	$scope.button = true;
 	$scope.building = {};
-    console.log($state);
 
 	$scope.startProcess = function () {
 		console.log($scope.building);
@@ -59,6 +58,15 @@ angular.module('ozayApp')
 			$scope.clear();
 		});
 	};
+
+
+
+})
+.controller('BuildingManageController', function ($rootScope, $scope, $cookieStore, Session, $state, $location, $filter, Building) {
+    Building.query({method:"organization"},function(result) {
+       $scope.buildings = result;
+    });
+
 
 
 
