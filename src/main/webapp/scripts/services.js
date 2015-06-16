@@ -228,34 +228,7 @@ ozayApp.factory('AuthenticationSharedService', function ($rootScope, $http, auth
 					}
 
                     if($rootScope.account == undefined || $rootScope.account == false || $rootScope.selectedBuilding == undefined){
-                        Building.query(function(result) {
-                            if(result.length > 0){
-                                var building = $rootScope.selectedBuilding;
-                                if(building === undefined){
-                                    // Check if building in cookie can be accessible to user
-                                    var tempBuilding = $cookieStore.get('selectedBuilding');
-                                    if(tempBuilding !== undefined || tempBuilding == false){
-                                        var accessible = false;
-                                        for(var i = 0; i< result.length; i++){
-                                            if(result[i].id == tempBuilding){
-                                                accessible = true;
-                                                break;
-                                            }
-                                        }
-                                        if(accessible === true){
-                                            building = tempBuilding;
-                                        }
-                                    }
-                                }
-                                if(building === undefined){
-                                    $cookieStore.put('selectedBuilding', result[0].id);
-                                    building = result[0].id;
-                                }
-                                $rootScope.buildingList = result;
-                                $rootScope.selectedBuilding = building;
-                            }
-                            $rootScope.getAccountInfo();
-                        });
+                       $rootScope.getBuildings();
                     }
 
                     if($rootScope.buildingList !== undefined){

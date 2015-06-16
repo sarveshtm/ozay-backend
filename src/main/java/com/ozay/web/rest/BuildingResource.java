@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * REST controller for managing users.
@@ -61,7 +62,6 @@ public class BuildingResource {
         User user = userService.getUserWithAuthorities();
         boolean isAdmin = false;
         for(Authority authority : user.getAuthorities()){
-            log.debug(authority.getName());
             if(authority.getName().equals("ROLE_ADMIN")){
                 isAdmin = true;
                 break;
@@ -92,10 +92,24 @@ public class BuildingResource {
         log.debug("REST GET LOGIN USER : {}", SecurityUtils.getCurrentLogin());
         User user = userService.getUserWithAuthorities();
         AccountInformation accountInformation = accountRepository.getLoginUserInformation(user, null);
-        List<Building> buildingList = buildingRepository.getBuildingsByOrganization(accountInformation.getOrganizationId());
-
+        List<Building> buildingList = buildingRepository.getBuildingsUserCanAccess(user);
 
         return buildingList;
+    }
+
+    /**
+     * GET  /rest/building/:id -> get the "Building" ID
+     */
+    @RequestMapping(value = "/building/{id}",
+        method = RequestMethod.GET,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    public ResponseEntity<Building> getOne(@PathVariable long id) {
+        log.debug("REST request to get building by id");
+
+        return Optional.ofNullable(buildingRepository.getBuilding(id))
+            .map(building -> new ResponseEntity<>(building, HttpStatus.OK))
+            .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     /**
@@ -132,7 +146,7 @@ public class BuildingResource {
     }
 
     /**
-     * POST  / building -> update building.
+     * PUT  / building -> update building.
      */
     @RequestMapping(value = "/building",
         method = RequestMethod.PUT,

@@ -39,28 +39,34 @@ public class BuildingRepository {
 
 
 
-    public List<Building> getBuildingsByUser(long id){
-        String query = "SELECT * FROM building b INNER JOIN user_building u ON b.id = u.building_id WHERE u.user_id = :userId order by id";
-        MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("userId", id);
-        return namedParameterJdbcTemplate.query(query, params, new BuildingRowMapper(){
-        });
-    }
+//    public List<Building> getBuildingsByUser(long id){
+//        String query = "SELECT * FROM building b INNER JOIN user_building u ON b.id = u.building_id WHERE u.user_id = :userId order by id";
+//        MapSqlParameterSource params = new MapSqlParameterSource();
+//        params.addValue("userId", id);
+//        return namedParameterJdbcTemplate.query(query, params, new BuildingRowMapper(){
+//        });
+//    }
 
-    public List<Building> getBuildingsByOrganization(long organizationId){
-        String query = "SELECT * FROM building WHERE organization_id = :organizationId";
-        MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("organizationId", organizationId);
-        return namedParameterJdbcTemplate.query(query, params, new BuildingRowMapper(){
-        });
-    }
+//    public List<Building> getBuildingsByOrganization(long organizationId){
+//        String query = "SELECT * FROM building WHERE organization_id = :organizationId";
+//        MapSqlParameterSource params = new MapSqlParameterSource();
+//        params.addValue("organizationId", organizationId);
+//        return namedParameterJdbcTemplate.query(query, params, new BuildingRowMapper(){
+//        });
+//    }
 
-    public Building getBuilding(int id){
+    public Building getBuilding(long id){
         String query = "SELECT * FROM building WHERE id = :id";
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("id", id);
-        return (Building)namedParameterJdbcTemplate.queryForObject(query, params, new BuildingRowMapper(){
-        });
+        List<Building> list =  namedParameterJdbcTemplate.query(query, params, new BuildingRowMapper(){});
+
+        if(list.size() == 1){
+            return list.get(0);
+        }
+        else {
+            return null;
+        }
     }
 
     public int create(Building building){
@@ -97,18 +103,18 @@ public class BuildingRepository {
 
     public void update(Building building){
 
-        String query = "UPDATE building SET" +
+        String query = "UPDATE building SET " +
             "name =:name, " +
             "organization_id = :organizationId, " +
             "email =:email, " +
-            "address_1= address1, " +
-            "address_2 = address2, " +
+            "address_1= :address1, " +
+            "address_2 = :address2, " +
             "state=:state, " +
             "zip=:zip, " +
-            "phone=:phone " +
+            "phone=:phone, " +
             "total_units=:totalUnits," +
             "last_modified_by =:modifiedBy, " +
-            "last_modified_date=now() s" +
+            "last_modified_date=now() " +
             "WHERE id=:id";
 
         MapSqlParameterSource params = new MapSqlParameterSource();

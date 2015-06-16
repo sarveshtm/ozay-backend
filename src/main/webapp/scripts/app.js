@@ -302,13 +302,21 @@ ozayApp
 		}
 	})
 	.state('home.building_create', {
-		url: "/building_create",
+		url: "/building/:method",
 		controller:'BuildingController',
-		templateUrl: "/views/building_create.html",
+		templateUrl: "/views/building_detail.html",
 		access: {
 			authorizedRoles: [USER_ROLES.user]
 		}
 	})
+	.state('home.building_edit', {
+    		url: "/building/:method/:buildingId",
+    		controller:'BuildingController',
+    		templateUrl: "/views/building_detail.html",
+    		access: {
+    			authorizedRoles: [USER_ROLES.user]
+    		}
+    	})
 
 	.state('home.directory', {
 		url: "/directory",
@@ -438,7 +446,7 @@ ozayApp
 .factory('custom', function ($rootScope, $cookieStore) {
 	$rootScope.selectedBuilding = $cookieStore.selectedBuilding;
 })
-.run(function($rootScope, $cookieStore, $location, $http, $window, AuthenticationSharedService, Session, USER_ROLES, $state) {
+.run(function($rootScope, $cookieStore, $location, $http, $window, AuthenticationSharedService, Session, USER_ROLES, $state, Building) {
 
 	$rootScope.authenticated = false;
 	$rootScope.$on('$stateChangeStart', function (event, next) {
@@ -490,6 +498,37 @@ ozayApp
 	$rootScope.$on('event:auth-loginCancelled', function() {
 		$location.path('');
 	});
+
+	$rootScope.getBuildings = function(){
+	    Building.query(function(result) {
+                                    if(result.length > 0){
+                                        var building = $rootScope.selectedBuilding;
+                                        if(building === undefined){
+                                            // Check if building in cookie can be accessible to user
+                                            var tempBuilding = $cookieStore.get('selectedBuilding');
+                                            if(tempBuilding !== undefined || tempBuilding == false){
+                                                var accessible = false;
+                                                for(var i = 0; i< result.length; i++){
+                                                    if(result[i].id == tempBuilding){
+                                                        accessible = true;
+                                                        break;
+                                                    }
+                                                }
+                                                if(accessible === true){
+                                                    building = tempBuilding;
+                                                }
+                                            }
+                                        }
+                                        if(building === undefined){
+                                            $cookieStore.put('selectedBuilding', result[0].id);
+                                            building = result[0].id;
+                                        }
+                                        $rootScope.buildingList = result;
+                                        $rootScope.selectedBuilding = building;
+                                    }
+                                    $rootScope.getAccountInfo();
+                                });
+	}
 
 
 });
