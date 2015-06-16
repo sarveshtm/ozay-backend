@@ -1,5 +1,6 @@
 package com.ozay.repository;
 
+import com.ozay.domain.User;
 import com.ozay.model.Building;
 import com.ozay.rowmapper.BuildingRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -18,11 +19,25 @@ public class BuildingRepository {
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     public List<Building> getBuildings(){
-
         return namedParameterJdbcTemplate.query("SELECT * FROM building order by id", new BuildingRowMapper(){
-
         });
     }
+
+    public List<Building> getBuildingsUserCanAccess(User user){
+        String query = "SELECT b.* FROM building b " +
+            "LEFT JOIN organization o ON o.id = b.organization_id " +
+            "LEFT JOIN organization_user ou ON ou.organization_id = o.id " +
+            "LEFT JOIN member m ON b.id = m.building_id " +
+            "LEFT JOIN subscription s ON s.id = o.subscription_id " +
+            "WHERE s.user_id = :userId OR m.user_id = :userId OR ou.user_id = :userId " +
+            "GROUP BY b.id";
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("userId", user.getId());
+        return namedParameterJdbcTemplate.query(query, params, new BuildingRowMapper(){
+        });
+    }
+
+
 
     public List<Building> getBuildingsByUser(long id){
         String query = "SELECT * FROM building b INNER JOIN user_building u ON b.id = u.building_id WHERE u.user_id = :userId order by id";

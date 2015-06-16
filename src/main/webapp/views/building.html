@@ -23,7 +23,7 @@
                     <tbody>
                     <tr ng-repeat="building in buildings | orderBy:predicate:reverse">
                         <td></td>
-                        <td>{{building.name }}</td>
+                        <td><a href="#/building/edit/{{building.id}}">{{building.name}}</a></td>
                         <td>{{building.totalUnits}}</td>
                     </tr>
                     </tbody>

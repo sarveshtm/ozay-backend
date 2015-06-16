@@ -86,9 +86,7 @@ public class NotificationService {
             notificationRecordRepository.create(notificationRecord);
         }
 
-
         log.debug("REST request to save Notification : {}", notification);
-
 
         JsonResponse json = new JsonResponse();
 
@@ -97,7 +95,5 @@ public class NotificationService {
 
         return emailCount;
     }
-
-
 
 }

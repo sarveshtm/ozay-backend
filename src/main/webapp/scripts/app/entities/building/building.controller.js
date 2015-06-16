@@ -63,7 +63,7 @@ angular.module('ozayApp')
 
 })
 .controller('BuildingManageController', function ($rootScope, $scope, $cookieStore, Session, $state, $location, $filter, Building) {
-    Building.query({method:"organization"},function(result) {
+    Building.query(function(result) {
        $scope.buildings = result;
     });
 

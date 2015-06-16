@@ -74,7 +74,7 @@ public class BuildingResource {
             buildingList=  buildingRepository.getBuildings();
         } else {
             log.debug("REST GET get buildings getBuildingsByUser");
-            buildingList = buildingRepository.getBuildingsByUser(user.getId());
+            buildingList = buildingRepository.getBuildingsUserCanAccess(user);
         }
 
         return buildingList;

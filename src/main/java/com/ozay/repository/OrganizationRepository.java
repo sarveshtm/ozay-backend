@@ -79,9 +79,4 @@ public class OrganizationRepository {
         namedParameterJdbcTemplate.update(query,params);
     }
 
-
-
-
-
-
 }
