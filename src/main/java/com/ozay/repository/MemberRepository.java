@@ -119,11 +119,11 @@ public class MemberRepository {
             });
     }
 
-    public Member getMemberDetailByBuildingAndUserId(long id, long buildingId){
-        return (Member)jdbcTemplate.queryForObject("Select * FROM member WHERE building_id = ? AND user_id = ?",
-            new Object[]{buildingId, id}, new MemberRowMapper(){
-            });
-    }
+//    public Member getMemberDetailByBuildingAndUserId(long id, long buildingId){
+//        return (Member)jdbcTemplate.queryForObject("Select * FROM member WHERE building_id = ? AND user_id = ?",
+//            new Object[]{buildingId, id}, new MemberRowMapper(){
+//            });
+//    }
 
 
 

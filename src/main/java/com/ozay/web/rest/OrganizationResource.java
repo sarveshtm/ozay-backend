@@ -13,12 +13,11 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
+import javax.jws.soap.SOAPBinding;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -45,12 +44,24 @@ public class OrganizationResource {
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public ResponseEntity<Organization> getOne() {
+    public List<Organization> getAllByUser() {
         log.debug("REST request to get an organization");
         User user = userRepository.findOneByLogin(SecurityUtils.getCurrentLogin());
-        return Optional.ofNullable(organizationRepository.findOneByUserId(user.getId()))
+        return organizationRepository.findAllByUserId(user.getId());
+    }
+
+    /**
+     * GET  /Organization -> get organizations.
+     */
+    @RequestMapping(value = "/organization/{id}",
+        method = RequestMethod.GET,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    public ResponseEntity<Organization>getOne(@PathVariable long id) {
+        log.debug("REST request to get an organization");
+        return Optional.ofNullable(organizationRepository.findOne(id))
             .map(organization -> new ResponseEntity<>(organization, HttpStatus.OK))
-            .orElse(new ResponseEntity<>( HttpStatus.NOT_FOUND));
+            .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @RequestMapping(value = "/organization",
@@ -87,6 +98,20 @@ public class OrganizationResource {
         json.setSuccess(true);
         return new ResponseEntity<JsonResponse>(json,  new HttpHeaders(), HttpStatus.OK);
     }
+
+
+    /**
+     * GET  /Organization -> get organizations.
+     */
+//    @RequestMapping(value = "/organization/{id}/member",
+//        method = RequestMethod.GET,
+//        produces = MediaType.APPLICATION_JSON_VALUE)
+//    @Timed
+//    public List<User> getOranizationMember(@PathVariable long id) {
+//        log.debug("REST request to get Organization Member");
+//        User user = userRepository.findOneByLogin(SecurityUtils.getCurrentLogin());
+//
+//    }
 
 
 }

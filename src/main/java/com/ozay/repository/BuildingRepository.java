@@ -47,13 +47,13 @@ public class BuildingRepository {
 //        });
 //    }
 
-//    public List<Building> getBuildingsByOrganization(long organizationId){
-//        String query = "SELECT * FROM building WHERE organization_id = :organizationId";
-//        MapSqlParameterSource params = new MapSqlParameterSource();
-//        params.addValue("organizationId", organizationId);
-//        return namedParameterJdbcTemplate.query(query, params, new BuildingRowMapper(){
-//        });
-//    }
+    public List<Building> getBuildingsByOrganization(long organizationId){
+        String query = "SELECT * FROM building WHERE organization_id = :organizationId";
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("organizationId", organizationId);
+        return namedParameterJdbcTemplate.query(query, params, new BuildingRowMapper(){
+        });
+    }
 
     public Building getBuilding(long id){
         String query = "SELECT * FROM building WHERE id = :id";

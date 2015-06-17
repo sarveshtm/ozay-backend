@@ -12,7 +12,6 @@ angular.module('ozayApp')
 
 	if($stateParams.method == 'edit'){
         Building.get({id:$stateParams.buildingId}).$promise.then(function(building) {
-        	    console.log(building);
         		$scope.building = building;
         	}, function(error){
 
@@ -98,12 +97,10 @@ angular.module('ozayApp')
 
 
 })
-.controller('BuildingManageController', function ($rootScope, $scope, $cookieStore, Session, $state, $location, $filter, Building) {
-    Building.query(function(result) {
+.controller('BuildingManageController', function ($rootScope, $scope, $cookieStore, Session, $state, $location, $filter, Building, $stateParams) {
+    Building.query({method:'organization', id:$stateParams.organizationId},function(result) {
        $scope.buildings = result;
     });
-
-
 
 
 });

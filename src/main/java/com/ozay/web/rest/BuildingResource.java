@@ -83,18 +83,14 @@ public class BuildingResource {
     /**
      * GET  /rest/building/:login -> get the "Building" ID
      */
-    @RequestMapping(value = "/building/organization",
+    @RequestMapping(value = "/building/organization/{id}",
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public List<Building> getAllByOrganization() {
-        log.debug("REST request to get building by user");
-        log.debug("REST GET LOGIN USER : {}", SecurityUtils.getCurrentLogin());
-        User user = userService.getUserWithAuthorities();
-        AccountInformation accountInformation = accountRepository.getLoginUserInformation(user, null);
-        List<Building> buildingList = buildingRepository.getBuildingsUserCanAccess(user);
+    public List<Building> getAllByOrganization(@PathVariable long id) {
+        log.debug("REST request to get building by organization ID");
 
-        return buildingList;
+        return buildingRepository.getBuildingsByOrganization(id);
     }
 
     /**

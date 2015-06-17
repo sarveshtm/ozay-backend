@@ -334,6 +334,14 @@ ozayApp
 			authorizedRoles: [USER_ROLES.admin, USER_ROLES.access_directory]
 		}
 	})
+	.state('home.director_details_new', {
+    		url: "/directory/:method",
+    		templateUrl: 'views/directory_details.html',
+    		controller: 'MemberDetailController',
+    		access: {
+    			authorizedRoles: [USER_ROLES.user]
+    		}
+    	})
 	.state('home.password', {
 		url : '/password',
 		templateUrl: 'views/password.html',
@@ -350,15 +358,32 @@ ozayApp
 		}
 	})
 	.state('home.group', {
-    		url : '/group',
+    		url : '/management/group',
     		templateUrl: 'views/group.html',
     		controller: 'OrganizationController',
     		access: {
     			authorizedRoles: [USER_ROLES.access_management]
     		}
     	})
+
+    	.state('home.group_edit', {
+            		url : '/management/group/:method/:organizationId',
+            		templateUrl: 'views/group_detail.html',
+            		controller: 'OrganizationDetailController',
+            		access: {
+            			authorizedRoles: [USER_ROLES.access_management]
+            		}
+            	})
+    	.state('home.group_create', {
+            		url : '/management/group/:method',
+            		templateUrl: 'views/group_detail.html',
+            		controller: 'OrganizationDetailController',
+            		access: {
+            			authorizedRoles: [USER_ROLES.access_management]
+            		}
+            	})
 	.state('home.buildings', {
-    		url : '/buildings',
+    		url : '/management/buildings/:organizationId',
     		templateUrl: 'views/building.html',
     		controller: 'BuildingManageController',
     		access: {
@@ -381,14 +406,7 @@ ozayApp
         			authorizedRoles: [USER_ROLES.access_management]
         		}
     })
-	.state('home.director_details_new', {
-		url: "/directory/:method",
-		templateUrl: 'views/directory_details.html',
-		controller: 'MemberDetailController',
-		access: {
-			authorizedRoles: [USER_ROLES.user]
-		}
-	}).state('home.search', {
+	.state('home.search', {
 		url: "/search/:item",
 		templateUrl: 'views/search.html',
 		controller: 'SearchController',

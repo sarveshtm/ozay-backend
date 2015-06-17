@@ -171,14 +171,14 @@ public class UserService {
         if(isAdmin == false) {
             AccountInformation accountInformation = this.getUserInformation(currentUser, buildingId);
             try {
-                Member member = memberRepository.getMemberDetailByBuildingAndUserId(currentUser.getId(), buildingId);
-
-                if (member.isManagement() == true) {
-                    currentUser.getAuthorities().add(new Authority("ACCESS_DIRECTORY"));
-                    currentUser.getAuthorities().add(new Authority("ACCESS_NOTIFICATION"));
-                } else if (member.isStaff() == true || member.isBoard()) {
-                    currentUser.getAuthorities().add(new Authority("ACCESS_NOTIFICATION"));
-                }
+//                Member member = memberRepository.getMemberDetailByBuildingAndUserId(currentUser.getId(), buildingId);
+//
+//                if (member.isManagement() == true) {
+//                    currentUser.getAuthorities().add(new Authority("ACCESS_DIRECTORY"));
+//                    currentUser.getAuthorities().add(new Authority("ACCESS_NOTIFICATION"));
+//                } else if (member.isStaff() == true || member.isBoard()) {
+//                    currentUser.getAuthorities().add(new Authority("ACCESS_NOTIFICATION"));
+//                }
             } catch (Exception e) {
                 log.debug("UserService getUserWithAuthoritiesAddMoreAuthrities no user detail found {}", currentUser.getLogin());
             }

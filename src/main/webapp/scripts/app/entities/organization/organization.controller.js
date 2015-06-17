@@ -2,16 +2,23 @@
 
 angular.module('ozayApp')
 .controller('OrganizationController', function ($rootScope, $scope, $cookieStore, Session, $state, $location, $filter, Organization) {
+	Organization.query().$promise.then(function(organizations) {
+		$scope.organizations = organizations;
+	}, function(error){
 
+	});
 
+})
+.controller('OrganizationDetailController', function ($rootScope, $scope, $cookieStore, Session, $state, $stateParams, $filter, Organization) {
+    if($stateParams.method != 'edit' && $stateParams.method != 'new'){
+        $state.go('error');
+    }
 	$scope.button = true;
-	Organization.get().$promise.then(function(organization) {
-	    console.log(organization);
+	Organization.get({id:$stateParams.organizationId}).$promise.then(function(organization) {
 		$scope.organization = organization;
 		$scope.edit_text = true;
 	}, function(error){
-	$scope.organization = [];
-		$scope.create_text = true;
+	    $state.go('error');
 	});
 
 	$scope.create = function () {

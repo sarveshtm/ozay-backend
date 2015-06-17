@@ -1,61 +1,39 @@
 <!-- Page Heading -->
-<form name="organization_form" class="simple-form" ng-submit="organization_form.$valid && create(organization)">
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="panel panel-default page_content">
-                <div id="page_content_title" class="panel-heading">
-                    ORGANIZATION | <span ng-show="edit_text">EDIT</span><span ng-show="create_text">CREATE</span>
-                    <div class="button_group">
-                        <button class="btn btn-default" type="submit" ng-disabled="!button">Submit</button>
-                        <button class="btn btn-default" type="button" ng-click="refresh()">Cancel</button>
-                    </div>
-                    <div class="clear"></div>
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel panel-default page_content">
+            <div id="page_content_title">
+                GROUP | LIST
+                <div class="button_group">
+                    <a href="#/management/group/new"><button class="btn btn-default" type="submit">ADD</button></a>
                 </div>
+                <div class="clear"></div>
+            </div>
+            <!-- START table-responsive-->
+            <div class="table-responsive page_content_item">
+                <table id="notification_archive_table" class="dataTable">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th><a href="" ng-click="predicate = 'name'; reverse=!reverse">Name</a></th>
+                        <th colspan="2"><a href="" ng-click="predicate = 'name'; reverse=!reverse">Action</a></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="organization in organizations | orderBy:predicate:reverse">
+                        <td></td>
+                        <td>{{organization.name}}</td>
+                        <td><a href="#/management/group/edit/{{organization.id}}">EDIT</a></td>
+                        <td><a href="#/management/buildings/{{organization.id}}">Buildings</a></td>
 
-                <div class="panel-body">
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <form role="form">
-                                <div class="form-group">
-                                    <div class="alert alert-success" ng-show="showSuccessAlert">
-                                        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-                                        <span class="sr-only">Success:</span>
-                                        {{successTextAlert}}
-                                    </div>
-                                    <div class="alert alert-danger" ng-show="showErrorAlert">
-                                        <strong>{{errorTextAlert}}</strong>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label>Organization Name</label>
-                                    <input class="form-control" ng-model="organization.name">
-                                </div>
-                                <div class="form-group">
-                                    <label>Address 1</label>
-                                    <input class="form-control" ng-model="organization.address1">
-                                </div>
-                                <div class="form-group">
-                                    <label>Address 2</label>
-                                    <input class="form-control" ng-model="organization.address2">
-                                </div>
-                                <div class="form-group">
-                                    <label>State</label>
-                                    <input class="form-control" ng-model="organization.state">
-                                </div>
-                                <div class="form-group">
-                                    <label>Zip</label>
-                                    <input class="form-control" ng-model="organization.zip">
-                                </div>
-                                <div class="form-group">
-                                    <label>Phone</label>
-                                    <input class="form-control" ng-model="organization.phone">
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
+                    </tr>
+
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
-    <!-- /.row -->
-</form>
+
+</div>
+<!-- /.row -->
+
