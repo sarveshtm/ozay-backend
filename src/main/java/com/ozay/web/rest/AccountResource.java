@@ -156,9 +156,10 @@ public class AccountResource {
     public ResponseEntity<?> registerOrganizationUser(@RequestBody UserDTO userDTO, HttpServletRequest request,
                                              HttpServletResponse response) {
 
-        return Optional.ofNullable(userRepository.findOneByLogin(userDTO.getLogin()))
+        return Optional.ofNullable(userRepository.findOneByEmail(userDTO.getEmail()))
             .map(user -> new ResponseEntity<>("login already in use", HttpStatus.BAD_REQUEST))
             .orElseGet(() -> {
+
                 if (userRepository.findOneByEmail(userDTO.getEmail()) != null) {
                     return new ResponseEntity<>("e-mail address already in use", HttpStatus.BAD_REQUEST);
                 }
@@ -187,7 +188,7 @@ public class AccountResource {
     public ResponseEntity<?> activateOrganizationUser(@RequestBody InvitedUserDTO invitedUserDTO, HttpServletRequest request,
                                                   HttpServletResponse response) {
 
-        User user = new User();
+        User user = new User();// get user by email
         user.setLogin(invitedUserDTO.getLogin());
         user.setActivationKey(invitedUserDTO.getKey());
         user.setPassword(invitedUserDTO.getPassword());
