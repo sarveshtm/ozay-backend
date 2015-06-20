@@ -1,6 +1,7 @@
 package com.ozay.repository;
 
 import com.ozay.model.Member;
+import com.ozay.resultsetextractor.MemberResultSetExtractor;
 import com.ozay.rowmapper.MemberRowMapper;
 import com.ozay.web.rest.dto.NotificationDTO;
 import org.slf4j.Logger;
@@ -26,7 +27,15 @@ public class MemberRepository {
 
 
     public Member getOne(int id){
-        return (Member)jdbcTemplate.queryForObject("SELECT * FROM member WHERE id =?",new Object[]{id}, new MemberRowMapper());
+        String query = "SELECT * FROM member WHERE id =:id";
+        MapSqlParameterSource parameterSource = new MapSqlParameterSource();
+        parameterSource.addValue("id", id);
+        List<Member> list = (List<Member>)namedParameterJdbcTemplate.query("SELECT * FROM member WHERE id =:id", parameterSource, new MemberResultSetExtractor());
+        if(list.size()  == 1){
+            return list.get(0);
+        } else {
+            return null;
+        }
     }
 
     public List<Member> getAllUsersByBuilding(int buildingId){

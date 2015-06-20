@@ -11,6 +11,7 @@ public class Role {
     private long buildingId;
     private Long sortOrder;
     private boolean organizationUserRole;
+    private Long belongTo;
     private Set<RolePermission> rolePermissions;
 
     public long getId() {
@@ -43,6 +44,14 @@ public class Role {
 
     public void setSortOrder(Long sortOrder) {
         this.sortOrder = sortOrder;
+    }
+
+    public Long getBelongTo() {
+        return belongTo;
+    }
+
+    public void setBelongTo(Long belongTo) {
+        this.belongTo = belongTo;
     }
 
     public boolean isOrganizationUserRole() {

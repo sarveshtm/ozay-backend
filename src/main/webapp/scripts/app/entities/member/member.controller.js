@@ -68,7 +68,7 @@ angular.module('ozayApp')
 	}
 
 })
-.controller('MemberDetailController', function ($scope, $cookieStore, $routeParams, $location, $state, $stateParams, Member, $rootScope, Account) {
+.controller('MemberDetailController', function ($scope, $cookieStore, $location, $state, $stateParams, Member, $rootScope, Account, Role) {
 	if($stateParams.method != 'edit' && $stateParams.method != 'new'){
 		$location.path('/error').replace();
 	}
@@ -76,6 +76,24 @@ angular.module('ozayApp')
 	$scope.goBack = function(){
 		$state.go('home.directory');
 	}
+
+	$scope.getRoles = function(){
+        Role.query({method:"building", buildingId:$rootScope.selectedBuilding}).$promise.then(function(roles) {
+                        $scope.roleList = roles;
+                    }, function(error){
+
+                    });
+	}
+
+	if($rootScope.selectedBuilding === undefined || $rootScope.selectedBuilding == 0){
+        $rootScope.$watch('selectedBuilding', function(){
+            $scope.getRoles();
+        });
+	} else {
+		$scope.getRoles();
+	}
+
+
 
 	$scope.submitted = false;
 	$scope.Member = {};
@@ -161,19 +179,7 @@ angular.module('ozayApp')
 
 
 	$scope.button = true;
-	$scope.roleList = [{
-		name: 'management',
-		label:'Management'
-	},{
-		name: 'staff',
-		label:'Staff'
-	},{
-		name: 'board',
-		label:'Board'
-	},{
-		name: 'resident',
-		label:'Resident'
-	}];
+
 
 	$scope.renterList = [
 	                     {

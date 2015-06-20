@@ -8,6 +8,7 @@ import com.ozay.domain.util.CustomDateTimeSerializer;
 import org.joda.time.DateTime;
 
 import java.sql.Date;
+import java.util.Set;
 
 public class Member {
     private Integer id;
@@ -28,6 +29,8 @@ public class Member {
     private boolean board;
     private boolean resident;
     private boolean deleted;
+
+    private Set<Role> roles;
 
 
     public String getLogin() {
@@ -174,6 +177,14 @@ public class Member {
         this.deleted = deleted;
     }
 
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
     @Override
     public String toString() {
         return "Member{" +
@@ -182,7 +193,6 @@ public class Member {
             ", firstName='" + firstName + '\'' +
             ", lastName='" + lastName + '\'' +
             ", email='" + email + '\'' +
-
             ", user_id='" + userId + '\'' +
             "}";
     }

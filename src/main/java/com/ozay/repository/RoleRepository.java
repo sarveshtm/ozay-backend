@@ -18,7 +18,7 @@ public class RoleRepository {
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     public List<Role> findAllByBuilding(long buildingId){
-        String query = "SELECT * FROM role where building_id = :building_id";
+        String query = "SELECT * FROM role where building_id = :building_id ORDER BY sort_order";
         MapSqlParameterSource params = new MapSqlParameterSource();
 
         params.addValue("building_id", buildingId);

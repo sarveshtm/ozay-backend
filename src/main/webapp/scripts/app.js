@@ -189,7 +189,7 @@ ozayApp
 		templateUrl: 'views/directory.html',
 		controller: 'MemberController',
 		access: {
-			authorizedRoles: [USER_ROLES.admin, USER_ROLES.access_directory]
+			authorizedRoles: [USER_ROLES.admin, USER_ROLES.access_directory, USER_ROLES.subscriber]
 		}
 	})
 	.state('home.director_details', {
@@ -197,7 +197,7 @@ ozayApp
 		templateUrl: 'views/directory_details.html',
 		controller: 'MemberDetailController',
 		access: {
-			authorizedRoles: [USER_ROLES.admin, USER_ROLES.access_directory]
+			authorizedRoles: [USER_ROLES.admin, USER_ROLES.access_directory , USER_ROLES.subscriber]
 		}
 	})
 	.state('home.director_details_new', {
@@ -205,7 +205,7 @@ ozayApp
 		templateUrl: 'views/directory_details.html',
 		controller: 'MemberDetailController',
 		access: {
-			authorizedRoles: [USER_ROLES.user]
+			authorizedRoles: [USER_ROLES.subscriber]
 		}
 	})
 	.state('home.password', {
@@ -220,7 +220,7 @@ ozayApp
 		url : '/management',
 		templateUrl: 'views/management.html',
 		access: {
-			authorizedRoles: [USER_ROLES.access_management]
+			authorizedRoles: [USER_ROLES.admin,USER_ROLES.access_management, USER_ROLES.subscriber]
 		}
 	})
 	.state('home.group', {
