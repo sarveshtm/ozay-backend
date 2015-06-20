@@ -1,17 +1,20 @@
 package com.ozay.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.validator.constraints.Email;
 
-import javax.annotation.Generated;
 import javax.persistence.*;
+import org.hibernate.annotations.Type;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
+
+import org.joda.time.DateTime;
 
 /**
  * A user.
@@ -58,6 +61,13 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @Column(name = "activation_key", length = 20)
     private String activationKey;
 
+    @Size(max = 20)
+    @Column(name = "reset_key", length = 20)
+    private String resetKey;
+
+    @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
+    @Column(name = "reset_date", nullable = true)
+    private DateTime resetDate = null;
 
     @JsonIgnore
     @ManyToMany
@@ -115,6 +125,7 @@ public class User extends AbstractAuditingEntity implements Serializable {
         return activated;
     }
 
+
     public void setActivated(boolean activated) {
         this.activated = activated;
     }
@@ -161,6 +172,22 @@ public class User extends AbstractAuditingEntity implements Serializable {
 
     public boolean isActivated() {
         return activated;
+    }
+
+    public String getResetKey() {
+        return resetKey;
+    }
+
+    public void setResetKey(String resetKey) {
+        this.resetKey = resetKey;
+    }
+
+    public DateTime getResetDate() {
+        return resetDate;
+    }
+
+    public void setResetDate(DateTime resetDate) {
+        this.resetDate = resetDate;
     }
 
     @Override

@@ -17,6 +17,7 @@ public class RoleMapper implements RowMapper {
         Role role = new Role();
         role.setId(rs.getLong("id"));
         role.setName(rs.getString("name"));
+        role.setOrganizationUserRole(rs.getBoolean("organization_user_role"));
 
         return role;
     }

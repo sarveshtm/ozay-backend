@@ -46,7 +46,7 @@ public class OrganizationResource {
     @Timed
     public List<Organization> getAllByUser() {
         log.debug("REST request to get an organization");
-        User user = userRepository.findOneByLogin(SecurityUtils.getCurrentLogin());
+        User user = userRepository.findOneByLogin(SecurityUtils.getCurrentLogin()).get();
         return organizationRepository.findAllByUserId(user.getId());
     }
 
@@ -70,7 +70,7 @@ public class OrganizationResource {
     @Timed
     public ResponseEntity<JsonResponse> create(@RequestBody Organization organization) {
         log.debug("REST request to create an organization, {}", organization);
-        User user = userRepository.findOneByLogin(SecurityUtils.getCurrentLogin());
+        User user = userRepository.findOneByLogin(SecurityUtils.getCurrentLogin()).get();
         AccountInformation accountInformation = accountRepository.getLoginUserInformation(user, null);
         organization.setSubscriptionId(accountInformation.getSubscriptionId());
         organization.setCreatedBy(user.getId());
@@ -89,7 +89,7 @@ public class OrganizationResource {
         if(organization.getId() == null || organization.getId() == 0 ){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        User user = userRepository.findOneByLogin(SecurityUtils.getCurrentLogin());
+        User user = userRepository.findOneByLogin(SecurityUtils.getCurrentLogin()).get();
         AccountInformation accountInformation = accountRepository.getLoginUserInformation(user, null);
         organization.setSubscriptionId(accountInformation.getSubscriptionId());
         organization.setModifiedBy(user.getId());

@@ -397,6 +397,10 @@ input, select{
 .form-control {
   font-size:16px;
 }
+
+#ozay-top-ui{
+    min-width:0;
+}
 /* Login */
 #logo {
   max-width: 340px;
@@ -446,31 +450,29 @@ display: block;
   .block_5 li{
      width:20%;
   }
+  .ozay-checkbox_ul li{
 
- @media (max-width: 767px) {
-   .ozay-checkbox_ul li{
-          border:none;
-          border-bottom:1px solid white;
-      }
-       .block_4 li{
-          width:100%;
-       }
-       .block_5 li{
-            width:100%;
-         }
+      min-height: 20px;
+      overflow:auto;
   }
+
 
  .ozay-checkbox_ul li.active{
      background-color:#999;
   }
-   .ozay-checkbox_ul a{
+   .ozay-checkbox_ul li a{
+        padding-top:15px;
+        padding-bottom:10px;
+         padding-left:10px;
+         padding-right:10px;
+        height:100%;
+        display:block;
        text-decoration:none;
        color:black;
-       line-height:50px;
+       min-width:100px;
     }
     .ozay-checkbox_ul a:hover{
            color:black;
-
         }
 
   .ozay-checkbox_ul li.inactive{
@@ -484,6 +486,16 @@ display: block;
 .ozay-checkbox_ul input{
     display:none;
 }
+@media (max-width: 767px) {
+   .ozay-checkbox_ul li{
+          border:none;
+          border-top:1px solid white;
+      }
+       .ozay-checkbox_ul li{
+          width:100%;
+       }
+
+  }
 @media (min-width: 767px){
     #directory_detail_page .form-group {
       height: 80px;
@@ -531,3 +543,5 @@ display: flex; /* add */
 .navbar-right li{
     float:right;
 }
+
+

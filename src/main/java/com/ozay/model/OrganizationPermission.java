@@ -5,7 +5,7 @@ import java.util.Set;
 /**
  * Created by naofumiezaki on 6/13/15.
  */
-public class OrganizationAccess {
+public class OrganizationPermission {
     private long userId;
     private long organizationId;
     private String name;

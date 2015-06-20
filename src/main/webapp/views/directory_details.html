@@ -85,7 +85,7 @@
                         <div class="form-group">
                             <div class="col-lg-12" ng-class="{ 'has-error' : submitted && roleValidation == false}">
                                 <label class="control-label">Role</label>
-                                <ul class="ozay-checkbox_ul block_4">
+                                <ul class="ozay-checkbox_ul">
                                     <li ng-class="{'active': Member[obj.name],'inactive': !Member[obj.name]}" ng-repeat="obj in roleList"><a ng-click="Member[obj.name] = !Member[obj.name]"><input ng-model="Member[obj.name]"  type="checkbox" value='1' name="{{obj.name}}" >{{obj.label}}</a></li>
                                 </ul>
                                 <p ng-show="submitted && roleValidation == false" style="position:absolute;" class="help-block">Required</p>

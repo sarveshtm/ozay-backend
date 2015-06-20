@@ -5,7 +5,7 @@
             <div id="page_content_title">
                 BUILDINGS | LIST
                 <div class="button_group">
-                    <a href="#/building/new"><button class="btn btn-default" type="submit">ADD</button></a>
+                    <a href="#/management/group/{{organizationId}}/buildings/new"><button class="btn btn-default" type="submit">ADD</button></a>
                 </div>
                 <div class="clear"></div>
             </div>
@@ -17,14 +17,15 @@
                         <th></th>
                         <th><a href="" ng-click="predicate = 'name'; reverse=!reverse">Name</a></th>
                         <th><a href="" ng-click="predicate = 'total_units'; reverse=!reverse">Total Unit</a></th>
-
+                        <th>Action</th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr ng-repeat="building in buildings | orderBy:predicate:reverse">
                         <td></td>
-                        <td><a href="#/building/edit/{{building.id}}">{{building.name}}</a></td>
+                        <td><a href="#/management/group/{{organizationId}}/buildings/edit/{{building.id}}">{{building.name}}</a></td>
                         <td>{{building.totalUnits}}</td>
+                        <td><a href="#/management/group/{{organizationId}}/buildings/{{building.id}}/roles">Roles</a></td>
                     </tr>
                     </tbody>
                 </table>

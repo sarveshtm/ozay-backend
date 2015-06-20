@@ -22,9 +22,17 @@ public interface UserRepository extends JpaRepository<User, String> {
     @Query("select u from User u where u.login = ?1 or u.email = ?1")
     User findByOneByLoginOrEmail(String login);
 
-    User findOneByLogin(String login);
+    Optional<User> findOneByActivationKey(String activationKey);
 
+    List<User> findAllByActivatedIsFalseAndCreatedDateBefore(DateTime dateTime);
 
-    User findOneByEmail(String email);
+    Optional<User> findOneByResetKey(String resetKey);
+
+    Optional<User> findOneByEmail(String email);
+
+    Optional<User> findOneByLogin(String login);
+
+    @Override
+    void delete(User t);
 
 }

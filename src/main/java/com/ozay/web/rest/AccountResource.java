@@ -4,18 +4,21 @@ import com.codahale.metrics.annotation.Timed;
 import com.ozay.domain.Authority;
 import com.ozay.domain.PersistentToken;
 import com.ozay.domain.User;
-import com.ozay.model.InvitedUser;
+import com.ozay.model.InvitedMember;
 import com.ozay.model.Member;
 import com.ozay.repository.*;
 import com.ozay.security.SecurityUtils;
-import com.ozay.service.InvitedUserService;
+import com.ozay.service.InvitedMemberService;
 import com.ozay.service.MailService;
 import com.ozay.service.UserService;
+import com.ozay.web.rest.dto.InvitedUserDTO;
+import com.ozay.web.rest.dto.JsonResponse;
 import com.ozay.web.rest.dto.UserDTO;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -68,21 +71,26 @@ public class AccountResource {
     private MemberRepository memberRepository;
 
     @Inject
-    private InvitedUserRepository invitedUserRepository;
+    private InvitedMemberRepository invitedMemberRepository;
 
     @Inject
-    private InvitedUserService invitedUserService;
+    private InvitedMemberService invitedMemberService;
 
     @Inject
     private UserBuildingRepository userBuildingRepository;
+
+    @Inject
+    private AccountRepository accountRepository;
+
+
 
 
     /**
      * POST  /rest/register -> register the user.
      */
     @RequestMapping(value = "/rest/register",
-            method = RequestMethod.POST,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+        method = RequestMethod.POST,
+        produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
     public ResponseEntity<?> registerAccount(@RequestBody UserDTO userDTO, HttpServletRequest request,
                                              HttpServletResponse response) {
@@ -94,8 +102,8 @@ public class AccountResource {
                     return new ResponseEntity<>("e-mail address already in use", HttpStatus.BAD_REQUEST);
                 }
                 User user = userService.createUserInformation(userDTO.getLogin(), userDTO.getPassword(),
-                        userDTO.getFirstName(), userDTO.getLastName(), userDTO.getEmail().toLowerCase(),
-                        userDTO.getLangKey());
+                    userDTO.getFirstName(), userDTO.getLastName(), userDTO.getEmail().toLowerCase(),
+                    userDTO.getLangKey());
                 final Locale locale = Locale.forLanguageTag(user.getLangKey());
                 String content = createHtmlContentFromTemplate(user, locale, request, response);
                 mailService.sendActivationEmail(user.getEmail(), content, locale);
@@ -103,64 +111,116 @@ public class AccountResource {
     }
 
     /**
-     * POST  /rest/register -> register the user.
-     */
-    @RequestMapping(value = "/rest/account/invitation",
-        method = RequestMethod.POST,
-        produces = MediaType.APPLICATION_JSON_VALUE)
-    @Timed
-    public ResponseEntity<?> sendInvitation(@RequestBody Member member, HttpServletRequest request,
-                                             HttpServletResponse response) {
-        // Email is username
-        member.setLogin(member.getEmail());
-        return Optional.ofNullable(userRepository.findOneByEmail(member.getEmail()))
-            .map(user -> new ResponseEntity<>("login already in use", HttpStatus.BAD_REQUEST))
-            .orElseGet(() -> {
-                InvitedUser invitedUser = invitedUserService.createInvitedUserInformation(member, "en");
-                final Locale locale = Locale.forLanguageTag(invitedUser.getLangKey());
-                String content = createInvitationFromTemplate(member, invitedUser,  locale, request, response);
-                mailService.sendActivationInvitationCompleteEmail(member.getEmail(), content, locale);
-                return new ResponseEntity<>(HttpStatus.CREATED);});
-    }
-
-
-    /**
      * GET  /rest/activate -> activate the registered user.
      */
     @RequestMapping(value = "/rest/activate",
-            method = RequestMethod.GET,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+        method = RequestMethod.GET,
+        produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
     public ResponseEntity<String> activateAccount(@RequestParam(value = "key") String key) {
 
+        // check if this user is invited user
+        if(accountRepository.isInvitedUser(key) == true){
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
         return Optional.ofNullable(userService.activateRegistration(key))
             .map(user -> new ResponseEntity<String>(HttpStatus.OK))
             .orElse(new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
     }
 
+//    /**
+//     * POST  /rest/register -> register the user.
+//     */
+//    @RequestMapping(value = "/rest/account/invitation",
+//        method = RequestMethod.POST,
+//        produces = MediaType.APPLICATION_JSON_VALUE)
+//    @Timed
+//    public ResponseEntity<?> sendInvitation(@RequestBody Member member, HttpServletRequest request,
+//                                             HttpServletResponse response) {
+//        // Email is username
+//        member.setLogin(member.getEmail());
+//        return Optional.ofNullable(userRepository.findOneByEmail(member.getEmail()))
+//            .map(user -> new ResponseEntity<>("login already in use", HttpStatus.BAD_REQUEST))
+//            .orElseGet(() -> {
+//                InvitedMember invitedMember = invitedMemberService.createInvitedUserInformation(member, "en");
+//                final Locale locale = Locale.forLanguageTag(invitedMember.getLangKey());
+//                String content = createInvitationFromTemplate(member, invitedMember,  locale, request, response);
+//                mailService.sendActivationInvitationCompleteEmail(member.getEmail(), content, locale);
+//                return new ResponseEntity<>(HttpStatus.CREATED);});
+//    }
+
+    @RequestMapping(value = "/rest/register/organization-user",
+        method = RequestMethod.POST,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    public ResponseEntity<?> registerOrganizationUser(@RequestBody UserDTO userDTO, HttpServletRequest request,
+                                             HttpServletResponse response) {
+
+        return Optional.ofNullable(userRepository.findOneByLogin(userDTO.getLogin()))
+            .map(user -> new ResponseEntity<>("login already in use", HttpStatus.BAD_REQUEST))
+            .orElseGet(() -> {
+                if (userRepository.findOneByEmail(userDTO.getEmail()) != null) {
+                    return new ResponseEntity<>("e-mail address already in use", HttpStatus.BAD_REQUEST);
+                }
+                User user = userService.createUserInformation(userDTO.getLogin(), userDTO.getPassword(),
+                    userDTO.getFirstName(), userDTO.getLastName(), userDTO.getEmail().toLowerCase(),
+                    userDTO.getLangKey());
+                final Locale locale = Locale.forLanguageTag(user.getLangKey());
+                String content = createHtmlContentFromTemplate(user, locale, request, response);
+                String baseUrl = request.getScheme() +
+                    "://" +
+                    request.getServerName() +
+                    ":" +
+                    request.getServerPort();
+                mailService.sendInvitedUserRegisterEmail(user, baseUrl);
+                return new ResponseEntity<>(HttpStatus.CREATED);});
+    }
+
+
     /**
-     * GET  /rest/invitation/activate -> activate the invited user.
+     * POST  /rest/activate-invited-user -> activate invited organization user.
+     */
+    @RequestMapping(value = "/rest/activate-invited-user",
+        method = RequestMethod.POST,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    public ResponseEntity<?> activateOrganizationUser(@RequestBody InvitedUserDTO invitedUserDTO, HttpServletRequest request,
+                                                  HttpServletResponse response) {
+
+        User user = new User();
+        user.setLogin(invitedUserDTO.getLogin());
+        user.setActivationKey(invitedUserDTO.getKey());
+        user.setPassword(invitedUserDTO.getPassword());
+        userService.activateInvitedUser(user);
+        return new ResponseEntity<String>(HttpStatus.OK);
+    }
+
+
+
+    /**
+     * GET  /rest/invitation/activate -> activate the invited member.
      */
     @RequestMapping(value = "/rest/invitation-activate",
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public ResponseEntity<String> activateInvitedUser(@RequestParam(value = "key") String key) {
-        return Optional.ofNullable(invitedUserService.getDataByKey(key))
+    public ResponseEntity<String> activateInvitedMember(@RequestParam(value = "key") String key) {
+        return Optional.ofNullable(invitedMemberService.getDataByKey(key))
             .map(user -> new ResponseEntity<String>(HttpStatus.OK))
             .orElse(new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
     }
 
+
     /**
-     * POST  /rest/register -> register the user.
+     * POST  /rest/register -> register the member.
      */
     @RequestMapping(value = "/rest/invitation-activate",
         method = RequestMethod.POST,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
     @Transactional
-    public ResponseEntity<?> registerInvitedUser(@RequestBody UserDTO userDTO, @RequestParam(value = "key") String key, HttpServletRequest request,
-                                             HttpServletResponse response) {
+    public ResponseEntity<?> registerInvitedMember(@RequestBody UserDTO userDTO, @RequestParam(value = "key") String key, HttpServletRequest request,
+                                                   HttpServletResponse response) {
 
         return Optional.ofNullable(userRepository.findOneByLogin(userDTO.getLogin()))
             .map(user -> new ResponseEntity<>("login already in use", HttpStatus.BAD_REQUEST))
@@ -168,8 +228,8 @@ public class AccountResource {
                 if(key == null){
                     return new ResponseEntity<>("Key is not set", HttpStatus.BAD_REQUEST);
                 }
-                InvitedUser invitedUser = invitedUserService.getDataByKey(key);
-                Member member = memberRepository.getOne(invitedUser.getMemberId());
+                InvitedMember invitedMember = invitedMemberService.getDataByKey(key);
+                Member member = memberRepository.getOne(invitedMember.getMemberId());
                 log.debug("User detail info {}", member );
                 userDTO.setEmail(member.getEmail());
                 userDTO.setFirstName(member.getFirstName());
@@ -188,8 +248,8 @@ public class AccountResource {
                 memberRepository.update(member);
                 userBuildingRepository.create(member);
                 user.setActivated(true);
-                invitedUser.setActivated(true);
-                invitedUserRepository.activateInvitedUser(invitedUser);
+                invitedMember.setActivated(true);
+                invitedMemberRepository.activateInvitedMember(invitedMember);
 
                 userRepository.save(user);
 
@@ -205,8 +265,8 @@ public class AccountResource {
      * GET  /rest/authenticate -> check if the user is authenticated, and return its login.
      */
     @RequestMapping(value = "/rest/authenticate",
-            method = RequestMethod.GET,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+        method = RequestMethod.GET,
+        produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
     public String isAuthenticated(HttpServletRequest request) {
         log.debug("REST request to check if the current user is authenticated");
@@ -217,8 +277,8 @@ public class AccountResource {
      * GET  /rest/account -> get the current user.
      */
     @RequestMapping(value = "/rest/account",
-            method = RequestMethod.GET,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+        method = RequestMethod.GET,
+        produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
     public ResponseEntity<UserDTO> getAccount() {
         return Optional.ofNullable(userService.getUserWithAuthorities())
@@ -262,11 +322,11 @@ public class AccountResource {
      * POST  /rest/account -> update the current user information.
      */
     @RequestMapping(value = "/rest/account",
-            method = RequestMethod.POST,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+        method = RequestMethod.POST,
+        produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
     public ResponseEntity<?> saveAccount(@RequestBody UserDTO userDTO) {
-        User userHavingThisEmail = userRepository.findOneByLogin(userDTO.getEmail());
+        User userHavingThisEmail = userRepository.findOneByLogin(userDTO.getEmail()).get();
         if (userHavingThisEmail != null && !userHavingThisEmail.getLogin().equals(SecurityUtils.getCurrentLogin())) {
             return new ResponseEntity<String>("e-mail address already in use", HttpStatus.BAD_REQUEST);
         }
@@ -278,8 +338,8 @@ public class AccountResource {
      * POST  /rest/change_password -> changes the current user's password
      */
     @RequestMapping(value = "/rest/account/change_password",
-            method = RequestMethod.POST,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+        method = RequestMethod.POST,
+        produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
     public ResponseEntity<?> changePassword(@RequestBody String password) {
         if (StringUtils.isEmpty(password)) {
@@ -290,14 +350,14 @@ public class AccountResource {
     }
 
     /**
-     * GET  /rest/account/sessions -> get the current open sessions.
+     * GET  /account/sessions -> get the current open sessions.
      */
-    @RequestMapping(value = "/rest/account/sessions",
-            method = RequestMethod.GET,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/account/sessions",
+        method = RequestMethod.GET,
+        produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
     public ResponseEntity<List<PersistentToken>> getCurrentSessions() {
-        return Optional.ofNullable(userRepository.findOneByLogin(SecurityUtils.getCurrentLogin()))
+        return userRepository.findOneByLogin(SecurityUtils.getCurrentLogin())
             .map(user -> new ResponseEntity<>(
                 persistentTokenRepository.findByUser(user),
                 HttpStatus.OK))
@@ -318,14 +378,14 @@ public class AccountResource {
      *   cookie.
      */
     @RequestMapping(value = "/rest/account/sessions/{series}",
-            method = RequestMethod.DELETE)
+        method = RequestMethod.DELETE)
     @Timed
     public void invalidateSession(@PathVariable String series) throws UnsupportedEncodingException {
         String decodedSeries = URLDecoder.decode(series, "UTF-8");
-        User user = userRepository.findOneByLogin(SecurityUtils.getCurrentLogin());
+        User user = userRepository.findOneByLogin(SecurityUtils.getCurrentLogin()).get();
         if (persistentTokenRepository.findByUser(user).stream()
-                .filter(persistentToken -> StringUtils.equals(persistentToken.getSeries(), decodedSeries))
-                .count() > 0) {
+            .filter(persistentToken -> StringUtils.equals(persistentToken.getSeries(), decodedSeries))
+            .count() > 0) {
 
             persistentTokenRepository.delete(decodedSeries);
         }
@@ -336,18 +396,31 @@ public class AccountResource {
         Map<String, Object> variables = new HashMap<>();
         variables.put("user", user);
         variables.put("baseUrl", request.getScheme() + "://" +   // "http" + "://
-                                 request.getServerName() +       // "myhost"
-                                 ":" + request.getServerPort());
+            request.getServerName() +       // "myhost"
+            ":" + request.getServerPort());
         IWebContext context = new SpringWebContext(request, response, servletContext,
-                locale, variables, applicationContext);
+            locale, variables, applicationContext);
         return templateEngine.process("activationEmail", context);
     }
 
-    private String createInvitationFromTemplate(final Member member, final InvitedUser invitedUser,  final Locale locale, final HttpServletRequest request,
-                                                 final HttpServletResponse response) {
+    private String createInvitationFromTemplate(final Member member, final InvitedMember invitedMember,  final Locale locale, final HttpServletRequest request,
+                                                final HttpServletResponse response) {
         Map<String, Object> variables = new HashMap<>();
         variables.put("member", member);
-        variables.put("invitedUser", invitedUser);
+        variables.put("invitedUser", invitedMember);
+        variables.put("baseUrl", request.getScheme() + "://" +   // "http" + "://
+            request.getServerName() +       // "myhost"
+            ":" + request.getServerPort());
+        IWebContext context = new SpringWebContext(request, response, servletContext,
+            locale, variables, applicationContext);
+        return templateEngine.process("invitationEmail", context);
+    }
+
+    private String createInvitedUserFromTemplate(final Member member, final InvitedMember invitedMember,  final Locale locale, final HttpServletRequest request,
+                                                final HttpServletResponse response) {
+        Map<String, Object> variables = new HashMap<>();
+        variables.put("member", member);
+        variables.put("invitedUser", invitedMember);
         variables.put("baseUrl", request.getScheme() + "://" +   // "http" + "://
             request.getServerName() +       // "myhost"
             ":" + request.getServerPort());
@@ -357,7 +430,7 @@ public class AccountResource {
     }
 
     private String createInvitedUserRegisteredTemplate(final User user, final Locale locale, final HttpServletRequest request,
-                                                 final HttpServletResponse response) {
+                                                       final HttpServletResponse response) {
         Map<String, Object> variables = new HashMap<>();
         variables.put("user", user);
         variables.put("baseUrl", request.getScheme() + "://" +   // "http" + "://
@@ -365,6 +438,41 @@ public class AccountResource {
             ":" + request.getServerPort());
         IWebContext context = new SpringWebContext(request, response, servletContext,
             locale, variables, applicationContext);
-        return templateEngine.process("invited-user-activationEmail", context);
+        return templateEngine.process("invitedMemberActivationEmail", context);
+    }
+
+    @RequestMapping(value = "/account/reset_password/init",
+        method = RequestMethod.POST,
+        produces = MediaType.TEXT_PLAIN_VALUE)
+    @Timed
+    public ResponseEntity<?> requestPasswordReset(@RequestBody String mail, HttpServletRequest request) {
+
+        return userService.requestPasswordReset(mail)
+            .map(user -> {
+                String baseUrl = request.getScheme() +
+                    "://" +
+                    request.getServerName() +
+                    ":" +
+                    request.getServerPort();
+                mailService.sendPasswordResetMail(user, baseUrl);
+                return new ResponseEntity<>("e-mail was sent", HttpStatus.OK);
+            }).orElse(new ResponseEntity<>("e-mail address not registered", HttpStatus.BAD_REQUEST));
+
+    }
+
+    @RequestMapping(value = "/account/reset_password/finish",
+        method = RequestMethod.POST,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    public ResponseEntity<String> finishPasswordReset(@RequestParam(value = "key") String key, @RequestParam(value = "newPassword") String newPassword) {
+        if (!checkPasswordLength(newPassword)) {
+            return new ResponseEntity<>("Incorrect password", HttpStatus.BAD_REQUEST);
+        }
+        return userService.completePasswordReset(newPassword, key)
+            .map(user -> new ResponseEntity<String>(HttpStatus.OK)).orElse(new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
+    }
+
+    private boolean checkPasswordLength(String password) {
+        return (!StringUtils.isEmpty(password) && password.length() >= UserDTO.PASSWORD_MIN_LENGTH && password.length() <= UserDTO.PASSWORD_MAX_LENGTH);
     }
 }

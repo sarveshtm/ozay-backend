@@ -4,6 +4,7 @@ import com.ozay.domain.Authority;
 import com.ozay.domain.User;
 import com.ozay.model.AccountInformation;
 import com.ozay.resultsetextractor.AccountResultSetExtractor;
+import com.ozay.rowmapper.UserRowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -40,6 +41,8 @@ public class AccountRepository {
             accountInformation = accountInformations.get(0);
         }
 
+
+
 ////        HashMap<String,Authority> map = new HashMap<String,Authority>();
 //        System.out.println(account);
 
@@ -47,7 +50,16 @@ public class AccountRepository {
         return accountInformation;
     }
 
-
+    public boolean isInvitedUser(String activationKey){
+        String query = "SELECT * from t_user u INNER JOIN invited_user iu ON iu.id = u.id WHERE u.activation_key = :activationKey";
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("activationKey", activationKey);
+        List<User> list = namedParameterJdbcTemplate.query(query, params, new UserRowMapper());
+        if(list.size() == 0){
+            return true;
+        }
+            return false;
+    }
 
 
 
@@ -79,6 +91,13 @@ public class AccountRepository {
         parameterSource.addValue("lang_key", user.getLangKey());
         parameterSource.addValue("createdBy", user.getCreatedBy());
         parameterSource.addValue("activated", user.getActivated());
+        parameterSource.addValue("activationKey", user.getActivationKey());
+        namedParameterJdbcTemplate.update(query, parameterSource);
+    }
+
+    public void updateInvitedUser(User user){
+        String query = "UPDATE USER SET login=:login, password=:password, activated=true WHERE activation_key = :activationKey";
+        MapSqlParameterSource parameterSource = new MapSqlParameterSource();
         parameterSource.addValue("activationKey", user.getActivationKey());
         namedParameterJdbcTemplate.update(query, parameterSource);
     }

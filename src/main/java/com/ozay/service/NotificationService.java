@@ -54,7 +54,7 @@ public class NotificationService {
         notification.setNotice(notificationDto.getNotice());
         notification.setIssueDate(notificationDto.getIssueDate());
 
-        User currentUser = userRepository.findOneByLogin(SecurityUtils.getCurrentLogin());
+        User currentUser = userRepository.findOneByLogin(SecurityUtils.getCurrentLogin()).get();
 
         notification.setCreatedBy(currentUser.getLogin());
         notification.setCreatedDate(new DateTime());

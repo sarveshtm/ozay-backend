@@ -9,10 +9,9 @@ public class Role {
     private long id;
     private String name;
     private long buildingId;
-    private long sortOrder;
-
-
-    private Set<RoleAccess> roleAccesses;
+    private Long sortOrder;
+    private boolean organizationUserRole;
+    private Set<RolePermission> rolePermissions;
 
     public long getId() {
         return id;
@@ -38,19 +37,39 @@ public class Role {
         this.buildingId = buildingId;
     }
 
-    public long getSortOrder() {
+    public Long getSortOrder() {
         return sortOrder;
     }
 
-    public void setSortOrder(long sortOrder) {
+    public void setSortOrder(Long sortOrder) {
         this.sortOrder = sortOrder;
     }
 
-    public Set<RoleAccess> getRoleAccesses() {
-        return roleAccesses;
+    public boolean isOrganizationUserRole() {
+        return organizationUserRole;
     }
 
-    public void setRoleAccesses(Set<RoleAccess> roleAccesses) {
-        this.roleAccesses = roleAccesses;
+    public void setOrganizationUserRole(boolean organizationUserRole) {
+        this.organizationUserRole = organizationUserRole;
+    }
+
+    public Set<RolePermission> getRolePermissions() {
+        return rolePermissions;
+    }
+
+    public void setRolePermissions(Set<RolePermission> rolePermissions) {
+        this.rolePermissions = rolePermissions;
+    }
+
+    @Override
+    public String toString() {
+        return "Role{" +
+            "id='" + id + '\'' +
+            "name='" + name + '\'' +
+            ", buildingId='" + buildingId + '\'' +
+            ", sortOrder='" + sortOrder + '\'' +
+
+            ", rolePermissions='" + rolePermissions + '\'' +
+            "}";
     }
 }

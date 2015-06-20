@@ -9,177 +9,7 @@ var ozayApp = angular.module('ozayApp', ['http-auth-interceptor', 'tmh.dynamicLo
 ozayApp
 .config(function ($routeProvider, $httpProvider, $translateProvider, tmhDynamicLocaleProvider, $stateProvider, $urlRouterProvider, USER_ROLES) {
 
-//	$routeProvider
-//	.when('/register', {
-//	templateUrl: 'views/register.html',
-//	controller: 'RegisterController',
-//	access: {
-//	authorizedRoles: [USER_ROLES.all]
-//	}
-//	})
-//	.when('/activate', {
-//	templateUrl: 'views/activate.html',
-//	controller: 'ActivationController',
-//	access: {
-//	authorizedRoles: [USER_ROLES.all]
-//	}
-//	})
-//	.when('/login', {
-//	templateUrl: 'views/login.html',
-//	controller: 'LoginController',
-//	access: {
-//	authorizedRoles: [USER_ROLES.all]
-//	}
-//	})
-//	.when('/error', {
-//	templateUrl: 'views/error.html',
-//	access: {
-//	authorizedRoles: [USER_ROLES.all]
-//	}
-//	})
-//	.when('/settings', {
-//	templateUrl: 'views/settings.html',
-//	controller: 'SettingsController',
-//	access: {
-//	authorizedRoles: [USER_ROLES.user]
-//	}
-//	})
-//	.when('/password', {
-//	templateUrl: 'views/password.html',
-//	controller: 'PasswordController',
-//	access: {
-//	authorizedRoles: [USER_ROLES.user]
-//	}
-//	})
-//	.when('/sessions', {
-//	templateUrl: 'views/sessions.html',
-//	controller: 'SessionsController',
-//	resolve:{
-//	resolvedSessions:['Sessions', function (Sessions) {
-//	return Sessions.get();
-//	}]
-//	},
-//	access: {
-//	authorizedRoles: [USER_ROLES.user]
-//	}
-//	})
-//	.when('/metrics', {
-//	templateUrl: 'views/metrics.html',
-//	controller: 'MetricsController',
-//	access: {
-//	authorizedRoles: [USER_ROLES.admin]
-//	}
-//	})
-//	.when('/health', {
-//	templateUrl: 'views/health.html',
-//	controller: 'HealthController',
-//	access: {
-//	authorizedRoles: [USER_ROLES.admin]
-//	}
-//	})
-//	.when('/configuration', {
-//	templateUrl: 'views/configuration.html',
-//	controller: 'ConfigurationController',
-//	resolve:{
-//	resolvedConfiguration:['ConfigurationService', function (ConfigurationService) {
-//	return ConfigurationService.get();
-//	}]
-//	},
-//	access: {
-//	authorizedRoles: [USER_ROLES.admin]
-//	}
-//	})
-//	.when('/logs', {
-//	templateUrl: 'views/logs.html',
-//	controller: 'LogsController',
-//	resolve:{
-//	resolvedLogs:['LogsService', function (LogsService) {
-//	return LogsService.findAll();
-//	}]
-//	},
-//	access: {
-//	authorizedRoles: [USER_ROLES.admin]
-//	}
-//	})
-//	.when('/audits', {
-//	templateUrl: 'views/audits.html',
-//	controller: 'AuditsController',
-//	access: {
-//	authorizedRoles: [USER_ROLES.admin]
-//	}
-//	})
-//	.when('/logout', {
-//	templateUrl: 'views/main.html',
-//	controller: 'LogoutController',
-//	access: {
-//	authorizedRoles: [USER_ROLES.all]
-//	}
-//	})
-//	.when('/docs', {
-//	templateUrl: 'views/docs.html',
-//	access: {
-//	authorizedRoles: [USER_ROLES.admin]
-//	}
-//	})
-//	.when('/notification_create', {
-//	controller: 'NotificationController',
-//	templateUrl: 'views/main2.html',
-//	access: {
-//	authorizedRoles: [USER_ROLES.all]
-//	}
-//	})
-//	.when('/notification_archives', {
-//	controller: 'NotificationController',
-//	templateUrl: 'views/main2.html',
-//	access: {
-//	authorizedRoles: [USER_ROLES.all]
-//	}
-//	})
-//	.when('/directory', {
-//	templateUrl: 'views/main2.html',
-//	controller: 'DirectoryController',
-//	access: {
-//	authorizedRoles: [USER_ROLES.all]
-//	}
-//	})
-//	.when('/dashboard', {
-//	templateUrl: 'views/main2.html',
-//	controller: 'DirectoryController',
-//	access: {
-//	authorizedRoles: [USER_ROLES.all]
-//	}
-//	})
-//	.when('/directory/:memberId', {
-//	templateUrl: 'views/main2.html',
-//	controller: 'DirectoryDetailController',
-//	access: {
-//	authorizedRoles: [USER_ROLES.all]
-//	}
-//	})
-//	.when('/collaborate_create', {
-//	templateUrl: 'views/main2.html',
-//	controller: 'CollaborateCreateController',
-//	access: {
-//	authorizedRoles: [USER_ROLES.all]
-//	}
-//	})
-//	.otherwise({
-//	templateUrl: 'views/main2.html',
-//	controller: 'MainController',
-//	access: {
-//	authorizedRoles: [USER_ROLES.all]
-//	}
-//	});
 
-//	$routeProvider
-//	.otherwise({
-//	access: {
-//	authorizedRoles: [USER_ROLES.user]
-//	}
-//	});
-
-
-	$urlRouterProvider.when('', '/');
 	$urlRouterProvider.otherwise('/');
 	$stateProvider
 	.state('login', {
@@ -301,8 +131,16 @@ ozayApp
 			authorizedRoles: [USER_ROLES.user]
 		}
 	})
+	.state('home.buildings', {
+		url : '/management/group/:organizationId/buildings',
+		templateUrl: 'views/building.html',
+		controller: 'BuildingManageController',
+		access: {
+			authorizedRoles: [USER_ROLES.user]
+		}
+	})
 	.state('home.building_create', {
-		url: "/building/:method",
+		url: "/management/group/:organizationId/buildings/new",
 		controller:'BuildingController',
 		templateUrl: "/views/building_detail.html",
 		access: {
@@ -310,13 +148,41 @@ ozayApp
 		}
 	})
 	.state('home.building_edit', {
-    		url: "/building/:method/:buildingId",
-    		controller:'BuildingController',
-    		templateUrl: "/views/building_detail.html",
-    		access: {
-    			authorizedRoles: [USER_ROLES.user]
-    		}
-    	})
+
+		url: "/management/group/:organizationId/buildings/edit/:buildingId",
+		controller:'BuildingController',
+		templateUrl: "/views/building_detail.html",
+		access: {
+			authorizedRoles: [USER_ROLES.user]
+		}
+	})
+	.state('home.role', {
+
+		url: "/management/group/:organizationId/buildings/:buildingId/roles",
+		controller:'RoleController',
+		templateUrl: "/views/role.html",
+		access: {
+			authorizedRoles: [USER_ROLES.user]
+		}
+	})
+	.state('home.role_create', {
+
+		url: "/management/group/:organizationId/buildings/:buildingId/roles/new",
+		controller:'RoleDetailController',
+		templateUrl: "/views/role_detail.html",
+		access: {
+			authorizedRoles: [USER_ROLES.user]
+		}
+	})
+	.state('home.role_edit', {
+
+		url: "/management/group/:organizationId/buildings/:buildingId/roles/edit/:roleId",
+		controller:'RoleDetailController',
+		templateUrl: "/views/role_detail.html",
+		access: {
+			authorizedRoles: [USER_ROLES.user]
+		}
+	})
 
 	.state('home.directory', {
 		url: "/directory",
@@ -335,13 +201,13 @@ ozayApp
 		}
 	})
 	.state('home.director_details_new', {
-    		url: "/directory/:method",
-    		templateUrl: 'views/directory_details.html',
-    		controller: 'MemberDetailController',
-    		access: {
-    			authorizedRoles: [USER_ROLES.user]
-    		}
-    	})
+		url: "/directory/:method",
+		templateUrl: 'views/directory_details.html',
+		controller: 'MemberDetailController',
+		access: {
+			authorizedRoles: [USER_ROLES.user]
+		}
+	})
 	.state('home.password', {
 		url : '/password',
 		templateUrl: 'views/password.html',
@@ -358,54 +224,57 @@ ozayApp
 		}
 	})
 	.state('home.group', {
-    		url : '/management/group',
-    		templateUrl: 'views/group.html',
-    		controller: 'OrganizationController',
+		url : '/management/group',
+		templateUrl: 'views/group.html',
+		controller: 'OrganizationController',
+		access: {
+			authorizedRoles: [USER_ROLES.access_management]
+		}
+	})
+
+	.state('home.group_edit', {
+		url : '/management/group/edit/:organizationId',
+		templateUrl: 'views/group_detail.html',
+		controller: 'OrganizationDetailController',
+		access: {
+			authorizedRoles: [USER_ROLES.user]
+		}
+	})
+	.state('home.group_create', {
+		url : '/management/group/new',
+		templateUrl: 'views/group_detail.html',
+		controller: 'OrganizationDetailController',
+		access: {
+			authorizedRoles: [USER_ROLES.user]
+		}
+	})
+	.state('home.group_users', {
+    		url : '/management/group/:organizationId/users/',
+    		templateUrl: 'views/group_users.html',
+    		controller: 'OrganizationUserController',
+    		access: {
+    			authorizedRoles: [USER_ROLES.user]
+    		}
+    	})
+
+    	.state('home.group_users_edit', {
+    		url : '/management/group/:organizationId/users/edit/:userId',
+    		templateUrl: 'views/group_users_detail.html',
+    		controller: 'OrganizationUserDetailController',
+    		access: {
+    			authorizedRoles: [USER_ROLES.user]
+    		}
+    	})
+    	.state('home.group_users_create', {
+    		url : '/management/group/:organizationId/users/new',
+    		templateUrl: 'views/group_users_detail.html',
+    		controller: 'OrganizationUserDetailController',
     		access: {
     			authorizedRoles: [USER_ROLES.access_management]
     		}
     	})
 
-    	.state('home.group_edit', {
-            		url : '/management/group/:method/:organizationId',
-            		templateUrl: 'views/group_detail.html',
-            		controller: 'OrganizationDetailController',
-            		access: {
-            			authorizedRoles: [USER_ROLES.access_management]
-            		}
-            	})
-    	.state('home.group_create', {
-            		url : '/management/group/:method',
-            		templateUrl: 'views/group_detail.html',
-            		controller: 'OrganizationDetailController',
-            		access: {
-            			authorizedRoles: [USER_ROLES.access_management]
-            		}
-            	})
-	.state('home.buildings', {
-    		url : '/management/buildings/:organizationId',
-    		templateUrl: 'views/building.html',
-    		controller: 'BuildingManageController',
-    		access: {
-    			authorizedRoles: [USER_ROLES.access_management]
-    		}
-    })
-    .state('home.team', {
-    		url : '/team',
-    		templateUrl: 'views/team.html',
-    		controller: 'TeamController',
-    		access: {
-    			authorizedRoles: [USER_ROLES.access_management]
-    		}
-    })
-    .state('home.role', {
-        		url : '/roles',
-        		templateUrl: 'views/role.html',
-        		controller: 'RoleController',
-        		access: {
-        			authorizedRoles: [USER_ROLES.access_management]
-        		}
-    })
+
 	.state('home.search', {
 		url: "/search/:item",
 		templateUrl: 'views/search.html',
@@ -461,13 +330,10 @@ ozayApp
 		}
 	};
 })
-.factory('custom', function ($rootScope, $cookieStore) {
-	$rootScope.selectedBuilding = $cookieStore.selectedBuilding;
-})
 .run(function($rootScope, $cookieStore, $location, $http, $window, AuthenticationSharedService, Session, USER_ROLES, $state, Building) {
 
 	$rootScope.authenticated = false;
-	$rootScope.$on('$stateChangeStart', function (event, next) {
+	$rootScope.$on('$stateChangeSuccess', function (event, next) {
 		$rootScope.isAuthorized = AuthenticationSharedService.isAuthorized;
 		$rootScope.userRoles = USER_ROLES;
 		AuthenticationSharedService.valid(next.access.authorizedRoles);
@@ -518,34 +384,34 @@ ozayApp
 	});
 
 	$rootScope.getBuildings = function(){
-	    Building.query(function(result) {
-                                    if(result.length > 0){
-                                        var building = $rootScope.selectedBuilding;
-                                        if(building === undefined){
-                                            // Check if building in cookie can be accessible to user
-                                            var tempBuilding = $cookieStore.get('selectedBuilding');
-                                            if(tempBuilding !== undefined || tempBuilding == false){
-                                                var accessible = false;
-                                                for(var i = 0; i< result.length; i++){
-                                                    if(result[i].id == tempBuilding){
-                                                        accessible = true;
-                                                        break;
-                                                    }
-                                                }
-                                                if(accessible === true){
-                                                    building = tempBuilding;
-                                                }
-                                            }
-                                        }
-                                        if(building === undefined){
-                                            $cookieStore.put('selectedBuilding', result[0].id);
-                                            building = result[0].id;
-                                        }
-                                        $rootScope.buildingList = result;
-                                        $rootScope.selectedBuilding = building;
-                                    }
-                                    $rootScope.getAccountInfo();
-                                });
+		Building.query(function(result) {
+			if(result.length > 0){
+				var building = $rootScope.selectedBuilding;
+				if(building === undefined){
+					// Check if building in cookie can be accessible to user
+					var tempBuilding = $cookieStore.get('selectedBuilding');
+					if(tempBuilding !== undefined || tempBuilding == false){
+						var accessible = false;
+						for(var i = 0; i< result.length; i++){
+							if(result[i].id == tempBuilding){
+								accessible = true;
+								break;
+							}
+						}
+						if(accessible === true){
+							building = tempBuilding;
+						}
+					}
+				}
+				if(building === undefined){
+					$cookieStore.put('selectedBuilding', result[0].id);
+					building = result[0].id;
+				}
+				$rootScope.buildingList = result;
+				$rootScope.selectedBuilding = building;
+			}
+			$rootScope.getAccountInfo();
+		});
 	}
 
 

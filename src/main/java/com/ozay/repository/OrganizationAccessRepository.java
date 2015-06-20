@@ -1,7 +1,6 @@
 package com.ozay.repository;
 
-import com.ozay.model.OrganizationAccess;
-import com.ozay.model.RoleAccess;
+import com.ozay.model.OrganizationPermission;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -16,30 +15,30 @@ public class OrganizationAccessRepository {
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 
-    public void create(OrganizationAccess organizationAccess){
+    public void create(OrganizationPermission organizationPermission){
         String query="INSERT INTO organization_access (user_id, organization_id, name) VALUES(:userId,:organizationId :name)";
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("userId", organizationAccess.getUserId());
-        params.addValue("organizationId", organizationAccess.getOrganizationId());
-        params.addValue("name", organizationAccess.getName());
+        params.addValue("userId", organizationPermission.getUserId());
+        params.addValue("organizationId", organizationPermission.getOrganizationId());
+        params.addValue("name", organizationPermission.getName());
         namedParameterJdbcTemplate.update(query,params);
     }
 
-    public void update(OrganizationAccess organizationAccess){
+    public void update(OrganizationPermission organizationPermission){
         String query="UPDATE organization_access SET user_id=:userId,organization_id =:organizationId, name=:name";
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("userId", organizationAccess.getUserId());
-        params.addValue("organizationId", organizationAccess.getOrganizationId());
-        params.addValue("name", organizationAccess.getName());
+        params.addValue("userId", organizationPermission.getUserId());
+        params.addValue("organizationId", organizationPermission.getOrganizationId());
+        params.addValue("name", organizationPermission.getName());
         namedParameterJdbcTemplate.update(query,params);
     }
 
-    public void delete(OrganizationAccess organizationAccess){
+    public void delete(OrganizationPermission organizationPermission){
         String query="DELETE FROM organization_access WHERE user_id=:userId AND organization_id =:organizationId AND name=:name";
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("userId", organizationAccess.getUserId());
-        params.addValue("organizationId", organizationAccess.getOrganizationId());
-        params.addValue("name", organizationAccess.getName());
+        params.addValue("userId", organizationPermission.getUserId());
+        params.addValue("organizationId", organizationPermission.getOrganizationId());
+        params.addValue("name", organizationPermission.getName());
         namedParameterJdbcTemplate.update(query,params);
     }
 

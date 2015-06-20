@@ -16,18 +16,17 @@
                     <tr>
                         <th></th>
                         <th><a href="" ng-click="predicate = 'name'; reverse=!reverse">Name</a></th>
-                        <th colspan="2"><a href="" ng-click="predicate = 'name'; reverse=!reverse">Action</a></th>
+                        <th colspan="3"><a href="" ng-click="predicate = 'name'; reverse=!reverse">Action</a></th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr ng-repeat="organization in organizations | orderBy:predicate:reverse">
-                        <td></td>
-                        <td>{{organization.name}}</td>
-                        <td><a href="#/management/group/edit/{{organization.id}}">EDIT</a></td>
-                        <td><a href="#/management/buildings/{{organization.id}}">Buildings</a></td>
-
-                    </tr>
-
+                        <tr ng-repeat="organization in organizations | orderBy:predicate:reverse">
+                            <td></td>
+                            <td>{{organization.name}}</td>
+                            <td><a href="#/management/group/edit/{{organization.id}}">EDIT</a></td>
+                            <td><a href="#/management/group/{{organization.id}}/buildings">Buildings</a></td>
+                            <td><a href="#management/group/{{organization.id}}/users/">Members</a></td>
+                        </tr>
                     </tbody>
                 </table>
             </div>

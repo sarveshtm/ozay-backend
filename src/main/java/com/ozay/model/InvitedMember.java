@@ -5,7 +5,7 @@ import org.joda.time.DateTime;
 /**
  * Created by naofumiezaki on 6/6/15.
  */
-public class InvitedUser {
+public class InvitedMember {
     private Integer id;
     private Integer memberId;
     private String langKey;

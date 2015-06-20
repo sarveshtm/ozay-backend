@@ -1,7 +1,7 @@
 package com.ozay.service;
 
 import com.ozay.domain.User;
-import com.ozay.model.InvitedUser;
+import com.ozay.model.InvitedMember;
 import com.ozay.model.Member;
 import com.ozay.repository.*;
 import com.ozay.security.SecurityUtils;
@@ -19,9 +19,9 @@ import javax.inject.Inject;
  */
 @Service
 @Transactional
-public class InvitedUserService {
+public class InvitedMemberService {
 
-    private final Logger log = LoggerFactory.getLogger(InvitedUserService.class);
+    private final Logger log = LoggerFactory.getLogger(InvitedMemberService.class);
 
     @Inject
     private PasswordEncoder passwordEncoder;
@@ -42,32 +42,32 @@ public class InvitedUserService {
     private AccountRepository accountRepository;
 
     @Inject
-    private InvitedUserRepository invitedUserRepository;
+    private InvitedMemberRepository invitedMemberRepository;
 
     @Inject
     private UserBuildingRepository userBuildingRepository;
 
 
 
-    public InvitedUser getDataByKey(String key) {
+    public InvitedMember getDataByKey(String key) {
         log.debug("Get invited user by key {}", key);
-        return invitedUserRepository.getOne(key);
+        return invitedMemberRepository.getOne(key);
     }
 
 
     @Transactional
-    public InvitedUser createInvitedUserInformation(Member member, String langKey) {
-        User currentLoginUser = userRepository.findOneByLogin(SecurityUtils.getCurrentLogin());
-        InvitedUser invitedUser = new InvitedUser();
+    public InvitedMember createInvitedUserInformation(Member member, String langKey) {
+        User currentLoginUser = userRepository.findOneByLogin(SecurityUtils.getCurrentLogin()).get();
+        InvitedMember invitedMember = new InvitedMember();
 
-        invitedUser.setCreatedBy(currentLoginUser.getLogin());
-        invitedUser.setMemberId(member.getId());
-        invitedUser.setLangKey(langKey);
-        invitedUser.setActivationKey(RandomUtil.generateActivationKey());
+        invitedMember.setCreatedBy(currentLoginUser.getLogin());
+        invitedMember.setMemberId(member.getId());
+        invitedMember.setLangKey(langKey);
+        invitedMember.setActivationKey(RandomUtil.generateActivationKey());
 
-        invitedUserRepository.create(invitedUser);
-        log.debug("Created Information for Invited User: {}", invitedUser);
-        return invitedUser;
+        invitedMemberRepository.create(invitedMember);
+        log.debug("Created Information for Invited User: {}", invitedMember);
+        return invitedMember;
     }
 
 

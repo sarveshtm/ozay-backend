@@ -4,7 +4,6 @@ import com.ozay.domain.Authority;
 import com.ozay.domain.PersistentToken;
 import com.ozay.domain.User;
 import com.ozay.model.AccountInformation;
-import com.ozay.model.Member;
 import com.ozay.model.Subscription;
 import com.ozay.repository.*;
 import com.ozay.security.SecurityUtils;
@@ -52,7 +51,7 @@ public class UserService {
     private AccountRepository accountRepository;
 
     @Inject
-    private InvitedUserRepository invitedUserRepository;
+    private InvitedMemberRepository invitedMemberRepository;
 
     @Inject
     private SubscriptionRepository subscriptionRepository;
@@ -76,6 +75,12 @@ public class UserService {
             .orElse(null);
     }
 
+    public User activateInvitedUser(User user){
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        accountRepository.updateInvitedUser(user);
+        return user;
+    }
+
     @Transactional
     public User createUserInformation(String login, String password, String firstName, String lastName, String email,
                                       String langKey) {
@@ -83,11 +88,10 @@ public class UserService {
         Authority authority = authorityRepository.findOne("ROLE_USER");
         Set<Authority> authorities = new HashSet<>();
         String encryptedPassword = passwordEncoder.encode(password);
-        User currentLoginUser = userRepository.findOneByLogin(SecurityUtils.getCurrentLogin());
+        User currentLoginUser = userRepository.findOneByLogin(SecurityUtils.getCurrentLogin()).get();
         newUser.setLogin(login);
 
         newUser.setCreatedBy(SecurityUtils.getCurrentLogin());
-
 
         // new user gets initially a generated password
         newUser.setPassword(encryptedPassword);
@@ -110,15 +114,54 @@ public class UserService {
         for(Authority authority1 : newUser.getAuthorities()){
             accountRepository.insertAuthority(authority1, newUser.getLogin());
         }
-        User createdUser = userRepository.findOneByLogin(newUser.getLogin());
+        User createdUser = userRepository.findOneByLogin(newUser.getLogin()).get();
 //        userRepository.save(newUser);
         log.debug("Created Information for User: {}", newUser);
         return createdUser;
     }
 
+    @Transactional
+    public User createInvitedUserInformation(String login, String password, String firstName, String lastName, String email,
+                                      String langKey) {
+        User newUser = new User();
+        Authority authority = authorityRepository.findOne("ROLE_USER");
+        Set<Authority> authorities = new HashSet<>();
+        String encryptedPassword = passwordEncoder.encode(password);
+        User currentLoginUser = userRepository.findOneByLogin(SecurityUtils.getCurrentLogin()).get();
+        newUser.setLogin(login);
+
+        newUser.setCreatedBy(SecurityUtils.getCurrentLogin());
+
+        // new user gets initially a generated password
+        newUser.setPassword(encryptedPassword);
+        newUser.setFirstName(firstName);
+        newUser.setLastName(lastName);
+        newUser.setEmail(email);
+        newUser.setLangKey(langKey);
+        // new user is not active
+        newUser.setActivated(false);
+        // new user gets registration key
+        newUser.setActivationKey(RandomUtil.generateActivationKey());
+        authorities.add(authority);
+        newUser.setAuthorities(authorities);
+
+        if(newUser.getCreatedBy() == null){
+            newUser.setCreatedBy("System");
+        }
+
+        accountRepository.insertUser(newUser);
+        for(Authority authority1 : newUser.getAuthorities()){
+            accountRepository.insertAuthority(authority1, newUser.getLogin());
+        }
+        User createdUser = userRepository.findOneByLogin(newUser.getLogin()).get();
+//        userRepository.save(newUser);
+        log.debug("Created Invited User Information for User: {}", newUser);
+        return createdUser;
+    }
+
 
     public void updateUserInformation(String firstName, String lastName, String email) {
-        User currentUser = userRepository.findOneByLogin(SecurityUtils.getCurrentLogin());
+        User currentUser = userRepository.findOneByLogin(SecurityUtils.getCurrentLogin()).get();
         currentUser.setFirstName(firstName);
         currentUser.setLastName(lastName);
         currentUser.setEmail(email);
@@ -127,7 +170,7 @@ public class UserService {
     }
 
     public void changePassword(String password) {
-        User currentUser = userRepository.findOneByLogin(SecurityUtils.getCurrentLogin());
+        User currentUser = userRepository.findOneByLogin(SecurityUtils.getCurrentLogin()).get();
         String encryptedPassword = passwordEncoder.encode(password);
         currentUser.setPassword(encryptedPassword);
         userRepository.save(currentUser);
@@ -148,7 +191,7 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public User getUserWithAuthorities() {
-        User currentUser = userRepository.findOneByLogin(SecurityUtils.getCurrentLogin());
+        User currentUser = userRepository.findOneByLogin(SecurityUtils.getCurrentLogin()).get();
         currentUser.getAuthorities().size(); // eagerly load the association
 
         AccountInformation accountInformation = this.getUserInformation(currentUser, null);
@@ -158,7 +201,7 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public User getUserWithAuthorities(Long buildingId) {
-        User currentUser = userRepository.findOneByLogin(SecurityUtils.getCurrentLogin());
+        User currentUser = userRepository.findOneByLogin(SecurityUtils.getCurrentLogin()).get();
         currentUser.getAuthorities().size(); // eagerly load the association
 
         boolean isAdmin = false;
@@ -185,6 +228,34 @@ public class UserService {
         }
 
         return currentUser;
+    }
+
+    public Optional<User> completePasswordReset(String newPassword, String key) {
+        log.debug("Reset user password for reset key {}", key);
+
+        return userRepository.findOneByResetKey(key)
+            .filter(user -> {
+                DateTime oneDayAgo = DateTime.now().minusHours(24);
+                return user.getResetDate().isAfter(oneDayAgo.toInstant().getMillis());
+            })
+            .map(user -> {
+                user.setPassword(passwordEncoder.encode(newPassword));
+                user.setResetKey(null);
+                user.setResetDate(null);
+                userRepository.save(user);
+                return user;
+            });
+    }
+
+    public Optional<User> requestPasswordReset(String mail) {
+        return userRepository.findOneByEmail(mail)
+            .filter(user -> user.getActivated() == true)
+            .map(user -> {
+                user.setResetKey(RandomUtil.generateResetKey());
+                user.setResetDate(DateTime.now());
+                userRepository.save(user);
+                return user;
+            });
     }
 
     /**

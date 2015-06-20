@@ -1,8 +1,11 @@
 package com.ozay.service;
 
+import com.ozay.domain.User;
 import com.ozay.model.Notification;
 import com.ozay.model.NotificationRecord;
 import com.ozay.repository.MemberRepository;
+import com.sendgrid.SendGrid;
+import com.sendgrid.SendGridException;
 import org.apache.commons.lang.CharEncoding;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,14 +15,14 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.context.Context;
+import org.thymeleaf.spring4.SpringTemplateEngine;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.mail.internet.MimeMessage;
 import java.util.List;
 import java.util.Locale;
-
-import com.sendgrid.*;
 
 /**
  * Service for sending e-mails.
@@ -44,6 +47,9 @@ public class MailService {
 
     @Inject
     private MemberRepository memberRepository;
+
+    @Inject
+    private SpringTemplateEngine templateEngine;
 
     /**
      * System default email address that sends the e-mails.
@@ -124,6 +130,18 @@ public class MailService {
     }
 
     @Async
+    public void sendInvitedUserRegisterEmail(User user, String baseUrl) {
+        log.debug("Sending password reset e-mail to '{}'", user.getEmail());
+        Locale locale = Locale.forLanguageTag(user.getLangKey());
+        Context context = new Context(locale);
+        context.setVariable("user", user);
+        context.setVariable("baseUrl", baseUrl);
+        String content = templateEngine.process("registerOrganizationUserEmail", context);
+        String subject = messageSource.getMessage("email.reset.title", null, locale);
+        sendEmail(user.getEmail(), subject, content, false, true);
+    }
+
+    @Async
     public void sendActivationInvitationEmail(final String email, String content, Locale locale) {
         log.debug("Sending invitaion e-mail to '{}'", email);
         String subject = messageSource.getMessage("email.activation.invitation", null, locale);
@@ -135,5 +153,17 @@ public class MailService {
         log.debug("Sending invitaion e-mail to '{}'", email);
         String subject = messageSource.getMessage("email.activation.invitation_registration_complete", null, locale);
         sendEmail(email, subject, content, false, true);
+    }
+
+    @Async
+    public void sendPasswordResetMail(User user, String baseUrl) {
+        log.debug("Sending password reset e-mail to '{}'", user.getEmail());
+        Locale locale = Locale.forLanguageTag(user.getLangKey());
+        Context context = new Context(locale);
+        context.setVariable("user", user);
+        context.setVariable("baseUrl", baseUrl);
+        String content = templateEngine.process("passwordResetEmail", context);
+        String subject = messageSource.getMessage("email.reset.title", null, locale);
+        sendEmail(user.getEmail(), subject, content, false, true);
     }
 }
