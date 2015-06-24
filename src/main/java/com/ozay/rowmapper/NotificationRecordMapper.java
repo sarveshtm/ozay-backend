@@ -15,7 +15,7 @@ public class NotificationRecordMapper implements RowMapper {
     public NotificationRecord mapRow(ResultSet rs, int rowNum) throws SQLException {
         NotificationRecord notificationRecord = new NotificationRecord();
 
-        notificationRecord.setMemberId(rs.getInt("user_id"));
+        notificationRecord.setMemberId(rs.getLong("user_id"));
         notificationRecord.setNotificationId(rs.getLong("notification_id"));
         notificationRecord.setEmail(rs.getString("email"));
         notificationRecord.setNote(rs.getString("note"));

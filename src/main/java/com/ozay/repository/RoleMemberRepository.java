@@ -26,7 +26,7 @@ public class RoleMemberRepository {
     }
 
     public void delete(long roleId, long memberId){
-        String query="DELETE FROM role_member WHERE role_id:roleId AND member_id=:memberId";
+        String query="DELETE FROM role_member WHERE role_id =:roleId AND member_id=:memberId";
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("roleId", roleId);
         params.addValue("memberId", memberId);

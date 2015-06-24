@@ -6,7 +6,7 @@ import java.util.Set;
  * Created by naofumiezaki on 6/10/15.
  */
 public class Role {
-    private long id;
+    private Long id;
     private String name;
     private long buildingId;
     private Long sortOrder;
@@ -14,11 +14,11 @@ public class Role {
     private Long belongTo;
     private Set<RolePermission> rolePermissions;
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

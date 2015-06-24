@@ -230,7 +230,7 @@ public class AccountResource {
                     return new ResponseEntity<>("Key is not set", HttpStatus.BAD_REQUEST);
                 }
                 InvitedMember invitedMember = invitedMemberService.getDataByKey(key);
-                Member member = memberRepository.getOne(invitedMember.getMemberId());
+                Member member = memberRepository.findOne(invitedMember.getMemberId());
                 log.debug("User detail info {}", member );
                 userDTO.setEmail(member.getEmail());
                 userDTO.setFirstName(member.getFirstName());

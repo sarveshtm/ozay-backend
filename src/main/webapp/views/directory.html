@@ -34,55 +34,18 @@
                     </thead>
                     <tbody>
 
-                    <tr ng-repeat="directory in managementList | orderBy:natural(predicate):reverse">
+                    <tr ng-repeat="member in members | orderBy:natural(predicate):reverse">
 
-                        <td><span ng-if="$first">Management</span></td>
-                        <td><a href="#directory/edit/{{directory.id}}">{{directory.firstName}} {{directory.lastName}}</a></td>
-                        <td>{{directory.unit}}</td>
-                        <td>{{directory.parking}}</td>
-                        <td>{{directory.ownership}}</td>
-                        <td><span ng-if="isResident(directory.renter)">Yes</span><span ng-if="!isResident(directory.renter)">No</span></td>
-                        <td>{{directory.phone}}</td>
-                        <td>{{directory.email}}</td>
-                        <td ng-show="checkboxModel.deleteBtn"><input ng-model="directory.deleted" type="checkbox"></td>
+                        <td><span ng-if="$first"></span></td>
+                        <td><a href="#/directory/edit/{{member.id}}">{{member.firstName}} {{member.lastName}}</a></td>
+                        <td>{{member.unit}}</td>
+                        <td>{{member.parking}}</td>
+                        <td>{{member.ownership}}</td>
+                        <td><span ng-if="isResident(member.renter)">Yes</span><span ng-if="!isResident(member.renter)">No</span></td>
+                        <td>{{member.phone}}</td>
+                        <td>{{member.email}}</td>
+                        <td ng-show="checkboxModel.deleteBtn"><input ng-model="member.deleted" type="checkbox"></td>
                     </tr>
-                    <tr ng-repeat="directory in staffList | orderBy:natural(predicate):reverse">
-
-                        <td><span ng-if="$first">Staff</span></td>
-                        <td><a href="#directory/edit/{{directory.id}}">{{directory.firstName}} {{directory.lastName}}</a></td>
-                        <td>{{directory.unit}}</td>
-                        <td>{{directory.parking}}</td>
-                        <td>{{directory.ownership}}</td>
-                        <td><span ng-if="isResident(directory.renter)">Yes</span><span ng-if="!isResident(directory.renter)">No</span></td>
-                        <td>{{directory.phone}}</td>
-                        <td>{{directory.email}}</td>
-                        <td ng-show="checkboxModel.deleteBtn"><input ng-model="directory.deleted" type="checkbox"></td>
-                    </tr>
-                    <tr ng-repeat="directory in boardList| orderBy:natural(predicate):reverse">
-
-                        <td><span ng-if="$first">Board</span></td>
-                        <td><a href="#directory/edit/{{directory.id}}">{{directory.firstName}} {{directory.lastName}}</a></td>
-                        <td>{{directory.unit}}</td>
-                        <td>{{directory.parking}}</td>
-                        <td>{{directory.ownership}}</td>
-                        <td><span ng-if="isResident(directory.renter)">Yes</span><span ng-if="!isResident(directory.renter)">No</span></td>
-                        <td>{{directory.phone}}</td>
-                        <td>{{directory.email}}</td>
-                        <td ng-show="checkboxModel.deleteBtn"><input ng-model="directory.deleted" type="checkbox"></td>
-                    </tr>
-                    <tr ng-repeat="directory in residentList  | orderBy:natural(predicate):reverse">
-
-                        <td><span ng-if="$first">Resident</span></td>
-                        <td><a href="#directory/edit/{{directory.id}}">{{directory.firstName}} {{directory.lastName}}</a></td>
-                        <td>{{directory.unit}}</td>
-                        <td>{{directory.parking}}</td>
-                        <td>{{directory.ownership}}</td>
-                        <td><span ng-if="isResident(directory.renter)">Yes</span><span ng-if="!isResident(directory.renter)">No</span></td>
-                        <td>{{directory.phone}}</td>
-                        <td>{{directory.email}}</td>
-                        <td ng-show="checkboxModel.deleteBtn"><input ng-model="directory.deleted" type="checkbox"></td>
-                    </tr>
-
                     </tbody>
                 </table>
             </div>

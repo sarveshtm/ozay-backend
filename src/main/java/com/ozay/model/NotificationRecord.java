@@ -4,7 +4,7 @@ package com.ozay.model;
  * Created by naofumiezaki on 6/9/15.
  */
 public class NotificationRecord {
-    public int memberId;
+    public Long memberId;
     public Long notificationId;
 
     private boolean success;
@@ -13,11 +13,11 @@ public class NotificationRecord {
 
 
 
-    public int getMemberId() {
+    public Long getMemberId() {
         return memberId;
     }
 
-    public void setMemberId(int memberId) {
+    public void setMemberId(Long memberId) {
         this.memberId = memberId;
     }
 

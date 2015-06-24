@@ -26,11 +26,18 @@ public class MemberRepository {
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 
-    public Member getOne(int id){
+    public Member findOne(Long id){
         String query = "SELECT * FROM member WHERE id =:id";
         MapSqlParameterSource parameterSource = new MapSqlParameterSource();
         parameterSource.addValue("id", id);
-        List<Member> list = (List<Member>)namedParameterJdbcTemplate.query("SELECT * FROM member WHERE id =:id", parameterSource, new MemberResultSetExtractor());
+        List<Member> list = (List<Member>)namedParameterJdbcTemplate.query("SELECT m.*, " +
+            "r.id as r_id, " +
+            "r.name as r_name, " +
+            "r.building_id as r_building_id, " +
+            "r.sort_order as r_sort_order, " +
+            "r.organization_user_role as r_organization_user_role, " +
+            "r.belong_to as r_belong_to " +
+            " FROM member m LEFT JOIN role_member rm ON m.id = rm.member_id LEFT JOIN role r ON r.id = rm.role_id WHERE m.id =:id", parameterSource, new MemberResultSetExtractor());
         if(list.size()  == 1){
             return list.get(0);
         } else {
@@ -122,11 +129,11 @@ public class MemberRepository {
     }
 
 
-    public Member getUserByBuilding(int user_id, int buildingId){
-        return (Member)jdbcTemplate.queryForObject("Select * FROM member WHERE building_id = ? AND id = ?",
-            new Object[]{buildingId, user_id}, new MemberRowMapper(){
-            });
-    }
+//    public Member getUserByBuilding(int user_id, int buildingId){
+//        return (Member)jdbcTemplate.queryForObject("Select * FROM member WHERE building_id = ? AND id = ?",
+//            new Object[]{buildingId, user_id}, new MemberRowMapper(){
+//            });
+//    }
 
 //    public Member getMemberDetailByBuildingAndUserId(long id, long buildingId){
 //        return (Member)jdbcTemplate.queryForObject("Select * FROM member WHERE building_id = ? AND user_id = ?",
@@ -158,7 +165,7 @@ public class MemberRepository {
             });
     }
 
-    public boolean create(Member member){
+    public Long create(Member member){
         String insert = "INSERT INTO member(" +
             "login, " +
             "user_id, " +
@@ -171,12 +178,8 @@ public class MemberRepository {
             "renter, " +
             "unit, " +
             "expiration_date, " +
-            "parking, " +
-            "management, " +
-            "staff, " +
-            "board, " +
-            "resident ) " +
-            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            "parking)" +
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING id";
         Object[] params = new Object[] { member.getLogin(),
             member.getUserId(),
             member.getFirstName(),
@@ -188,21 +191,13 @@ public class MemberRepository {
             member.isRenter(),
             member.getUnit(),
             member.getExpirationDate(),
-            member.getParking(),
-            member.isManagement(),
-            member.isStaff(),
-            member.isBoard(),
-            member.isResident() };
+            member.getParking()};
 
-        int count = jdbcTemplate.update(insert, params);
-        if(count > 0){
-            return true;
-        } else {
-            return false;
-        }
+        return jdbcTemplate.queryForObject(insert, params, Long.class);
+
 
     }
-    public boolean update(Member member){
+    public void update(Member member){
         String update = "UPDATE member SET " +
             "first_name = ?, " +
             "last_name = ?, " +
@@ -213,10 +208,6 @@ public class MemberRepository {
             "unit = ?, " +
             "expiration_date = ?, " +
             "parking = ?, " +
-            "management = ?, " +
-            "staff = ?, " +
-            "board = ?, " +
-            "resident = ?, " +
             "deleted = ?, " +
             "user_id = ? " +
             "WHERE building_id = ? " +
@@ -232,22 +223,14 @@ public class MemberRepository {
             member.getUnit(),
             member.getExpirationDate(),
             member.getParking(),
-            member.isManagement(),
-            member.isStaff(),
-            member.isBoard(),
-            member.isResident(),
             member.isDeleted(),
             member.getUserId(),
             member.getBuildingId(),
             member.getId()
         };
 
-        int count = jdbcTemplate.update(update, params);
-        if(count > 0){
-            return true;
-        } else {
-            return false;
-        }
+        jdbcTemplate.update(update, params);
+
     }
 
 }

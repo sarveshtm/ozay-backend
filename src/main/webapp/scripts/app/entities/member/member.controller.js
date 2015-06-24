@@ -9,47 +9,42 @@ angular.module('ozayApp')
 	$scope.getAll = function (method, id) {
 		Member.get({method:method, id: id}, function(result) {
 		    $scope.members = result;
-			$scope.managementList = result[0].memberList;
-			$scope.staffList = result[1].memberList;
-			$scope.boardList = result[2].memberList;
-			$scope.residentList = result[3].memberList;
 		});
 	};
 
-	$scope.deleteBtnClicked = function(){
-	    var deleteList = [];
-	    for(var i = 0; i< $scope.managementList.length; i++){
-            if($scope.managementList[i].deleted == true){
-                deleteList.push($scope.managementList[i]);
-            }
-	    }
-	    for(var i = 0; i< $scope.staffList.length; i++){
-	        if($scope.staffList[i].deleted == true){
-	            deleteList.push($scope.staffList[i]);
-            }
-        }
-        for(var i = 0; i< $scope.boardList.length; i++){
-            if($scope.boardList[i].deleted == true){
-                deleteList.push($scope.boardList[i]);
-            }
-        }
-        for(var i = 0; i< $scope.residentList.length; i++){
-            if($scope.residentList[i].deleted == true){
-                deleteList.push($scope.residentList[i]);
-            }
-        }
-
-        Member.deleteMembers(deleteList,
-        					function (data) {
-        				$scope.showSuccessAlert = true;
-        				$scope.successTextAlert = "Successfully Deleted";
-        				$scope.button = true;
-        				$scope.getAll('building', building);
-        			}, function (error){
-
-        			});
-	}
-
+//	$scope.deleteBtnClicked = function(){
+//	    var deleteList = [];
+//	    for(var i = 0; i< $scope.managementList.length; i++){
+//            if($scope.managementList[i].deleted == true){
+//                deleteList.push($scope.managementList[i]);
+//            }
+//	    }
+//	    for(var i = 0; i< $scope.staffList.length; i++){
+//	        if($scope.staffList[i].deleted == true){
+//	            deleteList.push($scope.staffList[i]);
+//            }
+//        }
+//        for(var i = 0; i< $scope.boardList.length; i++){
+//            if($scope.boardList[i].deleted == true){
+//                deleteList.push($scope.boardList[i]);
+//            }
+//        }
+//        for(var i = 0; i< $scope.residentList.length; i++){
+//            if($scope.residentList[i].deleted == true){
+//                deleteList.push($scope.residentList[i]);
+//            }
+//        }
+//
+//        Member.deleteMembers(deleteList,
+//        					function (data) {
+//        				$scope.showSuccessAlert = true;
+//        				$scope.successTextAlert = "Successfully Deleted";
+//        				$scope.button = true;
+//        				$scope.getAll('building', building);
+//        			}, function (error){
+//
+//        			});
+//	}
 
 
 	var building = $rootScope.selectedBuilding;
@@ -69,9 +64,10 @@ angular.module('ozayApp')
 
 })
 .controller('MemberDetailController', function ($scope, $cookieStore, $location, $state, $stateParams, Member, $rootScope, Account, Role) {
-	if($stateParams.method != 'edit' && $stateParams.method != 'new'){
-		$location.path('/error').replace();
-	}
+
+	if($state.current.name != 'home.directory_edit' && $state.current.name != 'home.directory_details_new'){
+    		$state.go('error');
+    	}
 
 	$scope.goBack = function(){
 		$state.go('home.directory');
@@ -85,41 +81,45 @@ angular.module('ozayApp')
                     });
 	}
 
-	if($rootScope.selectedBuilding === undefined || $rootScope.selectedBuilding == 0){
-        $rootScope.$watch('selectedBuilding', function(){
-            $scope.getRoles();
-        });
-	} else {
-		$scope.getRoles();
-	}
-
 
 
 	$scope.submitted = false;
-	$scope.Member = {};
-	$scope.Member.user = {};
+	$scope.role = [];
+	$scope.member = {};
+	$scope.member.user = {};
 
-	$scope.type = 'EDIT';
-	if($stateParams.method == 'new'){
-		$scope.type = 'CREATE';
-		var building = $rootScope.selectedBuilding;
+		$scope.getMember = function(method, login){
+    		Member.getMember({method:method, id: $rootScope.selectedBuilding, login:login}, function(result) {
 
-		if(building === undefined){
-			building = $cookieStore.get('selectedBuilding');
-		}
-		$scope.Member.buildingId = building;
-		$scope.Member.management = false;
-		$scope.Member.staff = false;
-		$scope.Member.board = false;
-		$scope.Member.resident = false;
-	}
+    			if(result.unit == null){
+    				result.unit = "";
+    			}
+    			$scope.member = result;
+    			$scope.model.radioBox = result.renter;
+
+    			if($scope.member.roles.length == 0){
+                			    $scope.member.roles = [];
+                			} else{
+                			     angular.forEach($scope.member.roles, function(value, key) {
+                                    var index = value.id;
+                                    $scope.role[index] = true;
+                                });
+
+                			}
+    		}, function(){
+
+    			$state.go("home.directory");
+
+    		});
+    	}
+
 
 	$scope.invite = function(){
 		$scope.button = false;
-		if($scope.type == 'EDIT'){
+		if($state.current.name == 'home.directory_edit'){
 		    var result = confirm("Would like to invite this user?");
 		    if(result == true){
-		        Account.save({method:"invitation"},$scope.Member,
+		        Account.save({method:"invitation"},$scope.member,
 		        function(data){
 		            $scope.showSuccessAlert = true;
                     $scope.successTextAlert = "Invitation sent";
@@ -140,11 +140,12 @@ angular.module('ozayApp')
 
 
 	$scope.create = function () {
+
 		$scope.showSuccessAlert = false;
 		$scope.showErrorAlert = false;
 		$scope.button = false;
-		if($scope.type == 'EDIT'){
-			Member.update($scope.Member,
+		if($state.current.name == 'home.directory_edit'){
+			Member.update($scope.member,
 					function (data) {
 				$scope.showSuccessAlert = true;
 				$scope.successTextAlert = "Successfully Saved";
@@ -153,13 +154,13 @@ angular.module('ozayApp')
 				$scope.showErrorAlert = true;
 				$scope.errorTextAlert = "";
 				for(var i =0; i< error.data.fieldErrorDTOs.length;i++){
-					console.log(error.data.fieldErrorDTOs[i]);
 					$scope.errorTextAlert += error.data.fieldErrorDTOs[i].field + ": " + error.data.fieldErrorDTOs[i].message;
 				}
 				$scope.button = true;
 			});
 		} else {
-			Member.save($scope.Member,
+		    $scope.member.buildingId = $rootScope.selectedBuilding;
+			Member.save($scope.member,
 					function (data) {
 				$scope.showSuccessAlert = true;
 				$scope.successTextAlert = "Successfully Saved";
@@ -167,7 +168,6 @@ angular.module('ozayApp')
 				$scope.showErrorAlert = true;
 				$scope.errorTextAlert = "";
 				for(var i =0; i< error.data.fieldErrorDTOs.length;i++){
-					console.log(error.data.fieldErrorDTOs[i]);
 					$scope.errorTextAlert += error.data.fieldErrorDTOs[i].field + ": " + error.data.fieldErrorDTOs[i].message;
 				}
 
@@ -176,42 +176,67 @@ angular.module('ozayApp')
 		}
 	};
 
+	$scope.memberRoleClicked = function(selectedValue, modelValue, role){
 
+                if(modelValue == true){
+                    if($scope.member.roles == null || $scope.member.roles == false || $scope.member.roles == undefined){
+                        $scope.member.roles = [];
+                    }
 
-	$scope.button = true;
+                    $scope.member.roles.push({id:selectedValue});
+                } else {
+                    angular.forEach($scope.member.roles, function(value, key) {
+                        if(selectedValue == value.id){
+                            $scope.member.roles.splice(key, 1);
+                        }
+                    });
+                }
+                console.log($scope.member.roles);
+            }
 
+	if($rootScope.selectedBuilding === undefined || $rootScope.selectedBuilding == 0){
+        $rootScope.$watch('selectedBuilding', function(){
+            if($rootScope.selectedBuilding !== undefined){
+                $scope.getRoles();
+                if($state.current.name == 'home.directory_edit'){
+                    $scope.getMember('building', $stateParams.memberId);
+                }
+            }
+        });
+	} else {
+		$scope.getRoles();
+		if($state.current.name == 'home.directory_edit'){
+		    $scope.getMember('building', $stateParams.memberId);
+		}
 
-	$scope.renterList = [
-	                     {
-	                    	 value:true,
-	                    	 label : 'Yes'
-	                     },{
-	                    	 value:false,
-	                    	 label : 'No'
-	                     }];
-
-	$scope.getMember = function(method, id, login){
-		Member.getMember({method:method, id: id, login:login}, function(result) {
-
-			if(result.unit == null){
-				result.unit = "";
-			}
-			$scope.Member = result;
-			$scope.model.radioBox = result.renter;
-		}, function(){
-
-			$state.go("home.directory");
-
-		});
 	}
-	if($stateParams.method == 'edit'){
-		var selectedBuildingId = $cookieStore.get('selectedBuilding');
-		$scope.getMember('building', selectedBuildingId, $stateParams.memberId);
+
+
+
+
+	if($state.current.name == 'home.directory_edit'){
+	    $scope.type = 'EDIT';
+
+	} else {
+	    $scope.type = 'CREATE';
+	    $scope.member.roles = [];
 	}
+
+		$scope.button = true;
+
+
+    	$scope.renterList = [
+    	                     {
+    	                    	 value:true,
+    	                    	 label : 'Yes'
+    	                     },{
+    	                    	 value:false,
+    	                    	 label : 'No'
+    	                     }];
 
 
 	$scope.cancel = function(){
-		$location.path('/directory').replace();
+		$state.go("home.directory");
 	}
 	$scope.model = {
 			name: 'renter',
@@ -222,31 +247,6 @@ angular.module('ozayApp')
 		$scope.model = obj;
 	};
 
-	$scope.roleValidation = false;
-
-	$scope.roleValidationCheck = function(){
-
-		if($scope.Member.management == false && $scope.Member.staff == false && $scope.Member.board == false && $scope.Member.resident == false){
-			$scope.roleValidation = false;
-			return false;
-		} else{
-			$scope.roleValidation = true;
-			return true;
-		}
-	}
-
-	$scope.$watch('Member.management', function() {
-		$scope.roleValidationCheck();
-	});
-	$scope.$watch('Member.staff', function() {
-		$scope.roleValidationCheck();
-	});
-	$scope.$watch('Member.board', function() {
-		$scope.roleValidationCheck();
-	});
-	$scope.$watch('Member.resident', function() {
-		$scope.roleValidationCheck();
-	});
 
 
 });

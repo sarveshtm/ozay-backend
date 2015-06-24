@@ -13,7 +13,7 @@ public class MemberRowMapper implements RowMapper {
 
     public Member mapRow(ResultSet rs, int rowNum) throws SQLException {
         Member member = new Member();
-        member.setId(rs.getInt("id"));
+        member.setId(rs.getLong("id"));
         member.setLogin(rs.getString("login"));
         member.setEmail(rs.getString("email"));
         member.setPhone(rs.getString("phone"));
@@ -24,10 +24,6 @@ public class MemberRowMapper implements RowMapper {
         member.setRenter(rs.getBoolean("renter"));
         member.setUnit(rs.getString("unit"));
         member.setParking(rs.getString("parking"));
-        member.setManagement(rs.getBoolean("management"));
-        member.setStaff(rs.getBoolean("staff"));
-        member.setBoard(rs.getBoolean("board"));
-        member.setResident(rs.getBoolean("resident"));
         member.setDeleted(rs.getBoolean("deleted"));
         member.setUserId(rs.getLong("user_id"));
 

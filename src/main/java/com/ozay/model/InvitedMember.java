@@ -6,8 +6,8 @@ import org.joda.time.DateTime;
  * Created by naofumiezaki on 6/6/15.
  */
 public class InvitedMember {
-    private Integer id;
-    private Integer memberId;
+    private Long id;
+    private Long memberId;
     private String langKey;
     private String activationKey;
     private boolean activated;
@@ -17,19 +17,19 @@ public class InvitedMember {
     private DateTime updatedDate;
     private DateTime activatedDate;
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public Integer getMemberId() {
+    public Long getMemberId() {
         return memberId;
     }
 
-    public void setMemberId(Integer memberId) {
+    public void setMemberId(Long memberId) {
         this.memberId = memberId;
     }
 

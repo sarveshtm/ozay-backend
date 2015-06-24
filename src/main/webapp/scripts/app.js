@@ -9,7 +9,6 @@ var ozayApp = angular.module('ozayApp', ['http-auth-interceptor', 'tmh.dynamicLo
 ozayApp
 .config(function ($routeProvider, $httpProvider, $translateProvider, tmhDynamicLocaleProvider, $stateProvider, $urlRouterProvider, USER_ROLES) {
 
-
 	$urlRouterProvider.otherwise('/');
 	$stateProvider
 	.state('login', {
@@ -192,15 +191,15 @@ ozayApp
 			authorizedRoles: [USER_ROLES.admin, USER_ROLES.access_directory, USER_ROLES.subscriber]
 		}
 	})
-	.state('home.director_details', {
-		url: "/directory/:method/:memberId",
+	.state('home.directory_edit', {
+		url: "/directory/edit/:memberId",
 		templateUrl: 'views/directory_details.html',
 		controller: 'MemberDetailController',
 		access: {
 			authorizedRoles: [USER_ROLES.admin, USER_ROLES.access_directory , USER_ROLES.subscriber]
 		}
 	})
-	.state('home.director_details_new', {
+	.state('home.directory_details_new', {
 		url: "/directory/:method",
 		templateUrl: 'views/directory_details.html',
 		controller: 'MemberDetailController',

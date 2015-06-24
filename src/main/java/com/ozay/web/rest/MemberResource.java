@@ -55,9 +55,9 @@ public class MemberResource {
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public List<MemberListDTO> getAll(@PathVariable int buildingId) {
+    public List<Member> getAll(@PathVariable int buildingId) {
         log.debug("REST request to get all Notifications");
-        return memberService.createMemberListByRole(memberRepository.getAllUsersByBuilding(buildingId));
+        return memberRepository.getAllUsersByBuilding(buildingId);
     }
 
     /**
@@ -67,10 +67,10 @@ public class MemberResource {
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public ResponseEntity<Member> getMemberDetail(@PathVariable int buildingId, @PathVariable int id) {
+    public ResponseEntity<Member> getMemberDetail(@PathVariable int buildingId, @PathVariable Long id) {
         log.debug("REST request to get Building ID : {}", buildingId);
         log.debug("REST request to get Building login: {}", id);
-        return Optional.ofNullable(memberRepository.getUserByBuilding(id, buildingId))
+        return Optional.ofNullable(memberRepository.findOne(id))
             .map(member -> new ResponseEntity<>(member, HttpStatus.OK))
             .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
@@ -107,9 +107,6 @@ public class MemberResource {
             return new ResponseEntity<JsonResponse>(json,  new HttpHeaders(), HttpStatus.BAD_REQUEST);
         }
 
-        if(member.isManagement() == false && member.isStaff() == false && member.isBoard() == false){
-            member.setResident(true);
-        }
         member.setUnit(member.getUnit().toUpperCase());
 
         if(this.checkIfUserAlreadyExistInUnit(member) == true){
@@ -123,7 +120,7 @@ public class MemberResource {
         log.debug("REST request :create function : {}", member);
 
         // get only username before @ (email)
-        memberRepository.create(member);
+        memberService.create(member);
         log.debug("User Detail create success");
         return new ResponseEntity<JsonResponse>(json,  new HttpHeaders(), HttpStatus.OK);
     }
@@ -153,7 +150,7 @@ public class MemberResource {
     @Timed
     public ResponseEntity<JsonResponse> update(@RequestBody Member member) throws URISyntaxException {
         log.debug("REST request :update  record : {}", member);
-        member.setUnit(member.getUnit().toUpperCase());
+
         JsonResponse json = new JsonResponse();
         if(member.getId() == null || member.getBuildingId() == null || member.getBuildingId() == 0) {
             log.error("REST request : user detail update bad request {} ", member);
@@ -167,8 +164,7 @@ public class MemberResource {
             return new ResponseEntity<JsonResponse>(json,  new HttpHeaders(), HttpStatus.BAD_REQUEST);
         }
 
-        boolean result = memberRepository.update(member);
-        log.debug("User Detail update success {}", result);
+        memberService.update(member);
 
         return new ResponseEntity<JsonResponse>(json,  new HttpHeaders(), HttpStatus.OK);
     }

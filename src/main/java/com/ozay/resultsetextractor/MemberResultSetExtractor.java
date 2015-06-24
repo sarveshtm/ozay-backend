@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by naofumiezaki on 6/12/15.
@@ -22,7 +23,7 @@ public class MemberResultSetExtractor implements ResultSetExtractor {
         while(rs.next()){
             if(member == null){
                 member = new Member();
-                member.setId(rs.getInt("id"));
+                member.setId(rs.getLong("id"));
                 member.setLogin(rs.getString("login"));
                 member.setEmail(rs.getString("email"));
                 member.setPhone(rs.getString("phone"));
@@ -33,20 +34,21 @@ public class MemberResultSetExtractor implements ResultSetExtractor {
                 member.setRenter(rs.getBoolean("renter"));
                 member.setUnit(rs.getString("unit"));
                 member.setParking(rs.getString("parking"));
-                member.setManagement(rs.getBoolean("management"));
-                member.setStaff(rs.getBoolean("staff"));
-                member.setBoard(rs.getBoolean("board"));
-                member.setResident(rs.getBoolean("resident"));
                 member.setDeleted(rs.getBoolean("deleted"));
                 member.setUserId(rs.getLong("user_id"));
+                member.setRoles(new HashSet<Role>());
             }
             Role role = new Role();
-            role.setBuildingId(rs.getLong("building_id"));
-            role.setName(rs.getString("name"));
-            role.setSortOrder(rs.getLong("sort_order"));
-            role.setOrganizationUserRole(rs.getBoolean("organization_user_role"));
-            role.setBelongTo(rs.getLong("belong_to"));
-            member.getRoles().add(role);
+            role.setId(rs.getLong("r_id"));
+            role.setBuildingId(rs.getLong("r_building_id"));
+            role.setName(rs.getString("r_name"));
+            role.setSortOrder(rs.getLong("r_sort_order"));
+            role.setOrganizationUserRole(rs.getBoolean("r_organization_user_role"));
+            role.setBelongTo(rs.getLong("r_belong_to"));
+            if(role.getId() != null){
+                member.getRoles().add(role);
+            }
+
 
         }
         list.add(member);

@@ -13,8 +13,8 @@ import java.sql.SQLException;
 public class InvitedMemberRowMapper implements RowMapper {
     public InvitedMember mapRow(ResultSet rs, int rowNum) throws SQLException {
         InvitedMember invitedMember = new InvitedMember();
-        invitedMember.setId(rs.getInt("id"));
-        invitedMember.setMemberId(rs.getInt("member_id"));
+        invitedMember.setId(rs.getLong("id"));
+        invitedMember.setMemberId(rs.getLong("member_id"));
         invitedMember.setLangKey(rs.getString("lang_key"));
         invitedMember.setActivated(rs.getBoolean("activated"));
         invitedMember.setActivationKey(rs.getString("activation_key"));

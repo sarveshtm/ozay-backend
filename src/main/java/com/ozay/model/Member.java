@@ -11,7 +11,7 @@ import java.sql.Date;
 import java.util.Set;
 
 public class Member {
-    private Integer id;
+    private Long id;
     private String firstName;
     private String lastName;
     private String email;
@@ -24,10 +24,6 @@ public class Member {
     private String parking;
     private String unit;
     private DateTime expirationDate;
-    private boolean management;
-    private boolean staff;
-    private boolean board;
-    private boolean resident;
     private boolean deleted;
 
     private Set<Role> roles;
@@ -89,43 +85,12 @@ public class Member {
         this.expirationDate = expirationDate;
     }
 
-    public boolean isManagement() {
-        return management;
-    }
 
-    public void setManagement(boolean management) {
-        this.management = management;
-    }
-
-    public boolean isStaff() {
-        return staff;
-    }
-
-    public void setStaff(boolean staff) {
-        this.staff = staff;
-    }
-
-    public boolean isBoard() {
-        return board;
-    }
-
-    public void setBoard(boolean board) {
-        this.board = board;
-    }
-
-    public boolean isResident() {
-        return resident;
-    }
-
-    public void setResident(boolean resident) {
-        this.resident = resident;
-    }
-
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
