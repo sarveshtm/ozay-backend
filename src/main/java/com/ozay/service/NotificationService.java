@@ -48,7 +48,7 @@ public class NotificationService {
     @Inject
     private NotificationRecordRepository notificationRecordRepository;
 
-    public int sendNotice(NotificationDTO notificationDto){
+    public int sendNotice(NotificationDTO notificationDto, String baseUrl){
         Notification notification = new Notification();
         notification.setBuildingId(notificationDto.getBuildingId());
         notification.setNotice(notificationDto.getNotice());
@@ -77,7 +77,7 @@ public class NotificationService {
             notificationRecords.add(notificationRecord);
         }
 
-        int emailCount = mailService.sendGrid(notification, notificationRecords);
+        int emailCount = mailService.sendGrid(notification, notificationRecords, baseUrl);
 
         Long newId =  notificationRepository.create(notification);
 

@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
 
@@ -53,9 +54,17 @@ public class NotificationResource {
         consumes = "application/json",
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public ResponseEntity<JsonResponse> create(@RequestBody NotificationDTO notificationDto) {
+    public ResponseEntity<JsonResponse> create(@RequestBody NotificationDTO notificationDto, HttpServletRequest request) {
         log.debug("REST request to save Notification : {}", notificationDto);
-        int emailCount = notificationService.sendNotice(notificationDto);
+
+        String baseUrl = request.getScheme() +
+            "://" +
+            request.getServerName() +
+            ":" +
+            request.getServerPort();
+
+
+        int emailCount = notificationService.sendNotice(notificationDto, baseUrl);
 
         JsonResponse json = new JsonResponse();
 

@@ -65,24 +65,32 @@ public class MailService {
         this.from = env.getProperty("spring.mail.from");
     }
 
-    public int sendGrid(Notification notification, List<NotificationRecord> notificationRecords){
+    public int sendGrid(Notification notification, List<NotificationRecord> notificationRecords, String baseUrl){
         SendGrid sendgrid = new SendGrid("OzayOrg", "OzayOrg1124");
 
         int sentCount = 0;
 
         SendGrid.Email sendGrid = new SendGrid.Email();
 
-        for(NotificationRecord notificationRecord : notificationRecords){
-            if(notificationRecord.getEmail() != null){
-                if(notificationRecord.getEmail().matches(EMAIL_PATTERN)){
-                    sendGrid.addSmtpApiTo(notificationRecord.getEmail());
-                    sentCount++;
-                } else {
-                    notificationRecord.setSuccess(false);
-                    notificationRecord.setNote("INVALID Email address");
-                }
-            }
-        }
+//        for(NotificationRecord notificationRecord : notificationRecords){
+//            if(notificationRecord.getEmail() != null){
+//                if(notificationRecord.getEmail().matches(EMAIL_PATTERN)){
+//                    sendGrid.addSmtpApiTo(notificationRecord.getEmail());
+//                    sentCount++;
+//                } else {
+//                    notificationRecord.setSuccess(false);
+//                    notificationRecord.setNote("INVALID Email address");
+//                }
+//            }
+//        }
+        sendGrid.addSmtpApiTo("clmmns@gmail.com");
+
+        Locale locale = Locale.forLanguageTag("EN");
+
+        Context context = new Context(locale);
+        context.setVariable("notification", notification);
+        context.setVariable("baseUrl", baseUrl);
+        String content = templateEngine.process("notification", context);
 
         sendGrid.setFrom("noreply@ozay.us");
         sendGrid.setSubject(notification.getSubject());

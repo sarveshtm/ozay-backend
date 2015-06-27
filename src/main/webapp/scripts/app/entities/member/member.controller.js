@@ -81,6 +81,9 @@ angular.module('ozayApp')
                     });
 	}
 
+    $scope.unitChange = function(){
+       $scope.form.unit.$setValidity('unitvalidation', false);
+    }
 
 
 	$scope.submitted = false;
