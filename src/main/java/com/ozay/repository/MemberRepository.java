@@ -46,11 +46,21 @@ public class MemberRepository {
     }
 
     public List<Member> getAllUsersByBuilding(int buildingId){
-        return jdbcTemplate.query("Select * FROM member WHERE building_id =? AND deleted = false",
+        String query = "SELECT m.*,  FROM member WHERE building_id =:buildingId AND deleted = false";
+        MapSqlParameterSource parameterSource = new MapSqlParameterSource();
+        parameterSource.addValue("buildingId", buildingId);
 
-            new Object[]{buildingId}, new MemberRowMapper() {
+        List<Member> list = (List<Member>)namedParameterJdbcTemplate.query("SELECT m.*, " +
+            "r.id as r_id, " +
+            "r.name as r_name, " +
+            "r.building_id as r_building_id, " +
+            "r.sort_order as r_sort_order, " +
+            "r.organization_user_role as r_organization_user_role, " +
+            "r.belong_to as r_belong_to " +
+            " FROM member m LEFT JOIN role_member rm ON m.id = rm.member_id LEFT JOIN role r ON r.id = rm.role_id WHERE m.building_id = :buildingId AND m.deleted = false", parameterSource, new MemberResultSetExtractor());
 
-            });
+
+        return list;
     }
 
     public Integer countActiveUnits(int buildingId){

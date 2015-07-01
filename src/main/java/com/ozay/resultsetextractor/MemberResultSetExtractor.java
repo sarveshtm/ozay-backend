@@ -20,8 +20,13 @@ public class MemberResultSetExtractor implements ResultSetExtractor {
     public Object extractData(ResultSet rs) throws SQLException{
         List<Member> list = new ArrayList<Member>();
         Member member = null;
+        Long previous = null;
         while(rs.next()){
-            if(member == null){
+            if(previous == null || previous != rs.getLong("id")){
+                if(previous != null){
+                    list.add(member);
+                }
+                previous = rs.getLong("id");
                 member = new Member();
                 member.setId(rs.getLong("id"));
                 member.setLogin(rs.getString("login"));
@@ -48,8 +53,6 @@ public class MemberResultSetExtractor implements ResultSetExtractor {
             if(role.getId() != null){
                 member.getRoles().add(role);
             }
-
-
         }
         list.add(member);
 

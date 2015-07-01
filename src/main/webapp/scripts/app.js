@@ -4,7 +4,7 @@
 var httpHeaders;
 
 var ozayApp = angular.module('ozayApp', ['http-auth-interceptor', 'tmh.dynamicLocale',
-                                         'ngResource', 'ngRoute', 'ngCookies', 'ozayAppUtils', 'pascalprecht.translate', 'truncate', 'ui.router', 'angularjs-dropdown-multiselect', 'naturalSort']);
+                                         'ngResource', 'ngRoute', 'ngCookies', 'ozayAppUtils', 'pascalprecht.translate', 'truncate', 'ui.router', 'angularjs-dropdown-multiselect', 'naturalSort','textAngular']);
 
 ozayApp
 .config(function ($routeProvider, $httpProvider, $translateProvider, tmhDynamicLocaleProvider, $stateProvider, $urlRouterProvider, USER_ROLES) {
@@ -104,7 +104,7 @@ ozayApp
 		templateUrl: "/views/notification_create.html",
 		controller: 'NotificationController',
 		access: {
-			authorizedRoles: [USER_ROLES.admin, USER_ROLES.access_notification]
+			authorizedRoles: [USER_ROLES.admin, USER_ROLES.access_notification, USER_ROLES.subscriber]
 		}
 	})
 	.state('home.notification_archive', {
@@ -112,7 +112,7 @@ ozayApp
 		templateUrl: "/views/notification_archive.html",
 		controller: 'NotificationArchiveController',
 		access: {
-			authorizedRoles: [USER_ROLES.admin, USER_ROLES.access_notification]
+			authorizedRoles: [USER_ROLES.admin, USER_ROLES.access_notification, USER_ROLES.subscriber]
 		}
 	})
 	.state('home.collaborate_create', {
