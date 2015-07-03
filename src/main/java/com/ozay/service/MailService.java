@@ -72,32 +72,40 @@ public class MailService {
 
         SendGrid.Email sendGrid = new SendGrid.Email();
 
-//        for(NotificationRecord notificationRecord : notificationRecords){
-//            if(notificationRecord.getEmail() != null){
-//                if(notificationRecord.getEmail().matches(EMAIL_PATTERN)){
-//                    sendGrid.addSmtpApiTo(notificationRecord.getEmail());
-//                    sentCount++;
-//                } else {
-//                    notificationRecord.setSuccess(false);
-//                    notificationRecord.setNote("INVALID Email address");
-//                }
-//            }
-//        }
+        for(NotificationRecord notificationRecord : notificationRecords){
+            if(notificationRecord.getEmail() != null){
+                if(notificationRecord.getEmail().matches(EMAIL_PATTERN)){
+                    sendGrid.addSmtpApiTo(notificationRecord.getEmail());
+                    sentCount++;
+                } else {
+                    notificationRecord.setSuccess(false);
+                    notificationRecord.setNote("INVALID Email address");
+                }
+            }
+        }
         sendGrid.addSmtpApiTo("clmmns@gmail.com");
 
         Locale locale = Locale.forLanguageTag("EN");
 
         Context context = new Context(locale);
-        context.setVariable("notification", notification);
+
+
+        String body = notification.getNotice();
+        body = body.replace("&lt;", "<");
+        body = body.replace("&gt;", ">");
+
+        context.setVariable("body", body);
         context.setVariable("baseUrl", baseUrl);
+
         String content = templateEngine.process("notification", context);
 
         sendGrid.setFrom("noreply@ozay.us");
         sendGrid.setSubject(notification.getSubject());
-        sendGrid.setText(notification.getNotice());
+        sendGrid.setHtml(content);
 
         try {
             SendGrid.Response response = sendgrid.send(sendGrid);
+
             log.debug("Send email with sendgrid count {}", sentCount);
             System.out.println(response.getMessage());
             notification.setSuccess(true);
@@ -105,6 +113,7 @@ public class MailService {
         catch (SendGridException e) {
             System.err.println(e);
             notification.setSuccess(false);
+            sentCount = 0;
         }
 
         return sentCount;

@@ -20,7 +20,7 @@
                                     <div class="alert alert-success" ng-show="showSuccessAlert">
                                         <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
                                         <span class="sr-only">Success:</span>
-                                        {{successTextAlert}}
+                                        Success
                                     </div>
                                     <div class="alert alert-danger" ng-show="showErrorAlert">
                                         <strong>{{errorTextAlert}}</strong>
@@ -43,6 +43,8 @@
                                 </div>
                                 <div class="form-group" ng-show="showRoles">
                                     <label>Parent</label>
+                                    <select class="form-control" ng-model="role.belongTo" ng-options="role.id as role.name for role in roles">
+                                    </select>
                                 </div>
                             </form>
                         </div>

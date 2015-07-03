@@ -2,11 +2,20 @@
 
 angular.module('ozayApp')
 .controller('NotificationController', function ($scope, $filter, $rootScope, $cookieStore, Notification, Member, Role) {
-
+        // initial settings
+        $scope.button = true;
+        $scope.showSuccessAlert = false;
+        $scope.role = [];
+        $scope.memberList = [];
+        $scope.returnedMemberList = [];
     	$scope.getRoles = function(){
             Role.query({method:"building", buildingId:$rootScope.selectedBuilding}).$promise.then(function(roles) {
-
                             $scope.roleList = roles;
+                            angular.forEach(roles, function(role, key) {
+                                $scope.memberList.push({id:role.id, list:[]});
+                            });
+
+                            $scope.getAll('building', $rootScope.selectedBuilding);
                         }, function(error){
 
                         });
@@ -21,179 +30,154 @@ angular.module('ozayApp')
     	} else {
     		$scope.getRoles();
     	}
-	// initial settings
-	$scope.button = true;
-	$scope.showSuccessAlert = false;
-    $scope.role = [];
-	$scope.memberList = [];
+
+
 
 	// Get people in the building
 	$scope.getAll = function (method, id) {
-
 		Member.get({method:method, id: id}, function(result) {
             $scope.individualList = [];
-            $scope.memberList = result;
-		    angular.forEach(result, function(value, key) {
-                $scope.individualList.push({id: value.id, label: value.unit + " " + value.firstName + " " + value.lastName, role: '1'});
+            $scope.returnedMemberList = result;
+            angular.forEach(result, function(value, key) {
+                angular.forEach(value.roles, function(role, key) {
+                    angular.forEach($scope.memberList, function(memberRole, key) {
+                        if(memberRole.id == role.id){
+                            memberRole.list.push(value);
+                        }
+                     });
+                });
             });
-
-
-
-//			managementList = result[0].memberList;
-//			staffList = result[1].memberList;
-//			boardList = result[2].memberList;
-//			residentList = result[3].memberList;
-//
-//			for(var i = 0; i<managementList.length; i++){
-//				$scope.individualList.push({id: managementList[i].id, label: managementList[i].unit + " " + managementList[i].firstName + " " + managementList[i].lastName, role: '1'});
-//				memberList.push({id: managementList[i].id, label: managementList[i].firstName + " " + managementList[i].lastName, role: 'management'});
-//			}
-//
-//			for(var i = 0; i<staffList.length; i++){
-//				$scope.individualList.push({id: staffList[i].id, label: staffList[i].unit + " " +  staffList[i].firstName + " " + staffList[i].lastName, role: '2'});
-//				memberList.push({id: staffList[i].id, label: staffList[i].firstName + " " + staffList[i].lastName, role: 'staff'});
-//			}
-//
-//			for(var i = 0; i<boardList.length; i++){
-//				$scope.individualList.push({id: boardList[i].id, label: boardList[i].unit + " " + boardList[i].firstName + " " + boardList[i].lastName, role: '3'});
-//				memberList.push({id: boardList[i].id, label: boardList[i].firstName + " " + boardList[i].lastName, role: 'board'});
-//			}
-//
-//			for(var i = 0; i<residentList.length; i++){
-//				$scope.individualList.push({id: residentList[i].id, label: residentList[i].unit + " " +  residentList[i].firstName + " " + residentList[i].lastName, role: '4'});
-//				memberList.push({id: residentList[i].id, label: residentList[i].firstName + " " + residentList[i].lastName, role: 'resident'});
-//			}
+		    angular.forEach(result, function(value, key) {
+                $scope.individualList.push({id: value.id, label: value.unit + " " + value.firstName + " " + value.lastName});
+            });
 		});
 	};
 
-	$scope.groupChanged = function(model, name){
+	$scope.groupChanged = function(model, list){
 
-		var list = null;
-		if(name == 'management'){
-			list = managementList;
-		} else if(name == 'staff'){
-			list = staffList;
-		} else if(name == 'board'){
-			list = boardList;
-		} else if(name == 'resident'){
-			list = residentList;
-		} else {
-			return ;
-		}
-		if(model == true){
-			for(var i = 0; i<list.length; i++){
-				var hasData = false;
-				for(var j = 0; j < $scope.selectedUsers.length;j++){
-					if(list[i].id == $scope.selectedUsers[j].id){
-						hasData = true;
-						break;
-					}
-				}
-				if(hasData === false){
-					$scope.selectedUsers.push({id:list[i].id});
-				}
-			}
-		} else {
-			for(var i = 0; i<list.length; i++){
-				for(var j = 0; j < $scope.selectedUsers.length;j++){
-					if(list[i].id == $scope.selectedUsers[j].id){
-						$scope.selectedUsers.splice(j, 1);
-					}
-				}
-			}
-		}
+        if(model == true){
+            angular.forEach(list, function(value, key) {
+                var hasUser = false;
+                angular.forEach($scope.selectedUsers, function(user, userKey) {
+                    if(value.id == user.id){
+                        hasUser = true;
+                    }
+                });
+
+                if(hasUser == false){
+                    $scope.selectedUsers.push({id:value.id});
+                }
+            });
+        }
+        else {
+            angular.forEach(list, function(value, key) {
+                angular.forEach($scope.selectedUsers, function(user, userKey) {
+                    if(value.id == user.id){
+                        $scope.selectedUsers.splice(userKey, 1);
+                    }
+                });
+            });
+        }
 	}
 
 	$scope.deselectModel = function(id){
+        var member = null;
+        angular.forEach($scope.returnedMemberList, function(value, key) {
+            if(value.id == id){
+                member = value;
+            }
+        });
 
-		for(var i = 0; i< memberList.length; i++){
-			if(memberList[i].id == id){
-				if(memberList[i].role == 'management'){
-					$scope.notification.management = false;
-				}
-				else if(memberList[i].role  == 'staff'){
-					$scope.notification.staff = false;
-				}
-				else if(memberList[i].role  == 'board'){
-					$scope.notification.board = false;
-				}
-				else if(memberList[i].role  == 'resident'){
-					$scope.notification.resident = false;
-				}
-			}
-		}
+        angular.forEach(member.roles, function(value, key) {
+            $scope.role[value.id] = false;
+        });
 	}
 
-	$scope.checkIfAllGroupItemSelected = function(list){
-		var hasAll = true;
-		for(var i = 0; i < list.length; i++){
-			var hasUser = false;
-			for(var j = 0; j < $scope.selectedUsers.length; j++){
-				if(list[i].id == $scope.selectedUsers[j].id){
-					hasUser = true;
-					break;
-				}
-			}
+	$scope.checkIfAllGroupItemSelected = function(id){
+	    var list = null
+        angular.forEach($scope.memberList, function(value, key) {
+            if(value.id == id){
+                list = value.list;
+            }
+        });
+        var existAll = false;
+        if(list != null){
+            existAll = true;
+            angular.forEach(list, function(value, key){
+                var hasMember = false;
 
-			if(hasUser == false){
-				hasAll = false;
-				break;
-			}
-		}
-		return hasAll;
+                angular.forEach($scope.selectedUsers, function(user, key){
+                    if(user.id == value.id){
+                        hasMember = true;
+                    }
+                });
+                if(hasMember == false){
+                    existAll = false;
+                }
+            });
+        }
+        return existAll;
 	}
 
 	$scope.checkWhichGroup = function(id){
+	    var member = null;
+        angular.forEach($scope.returnedMemberList, function(value, key) {
+            if(value.id == id){
+                member = value;
+            }
+        });
 
-         angular.forEach($scope.memberList, function(value, key) {
-            angular.forEach(value, function(role, key) {
-                
-                                         });
-                             });
+        angular.forEach(member.roles, function(value, key) {
+            $scope.role[value.id] = $scope.checkIfAllGroupItemSelected(value.id);
+        });
+	}
 
+	$scope.checkSubCategories = function(model, id){
+	    angular.forEach($scope.roleList, function(value, key) {
+            if(value.id != id && value.belongTo == id){
+                $scope.role[value.id] = model;
+            }
+         });
 	}
 
 	$scope.memberRoleClicked = function(id, model, model1){
-	console.log(model1);
-
+        $scope.checkSubCategories(model, id);
+        var list = null;
+        angular.forEach($scope.memberList, function(value, key) {
+            if(value.id == id){
+                list = value.list;
+            }
+        });
+        $scope.groupChanged(model, list);
 	}
-
 
 	$scope.onItemSelect = function(item){
 		$scope.checkWhichGroup(item.id);
 	}
 
 	$scope.onItemDeselect = function(item){
-		//$scope.deselectModel(item.id);
+		$scope.deselectModel(item.id);
 
 	}
 	$scope.onSelectAll = function(){
-
-	      angular.forEach($scope.roleList, function(value, key) {
-                         $scope.role[value.id] = true;
-                     });
-
-//		$scope.notification.management = true;
-//		$scope.notification.staff = true;
-//		$scope.notification.board = true;
-//		$scope.notification.resident = true;
+	    angular.forEach($scope.roleList, function(value, key) {
+            $scope.role[value.id] = true;
+        });
 	}
 	$scope.onDeselectAll = function(){
-	angular.forEach($scope.roleList, function(value, key) {
-                             $scope.role[value.id] = false;
-                         });
-//		$scope.notification.management = false;
-//		$scope.notification.staff = false;
-//		$scope.notification.board = false;
-//		$scope.notification.resident = false;
+	    angular.forEach($scope.roleList, function(value, key) {
+            $scope.role[value.id] = false;
+        });
 	}
 
 
 	$scope.multiSelectSettings = {
 			enableSearch: true,
-			scrollableHeight: '400px',
+			scrollableHeight: '350px',
 			scrollable: true,
-			groupByTextProvider: function(groupValue) { if (groupValue === '1') { return 'Management'; }else if (groupValue === '2') { return 'Staff'; } else if (groupValue === '3') { return 'Board'; } else { return 'Resident'; } } };
+//			groupByTextProvider: function(groupValue) { if (groupValue === '1') { return 'Management'; }else if (groupValue === '2') { return 'Staff'; } else if (groupValue === '3') { return 'Board'; } else { return 'Resident'; } }
+
+			};
 
 	$scope.eventSettings ={
 			onItemSelect: function(item){$scope.onItemSelect(item);},
@@ -202,15 +186,12 @@ angular.module('ozayApp')
 			onDeselectAll:function(){$scope.onDeselectAll();}
 	}
 
-	$scope.startProcess = function (method, id) {
+	$scope.startProcess = function () {
 		var result = $scope.selectedUsers.length;
 
-		if($scope.notification.management == false
-		&& $scope.notification.staff == false
-		&& $scope.notification.board == false
-		&& $scope.notification.resident == false
-		&& $scope.notification.individual == false){
-		    result = memberList.length;
+		if(result == 0){
+		    alert("Pick at least one member");
+		    return false;
 		}
 
 		$scope.showSuccessAlert = false;
@@ -218,9 +199,9 @@ angular.module('ozayApp')
 		var message = "Do you want to send to " + result + " recipients";
 		if(confirm(message)){
 			$scope.notification.buildingId = $rootScope.selectedBuilding;
-			$scope.notification.individuals = [];
+			$scope.notification.memberIds = [];
 			for(var i = 0; i<$scope.selectedUsers.length;i++){
-				$scope.notification.individuals.push($scope.selectedUsers[i].id);
+				$scope.notification.memberIds.push($scope.selectedUsers[i].id);
 			}
 			Notification.save($scope.notification,
 					function (data) {
@@ -239,21 +220,13 @@ angular.module('ozayApp')
 
 
 
-	// Get All members in this building
-	var building = $rootScope.selectedBuilding;
-	if(building === undefined){
-		building = $cookieStore.get('selectedBuilding');
-	}
-	$scope.getAll('building', building);
 	// End
 
 	// Create Notification
 	$scope.create = function () {
 		$scope.button = false;
-		$scope.startProcess('building_user_count', $rootScope.selectedBuilding);
+		$scope.startProcess();
 	};
-
-
 
 
 
@@ -263,12 +236,6 @@ angular.module('ozayApp')
 
 	// Create notification and set today's date and set minDate(Notification cannot be scheduled for the past)
 	$scope.notification = {};
-//	$scope.notification.management = false;
-//	$scope.notification.staff = false;
-//	$scope.notification.board = false;
-//	$scope.notification.resident = false;
-//	$scope.notification.individual = false;
-
 	$scope.notification.issueDate = new Date();
 	$scope.minDate = new Date();
 	$scope.selectedUsers = [];

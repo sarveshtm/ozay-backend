@@ -57,7 +57,6 @@ public class NotificationService {
         User currentUser = userRepository.findOneByLogin(SecurityUtils.getCurrentLogin()).get();
 
         notification.setCreatedBy(currentUser.getLogin());
-        notification.setCreatedDate(new DateTime());
 
         String buildingName = buildingRepository.getBuilding(notification.getBuildingId()).getName();
         String subject = buildingName + " Notice : " + notificationDto.getSubject();
@@ -78,7 +77,9 @@ public class NotificationService {
         }
 
         int emailCount = mailService.sendGrid(notification, notificationRecords, baseUrl);
-
+        if(emailCount == 0){
+            return 0;
+        }
         Long newId =  notificationRepository.create(notification);
 
         for(NotificationRecord notificationRecord : notificationRecords){

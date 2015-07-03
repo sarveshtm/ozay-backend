@@ -1,9 +1,12 @@
 package com.ozay.web.rest.dto;
 
+import com.ozay.model.Member;
+import com.ozay.model.Role;
 import org.joda.time.DateTime;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by naofumiezaki on 3/8/15.
@@ -14,25 +17,8 @@ public class NotificationDTO {
     private DateTime issueDate;
     private String subject;
     private String notice;
-    private boolean management;
-    private boolean staff;
-    private boolean board;
-    private boolean resident;
-    private boolean individual;
-    private List<Integer> individuals;
-    public NotificationDTO(){}
-    public NotificationDTO(int buildingId, DateTime issueDate, String subject, String notice, boolean management, boolean staff, boolean board, boolean resident, boolean individual, List<Integer> individuals) {
-        this.buildingId = buildingId;
-        this.issueDate = issueDate;
-        this.subject = subject;
-        this.notice = notice;
-        this.management = management;
-        this.staff = staff;
-        this.board = board;
-        this.resident = resident;
-        this.individual = individual;
-        this.individuals = individuals;
-    }
+    private Set<Role> roles;
+    private Set<Integer> memberIds;
 
     public int getBuildingId() {
         return buildingId;
@@ -66,58 +52,26 @@ public class NotificationDTO {
         this.notice = notice;
     }
 
-    public boolean isManagement() {
-        return management;
+    public Set<Role> getRoles() {
+        return roles;
     }
 
-    public void setManagement(boolean management) {
-        this.management = management;
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
     }
 
-    public boolean isStaff() {
-        return staff;
+    public Set<Integer> getMemberIds() {
+        return memberIds;
     }
 
-    public void setStaff(boolean staff) {
-        this.staff = staff;
-    }
-
-    public boolean isBoard() {
-        return board;
-    }
-
-    public void setBoard(boolean board) {
-        this.board = board;
-    }
-
-    public boolean isResident() {
-        return resident;
-    }
-
-    public void setResident(boolean resident) {
-        this.resident = resident;
-    }
-
-    public boolean isIndividual() {
-        return individual;
-    }
-
-    public void setIndividual(boolean individual) {
-        this.individual = individual;
-    }
-
-    public List<Integer> getIndividuals() {
-        return individuals;
-    }
-
-    public void setIndividuals(List<Integer> individuals) {
-        this.individuals = individuals;
+    public void setMemberIds(Set<Integer> memberIds) {
+        this.memberIds = memberIds;
     }
 
     public String toString() {
         return "NotifiactionDTO{" +
 
-            ", individualSize='" + this.individuals.size() + '\'' +
+
             "}";
     }
 }

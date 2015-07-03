@@ -43,22 +43,24 @@ public class RoleRepository {
     }
 
     public Long create(Role role){
-        String query="INSERT INTO role (building_id, name, sort_order, organization_user_role) VALUES(:buildingId, :name, :sortOrder, :organizationUserRole) RETURNING id";
+        String query="INSERT INTO role (building_id, name, sort_order, organization_user_role, belong_to) VALUES(:buildingId, :name, :sortOrder, :organizationUserRole, :belongTo) RETURNING id";
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("buildingId", role.getBuildingId());
         params.addValue("name", role.getName());
         params.addValue("sortOrder", role.getSortOrder());
         params.addValue("organizationUserRole", role.isOrganizationUserRole());
+        params.addValue("belongTo", role.getBelongTo());
         return namedParameterJdbcTemplate.queryForObject(query, params, Long.class);
     }
 
     public void update(Role role){
-        String query="UPDATE role SET building_id=:buildingId, name=:name, sort_order=:sortOrder WHERE id=:id";
+        String query="UPDATE role SET building_id=:buildingId, name=:name, sort_order=:sortOrder, belong_to=:belongTo WHERE id=:id";
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("buildingId", role.getBuildingId());
         params.addValue("name", role.getName());
         params.addValue("sortOrder", role.getSortOrder());
         params.addValue("id", role.getId());
+        params.addValue("belongTo", role.getBelongTo());
         namedParameterJdbcTemplate.update(query,params);
     }
 

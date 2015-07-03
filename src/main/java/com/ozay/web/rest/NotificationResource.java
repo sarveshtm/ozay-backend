@@ -65,7 +65,9 @@ public class NotificationResource {
 
 
         int emailCount = notificationService.sendNotice(notificationDto, baseUrl);
-
+        if(emailCount == 0){
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
         JsonResponse json = new JsonResponse();
 
         String message = "Notice is successfully scheduled to " + emailCount + " recipients";

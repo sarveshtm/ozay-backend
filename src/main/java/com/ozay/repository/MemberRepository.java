@@ -14,6 +14,7 @@ import org.springframework.stereotype.Repository;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 
 @Repository
@@ -57,7 +58,7 @@ public class MemberRepository {
             "r.sort_order as r_sort_order, " +
             "r.organization_user_role as r_organization_user_role, " +
             "r.belong_to as r_belong_to " +
-            " FROM member m LEFT JOIN role_member rm ON m.id = rm.member_id LEFT JOIN role r ON r.id = rm.role_id WHERE m.building_id = :buildingId AND m.deleted = false", parameterSource, new MemberResultSetExtractor());
+            " FROM member m LEFT JOIN role_member rm ON m.id = rm.member_id LEFT JOIN role r ON r.id = rm.role_id WHERE m.building_id = :buildingId AND m.deleted = false ORDER BY m.id", parameterSource, new MemberResultSetExtractor());
 
 
         return list;
@@ -77,64 +78,16 @@ public class MemberRepository {
 
     public List<Member> getUserEmailsForNotification(NotificationDTO notificationDTO){
 
-        String query = "Select * FROM member WHERE building_id = :buildingId AND deleted = false ";
+        String query = "Select * FROM member WHERE building_id = :buildingId AND deleted = false AND id IN ( :ids )";
+        StringBuilder sb = new StringBuilder();
+
 
         MapSqlParameterSource parameterSource = new MapSqlParameterSource();
-
         parameterSource.addValue("buildingId", notificationDTO.getBuildingId());
-        List<String> whereClauses = new ArrayList<String>();
-
-        if(notificationDTO.isManagement() == true){
-            whereClauses.add(" management = :management ");
-            parameterSource.addValue("management", notificationDTO.isManagement());
-        }
-        if(notificationDTO.isStaff() == true){
-            whereClauses.add(" staff = :staff ");
-            parameterSource.addValue("staff", notificationDTO.isStaff());
-
-        }
-        if(notificationDTO.isBoard() == true){
-            whereClauses.add(" board = :board ");
-
-            parameterSource.addValue("board", notificationDTO.isBoard());
-        }
-        if(notificationDTO.isResident() == true){
-            whereClauses.add(" resident = :resident ");
-            parameterSource.addValue("resident", notificationDTO.isResident());
-        }
+        parameterSource.addValue("ids", notificationDTO.getMemberIds());
 
 
-        boolean hasIds = false;
-        if(notificationDTO.isIndividual() == true && notificationDTO.getIndividuals().size() > 0){
-            log.debug("Notification individual id : {}", notificationDTO.getIndividuals());
-            hasIds = true;
-            parameterSource.addValue("ids", notificationDTO.getIndividuals());
-        }
-        String restQuery = "";
-        if(whereClauses.size() > 0 || (notificationDTO.isIndividual() == true && notificationDTO.getIndividuals().size() > 0)){
-            boolean hasAndQuery = false;
-            restQuery += " AND ( ";
-            for(int i = 0; i<whereClauses.size(); i++){
-                hasAndQuery = true;
-                if(i != 0){
-                    restQuery += " AND ";
-                }
-                restQuery += whereClauses.get(i);
-            }
-            if(hasIds == true){
-                if(hasAndQuery == true){
-                    restQuery += " OR ";
-                }
-                restQuery += " id IN ( :ids ) ";
-            }
-
-            restQuery += " ) ";
-        }
-        log.debug("Notification individual query : {}", query + restQuery);
-
-
-
-        return namedParameterJdbcTemplate.query(query + restQuery,
+        return namedParameterJdbcTemplate.query(query,
             parameterSource ,  new MemberRowMapper() );
     }
 

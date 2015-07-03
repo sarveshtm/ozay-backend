@@ -16,6 +16,7 @@ angular.module('ozayApp')
 		$state.go('error');
 	}
 	$scope.role = {};
+	$scope.role.belongTo = 0;
 
 	$scope.access = [];
 	$scope.accessList = [];
@@ -37,16 +38,28 @@ angular.module('ozayApp')
 
 	});
 
-
 	Role.query({method:"building", buildingId:$stateParams.buildingId}).$promise.then(function(roles) {
-		$scope.roles = roles;
-		if(roles.length > 0){
-			$scope.showRoles = true;
-		}
+	    var filteredRoles = [];
+	    if(roles.length > 0){
+            $scope.showRoles = true;
+        }
 
-	}, function(error){
+	    angular.forEach(roles, function(value, key) {
+	    if(value.belongTo == 0){
+             if($state.current.name == 'home.role_edit' && $stateParams.roleId != value.id){
+                 filteredRoles.push(value);
+            } else if($state.current.name == 'home.role_create'){
+                filteredRoles.push(value);
+            }
+	    }
 
-	});
+
+	    });
+    		$scope.roles = filteredRoles;
+    	}, function(error){
+
+    });
+
 
 	$scope.button = true;
 
@@ -99,6 +112,7 @@ angular.module('ozayApp')
 						function (data) {
 					$scope.showSuccessAlert = true;
 					$scope.successTextAlert = data.response;
+					$scope.button = true;
 				}, function (error){
 					$scope.showErrorAlert = true;
 					$scope.errorTextAlert = "Error! Please try later.";
@@ -110,6 +124,7 @@ angular.module('ozayApp')
 						function (data) {
 					$scope.showSuccessAlert = true;
 					$scope.successTextAlert = data.response;
+					$scope.button = true;
 				}, function (error){
 					$scope.showErrorAlert = true;
 					$scope.errorTextAlert = "Error! Please try later.";
