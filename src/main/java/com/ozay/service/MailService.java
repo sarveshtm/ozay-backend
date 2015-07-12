@@ -109,11 +109,11 @@ public class MailService {
 
             log.debug("Send email with sendgrid count {}", sentCount);
             System.out.println(response.getMessage());
-            notification.setSuccess(true);
+
         }
         catch (SendGridException e) {
             System.err.println(e);
-            notification.setSuccess(false);
+
             sentCount = 0;
         }
 

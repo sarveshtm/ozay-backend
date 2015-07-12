@@ -31,7 +31,6 @@ public class Notification{
 
     private DateTime createdDate;
 
-    private boolean success;
 
     private List<NotificationRecord> notificationRecordList;
 
@@ -91,13 +90,6 @@ public class Notification{
         this.subject = subject;
     }
 
-    public boolean isSuccess() {
-        return success;
-    }
-
-    public void setSuccess(boolean success) {
-        this.success = success;
-    }
 
     public List<NotificationRecord> getNotificationRecordList() {
         return notificationRecordList;

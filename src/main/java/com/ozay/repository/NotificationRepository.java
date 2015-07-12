@@ -52,7 +52,6 @@ public class NotificationRepository{
         params.addValue("issueDate", new Timestamp(notification.getIssueDate().getMillis()));
         params.addValue("createdBy", notification.getCreatedBy());
         params.addValue("subject", notification.getSubject());
-        params.addValue("success", notification.isSuccess());
 
         return namedParameterJdbcTemplate.queryForObject(query, params, Long.class);
     }
