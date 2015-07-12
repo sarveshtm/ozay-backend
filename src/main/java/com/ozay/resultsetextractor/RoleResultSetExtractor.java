@@ -35,7 +35,9 @@ public class RoleResultSetExtractor implements ResultSetExtractor {
                 role.getRolePermissions().add(rolePermission);
             }
         }
-        list.add(role);
+        if(role != null){
+            list.add(role);
+        }
 
         return list;
     }

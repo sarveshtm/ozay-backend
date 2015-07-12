@@ -56,7 +56,7 @@ public class MemberResource {
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
     public List<Member> getAll(@PathVariable int buildingId) {
-        log.debug("REST request to get all Notifications");
+        log.debug("REST request to get all building members");
         return memberRepository.getAllUsersByBuilding(buildingId);
     }
 

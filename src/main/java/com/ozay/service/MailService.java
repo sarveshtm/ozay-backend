@@ -1,6 +1,7 @@
 package com.ozay.service;
 
 import com.ozay.domain.User;
+import com.ozay.model.Building;
 import com.ozay.model.Notification;
 import com.ozay.model.NotificationRecord;
 import com.ozay.repository.MemberRepository;
@@ -180,6 +181,20 @@ public class MailService {
         context.setVariable("user", user);
         context.setVariable("baseUrl", baseUrl);
         String content = templateEngine.process("passwordResetEmail", context);
+        String subject = messageSource.getMessage("email.reset.title", null, locale);
+        sendEmail(user.getEmail(), subject, content, false, true);
+    }
+
+    // When registered user is invited by a bulding
+    @Async
+    public void sendInvitedMail(User user, Building building, String baseUrl) {
+        log.debug("Sending password reset e-mail to '{}'", user.getEmail());
+        Locale locale = Locale.forLanguageTag(user.getLangKey());
+        Context context = new Context(locale);
+        context.setVariable("user", user);
+        context.setVariable("building", building);
+        context.setVariable("baseUrl", baseUrl);
+        String content = templateEngine.process("existingUserInvited", context);
         String subject = messageSource.getMessage("email.reset.title", null, locale);
         sendEmail(user.getEmail(), subject, content, false, true);
     }

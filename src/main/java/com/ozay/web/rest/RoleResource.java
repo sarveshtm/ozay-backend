@@ -99,5 +99,22 @@ public class RoleResource {
         return new ResponseEntity<JsonResponse>(json,  new HttpHeaders(), HttpStatus.OK);
     }
 
+    /**
+     * POST  /notifications -> Create a new notification.
+     */
+    @RequestMapping(value = "/role/delete",
+        method = RequestMethod.PUT,
+        consumes = "application/json",
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    public ResponseEntity<JsonResponse> multiDelete(@RequestBody List<Role> roles) {
+        log.debug("REST request to save Role : {}", roles);
+
+        roleService.multiDelete(roles);
+        JsonResponse json = new JsonResponse();
+        json.setSuccess(true);
+        return new ResponseEntity<JsonResponse>(json,  new HttpHeaders(), HttpStatus.OK);
+    }
+
 
 }

@@ -151,6 +151,7 @@ angular.module('ozayApp')
 			if(url != '/'){
 				result = currentUrl ==  url;
 			}
+			
 			return result;
 		}).addClass('active').parent().parent().addClass('in').parent();
 		if (element.is('li')) {

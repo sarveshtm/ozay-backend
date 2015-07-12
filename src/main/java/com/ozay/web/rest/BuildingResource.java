@@ -150,7 +150,7 @@ public class BuildingResource {
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
     public ResponseEntity<JsonResponse> update(@RequestBody Building building) {
-        log.debug("REST request : Building create function{}", building);
+        log.debug("REST request : Building update function{}", building);
         buildingRepository.update(building);
         JsonResponse json = new JsonResponse();
         return new ResponseEntity<JsonResponse>(json,  new HttpHeaders(), HttpStatus.OK);

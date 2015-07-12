@@ -54,8 +54,9 @@ public class MemberResultSetExtractor implements ResultSetExtractor {
                 member.getRoles().add(role);
             }
         }
-        list.add(member);
-
+        if(member != null){
+            list.add(member);
+        }
         return list;
     }
 }

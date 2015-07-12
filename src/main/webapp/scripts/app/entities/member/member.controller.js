@@ -8,43 +8,29 @@ angular.module('ozayApp')
          };
 	$scope.getAll = function (method, id) {
 		Member.get({method:method, id: id}, function(result) {
+		    console.log(result[0]);
 		    $scope.members = result;
 		});
 	};
 
-//	$scope.deleteBtnClicked = function(){
-//	    var deleteList = [];
-//	    for(var i = 0; i< $scope.managementList.length; i++){
-//            if($scope.managementList[i].deleted == true){
-//                deleteList.push($scope.managementList[i]);
-//            }
-//	    }
-//	    for(var i = 0; i< $scope.staffList.length; i++){
-//	        if($scope.staffList[i].deleted == true){
-//	            deleteList.push($scope.staffList[i]);
-//            }
-//        }
-//        for(var i = 0; i< $scope.boardList.length; i++){
-//            if($scope.boardList[i].deleted == true){
-//                deleteList.push($scope.boardList[i]);
-//            }
-//        }
-//        for(var i = 0; i< $scope.residentList.length; i++){
-//            if($scope.residentList[i].deleted == true){
-//                deleteList.push($scope.residentList[i]);
-//            }
-//        }
-//
-//        Member.deleteMembers(deleteList,
-//        					function (data) {
-//        				$scope.showSuccessAlert = true;
-//        				$scope.successTextAlert = "Successfully Deleted";
-//        				$scope.button = true;
-//        				$scope.getAll('building', building);
-//        			}, function (error){
-//
-//        			});
-//	}
+	$scope.deleteBtnClicked = function(){
+	    var deleteList = [];
+
+	    angular.forEach($scope.members, function(value, key) {
+          deleteList.push(value);
+        });
+
+
+        Member.deleteMembers(deleteList,
+        					function (data) {
+        				$scope.showSuccessAlert = true;
+        				$scope.successTextAlert = "Successfully Deleted";
+        				$scope.button = true;
+        				$scope.getAll('building', building);
+        			}, function (error){
+
+        			});
+	}
 
 
 	var building = $rootScope.selectedBuilding;
@@ -82,7 +68,12 @@ angular.module('ozayApp')
 	}
 
     $scope.unitChange = function(){
-       $scope.form.unit.$setValidity('unitvalidation', false);
+        if($scope.member.unit == ""){
+
+            $scope.form.unit.$setValidity('unitvalidation', false);
+        } else {
+            $scope.form.unit.$setValidity('unitvalidation', true);
+        }
     }
 
 

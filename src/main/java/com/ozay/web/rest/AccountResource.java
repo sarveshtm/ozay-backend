@@ -4,6 +4,7 @@ import com.codahale.metrics.annotation.Timed;
 import com.ozay.domain.Authority;
 import com.ozay.domain.PersistentToken;
 import com.ozay.domain.User;
+import com.ozay.model.Building;
 import com.ozay.model.InvitedMember;
 import com.ozay.model.Member;
 import com.ozay.repository.*;
@@ -82,6 +83,9 @@ public class AccountResource {
     @Inject
     private AccountRepository accountRepository;
 
+    @Inject
+    private BuildingRepository buildingRepository;
+
 
 
 
@@ -131,23 +135,39 @@ public class AccountResource {
 //    /**
 //     * POST  /rest/register -> register the user.
 //     */
-//    @RequestMapping(value = "/rest/account/invitation",
-//        method = RequestMethod.POST,
-//        produces = MediaType.APPLICATION_JSON_VALUE)
-//    @Timed
-//    public ResponseEntity<?> sendInvitation(@RequestBody Member member, HttpServletRequest request,
-//                                             HttpServletResponse response) {
-//        // Email is username
-//        member.setLogin(member.getEmail());
-//        return Optional.ofNullable(userRepository.findOneByEmail(member.getEmail()))
-//            .map(user -> new ResponseEntity<>("login already in use", HttpStatus.BAD_REQUEST))
-//            .orElseGet(() -> {
-//                InvitedMember invitedMember = invitedMemberService.createInvitedUserInformation(member, "en");
-//                final Locale locale = Locale.forLanguageTag(invitedMember.getLangKey());
-//                String content = createInvitationFromTemplate(member, invitedMember,  locale, request, response);
-//                mailService.sendActivationInvitationCompleteEmail(member.getEmail(), content, locale);
-//                return new ResponseEntity<>(HttpStatus.CREATED);});
-//    }
+    @RequestMapping(value = "/rest/account/invitation",
+        method = RequestMethod.POST,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    public ResponseEntity<?> sendInvitation(@RequestBody Member member, HttpServletRequest request,
+                                             HttpServletResponse response) {
+        if(member.getUserId() != 0 || member.getUserId() != null){
+            new ResponseEntity<>("User is already exist", HttpStatus.BAD_REQUEST);
+        }
+        // Email is username
+        member.setLogin(member.getEmail());
+        return Optional.ofNullable(userRepository.findOneByEmail(member.getEmail()).get())
+            .map(user -> {
+                member.setUserId(user.getId());
+                memberRepository.update(member);
+                Building building = buildingRepository.getBuilding(member.getBuildingId());
+
+                String baseUrl = request.getScheme() +
+                    "://" +
+                    request.getServerName() +
+                    ":" +
+                    request.getServerPort();
+
+                mailService.sendInvitedMail(user, building, baseUrl);
+                return new ResponseEntity<>(HttpStatus.OK);
+            })
+            .orElseGet(() -> {
+                InvitedMember invitedMember = invitedMemberService.createInvitedUserInformation(member, "en");
+                final Locale locale = Locale.forLanguageTag(invitedMember.getLangKey());
+                String content = createInvitationFromTemplate(member, invitedMember,  locale, request, response);
+                mailService.sendActivationInvitationCompleteEmail(member.getEmail(), content, locale);
+                return new ResponseEntity<>(HttpStatus.CREATED);});
+    }
 
     @RequestMapping(value = "/rest/register/organization-user",
         method = RequestMethod.POST,

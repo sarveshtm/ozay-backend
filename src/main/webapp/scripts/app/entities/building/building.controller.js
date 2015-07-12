@@ -27,11 +27,12 @@ angular.module('ozayApp')
 		$scope.showErrorAlert = false;
 		var message = "Do you want to save the building?";
 		if(confirm(message)){
-    		if($stateParams.method == 'new'){
+    		if($state.current.name == 'home.building_create'){
+
     		    Building.save($scope.building,
                             function (data) {
                         $scope.showSuccessAlert = true;
-                        $scope.successTextAlert = data.response;
+
                        // $cookieStore.put('selectedBuilding', data.response);
 //                       $rootScope.selectedBuilding = data.response;
 //                        $state.transitionTo('home.home', null, {'reload':true});

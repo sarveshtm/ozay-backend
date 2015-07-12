@@ -53,4 +53,11 @@ public class RoleService {
                 rolePermissionRepository.create(rolePermission);
         }
     }
+
+    @Transactional
+    public void multiDelete(List<Role> roles){
+        for(Role role : roles){
+            roleRepository.delete(role);
+        }
+    }
 }

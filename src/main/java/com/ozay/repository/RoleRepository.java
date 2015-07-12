@@ -61,11 +61,15 @@ public class RoleRepository {
         params.addValue("sortOrder", role.getSortOrder());
         params.addValue("id", role.getId());
         params.addValue("belongTo", role.getBelongTo());
-        namedParameterJdbcTemplate.update(query,params);
+        namedParameterJdbcTemplate.update(query, params);
     }
 
-
-
+    public void delete(Role role){
+        String query = "DELETE FROM role WHERE id = :id";
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("id", role.getId());
+        namedParameterJdbcTemplate.update(query, params);
+    }
 
 
 }
