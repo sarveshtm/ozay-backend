@@ -50,7 +50,8 @@ public class MemberResultSetExtractor implements ResultSetExtractor {
             role.setSortOrder(rs.getLong("r_sort_order"));
             role.setOrganizationUserRole(rs.getBoolean("r_organization_user_role"));
             role.setBelongTo(rs.getLong("r_belong_to"));
-            if(role.getId() != null){
+            if(role.getId() != 0){
+
                 member.getRoles().add(role);
             }
         }

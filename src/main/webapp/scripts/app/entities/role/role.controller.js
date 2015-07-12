@@ -105,6 +105,7 @@ angular.module('ozayApp')
 	$scope.create = function () {
 		$scope.button = false;
 		var confirm = ("Would you like to save?");
+
 		if(confirm){
 		    $scope.role.buildingId = $stateParams.buildingId;
 			if($scope.role.id === undefined || $scope.role.id == 0){
