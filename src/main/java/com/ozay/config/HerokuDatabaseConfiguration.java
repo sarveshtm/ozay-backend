@@ -50,6 +50,7 @@ public class HerokuDatabaseConfiguration implements EnvironmentAware {
                     "?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory";
 
             HikariConfig config = new HikariConfig();
+	    config.setMaximumPoolSize(5);
             config.setDataSourceClassName(propertyResolver.getProperty("dataSourceClassName"));
             config.addDataSourceProperty("url", dbUrl);
             config.addDataSourceProperty("user", username);
