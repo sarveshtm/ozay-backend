@@ -44,7 +44,7 @@ public class NotificationRepository{
     };
 
     public Long create(Notification notification){
-        String query = "INSERT INTO notification (building_id, notice, issue_date, created_by, created_date, subject, success)" +
+        String query = "INSERT INTO notification (building_id, notice, issue_date, created_by, created_date, subject)" +
             " VALUES (:buildingId, :notice, :issueDate, :createdBy, NOW(), :subject) RETURNING id";
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("buildingId", notification.getBuildingId());
