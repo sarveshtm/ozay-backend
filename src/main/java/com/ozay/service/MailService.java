@@ -84,7 +84,6 @@ public class MailService {
                 }
             }
         }
-        sendGrid.addSmtpApiTo("clmmns@gmail.com");
 
         Locale locale = Locale.forLanguageTag("EN");
 
