@@ -19,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Locale;
@@ -51,16 +52,37 @@ public class OrganizationUserResource {
     /**
      * GET  organization-user
      */
-    @RequestMapping(value = "/organization-user/organization/{organizationId}/user/{userId}",
+    @RequestMapping(value = "/organization-user/{organizationId}/{id}",
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public ResponseEntity<User> getOrganizationUser(@PathVariable Long organizationId, @PathVariable Long userId) {
-        log.debug("REST request to get Organization User : Organization ID {}, User ID {} ", organizationId, userId);
-        return Optional.ofNullable(organizationUserRepository.findOrganizationUser(organizationId, userId)).
+    public ResponseEntity<User> getOrganizationUser(@PathVariable Long organizationId, @PathVariable Long id) {
+        log.debug("REST request to get Organization User : Organization ID {}, User ID {} ", organizationId, id);
+        return Optional.ofNullable(organizationUserRepository.findOrganizationUser(organizationId, id)).
             map(user -> new ResponseEntity<>(user, HttpStatus.OK))
             .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
 
+    }
+
+    /**
+     * POST  /organization-user
+     */
+    @RequestMapping(value = "/organization-user",
+        method = RequestMethod.POST,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    public ResponseEntity<JsonResponse> addOrgUser(@RequestBody User organizationUser, HttpServletRequest request) {
+        log.debug("REST request to add user to an organization, {}", organizationUser.getEmail());
+
+//        User user = userRepository.findOneByLogin(SecurityUtils.getCurrentLogin()).get();
+//        AccountInformation accountInformation = accountRepository.getLoginUserInformation(user, null);
+//        organization.setSubscriptionId(accountInformation.getSubscriptionId());
+//        organization.setCreatedBy(user.getId());
+//        organizationRepository.create(organization);
+        JsonResponse json = new JsonResponse();
+        json.setSuccess(true);
+
+        return new ResponseEntity<JsonResponse>(json,  new HttpHeaders(), HttpStatus.CREATED);
     }
 
 }
