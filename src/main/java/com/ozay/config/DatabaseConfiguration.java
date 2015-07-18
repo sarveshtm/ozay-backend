@@ -45,7 +45,7 @@ public class DatabaseConfiguration implements EnvironmentAware {
 
     @Bean(destroyMethod = "shutdown")
 
-    @Profile("!" + Constants.SPRING_PROFILE_CLOUD)
+    @Profile("!" + Constants.SPRING_PROFILE_HEROKU)
     public DataSource dataSource() {
         log.debug("Configuring Datasource");
         if (propertyResolver.getProperty("url") == null && propertyResolver.getProperty("databaseName") == null) {
