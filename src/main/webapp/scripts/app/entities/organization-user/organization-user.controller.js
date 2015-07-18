@@ -62,10 +62,9 @@ angular.module('ozayApp')
             } else {
                 for(var i = 0; i< $scope.permissions.length; i++){
                     if(value == $scope.permissions[i].name){
-                        $scope.permissions.splice(i, 1);
+                        $scope.organizationUser.roles.splice(i, 1);
                     }
                 }
-            console.log($scope.role.rolePermissions);
             }
 	}
 

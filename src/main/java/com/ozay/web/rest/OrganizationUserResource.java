@@ -2,10 +2,7 @@ package com.ozay.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import com.ozay.domain.User;
-import com.ozay.model.Member;
-import com.ozay.model.AccountInformation;
-import com.ozay.model.Organization;
-import com.ozay.model.Permission;
+import com.ozay.model.*;
 import com.ozay.service.*;
 import com.ozay.repository.*;
 import com.ozay.security.SecurityUtils;
@@ -59,6 +56,9 @@ public class OrganizationUserResource {
     private MailService mailService;
 
     @Inject
+    private OrganizationService organizationService;
+
+    @Inject
     private ServletContext servletContext;
 
     @Inject
@@ -69,6 +69,7 @@ public class OrganizationUserResource {
 
     @Inject
     private OrganizationRepository organizationRepository;
+
 
     /**
      * GET  /organization-users
@@ -132,12 +133,11 @@ public class OrganizationUserResource {
             organizationUserRepository.create(organizationUser.getOrganizationId(),
                 organizationUser.getUserId());
         }
-        //3) Role Update
-
+        //3) Organization Role Update
+       organizationService.updateOrganizationPermission(organizationUser);
 
         JsonResponse json = new JsonResponse();
         json.setSuccess(true);
-
         return new ResponseEntity<JsonResponse>(json,  new HttpHeaders(), HttpStatus.CREATED);
     }
 
