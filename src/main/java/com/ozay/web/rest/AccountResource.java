@@ -99,7 +99,7 @@ public class AccountResource {
     public ResponseEntity<?> registerAccount(@RequestBody UserDTO userDTO, HttpServletRequest request,
                                              HttpServletResponse response) {
 
-        return Optional.ofNullable(userRepository.findOneByLogin(userDTO.getLogin()))
+        return userRepository.findOneByLogin(userDTO.getLogin())
             .map(user -> new ResponseEntity<>("login already in use", HttpStatus.BAD_REQUEST))
             .orElseGet(() -> {
                 if (userRepository.findOneByEmail(userDTO.getEmail()) != null) {
@@ -146,7 +146,7 @@ public class AccountResource {
         }
         // Email is username
         member.setLogin(member.getEmail());
-        return Optional.ofNullable(userRepository.findOneByEmail(member.getEmail()).get())
+        return userRepository.findOneByEmail(member.getEmail())
             .map(user -> {
                 member.setUserId(user.getId());
                 memberRepository.update(member);
@@ -176,7 +176,7 @@ public class AccountResource {
     public ResponseEntity<?> registerOrganizationUser(@RequestBody UserDTO userDTO, HttpServletRequest request,
                                              HttpServletResponse response) {
 
-        return Optional.ofNullable(userRepository.findOneByEmail(userDTO.getEmail()))
+        return userRepository.findOneByEmail(userDTO.getEmail())
             .map(user -> new ResponseEntity<>("login already in use", HttpStatus.BAD_REQUEST))
             .orElseGet(() -> {
 
@@ -216,8 +216,6 @@ public class AccountResource {
         return new ResponseEntity<String>(HttpStatus.OK);
     }
 
-
-
     /**
      * GET  /rest/invitation/activate -> activate the invited member.
      */
@@ -243,7 +241,7 @@ public class AccountResource {
     public ResponseEntity<?> registerInvitedMember(@RequestBody UserDTO userDTO, @RequestParam(value = "key") String key, HttpServletRequest request,
                                                    HttpServletResponse response) {
 
-        return Optional.ofNullable(userRepository.findOneByLogin(userDTO.getLogin()))
+        return userRepository.findOneByLogin(userDTO.getLogin())
             .map(user -> new ResponseEntity<>("login already in use", HttpStatus.BAD_REQUEST))
             .orElseGet(() -> {
                 if(key == null){
@@ -256,7 +254,7 @@ public class AccountResource {
                 userDTO.setFirstName(member.getFirstName());
                 userDTO.setLastName(member.getLastName());
                 if (userRepository.findOneByEmail(userDTO.getEmail()) != null) {
-                    return new ResponseEntity<>("e-mail address already in use", HttpStatus.BAD_REQUEST);
+                    //return new ResponseEntity<>("e-mail address already in use", HttpStatus.BAD_REQUEST);
                 }
 
                 log.debug("Validation fine for registerInvited User");

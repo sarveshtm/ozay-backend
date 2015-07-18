@@ -6,8 +6,10 @@ ozayApp.constant('USER_ROLES', {
         'all': '*',
         'admin': 'ROLE_ADMIN',
         'user': 'ROLE_USER',
-        'access_directory': 'ACCESS_DIRECTORY',
-        'access_notification': 'ACCESS_NOTIFICATION',
+        'access_directory_edit': 'DIRECTORY_EDIT',
+        'access_directory_list': 'DIRECTORY_LIST',
+        'access_notification_archive': 'NOTIFICATION_ARCHIVE',
+        'access_notification_create': 'NOTIFICATION_CREATE',
         'access_management': 'ROLE_MANAGEMENT',
         'subscriber': 'ROLE_SUBSCRIBER',
     });

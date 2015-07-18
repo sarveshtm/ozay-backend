@@ -28,19 +28,30 @@ public class AccountRepository {
 
     public AccountInformation getLoginUserInformation(User user,Long buildingId){
 
-        String query = "SELECT s.id as s_id, s.user_id as s_user_id, o.id as organization_id FROM t_user u LEFT JOIN subscription s ON s.user_id = u.id LEFT JOIN organization o ON o.user_id = s.user_id  WHERE u.id = :id";
+        String query = "SELECT DISTINCT s.id as s_id, s.user_id as s_user_id, o.id as organization_id, rp.name\n" +
+            "FROM t_user u " +
+            "LEFT JOIN subscription s ON s.user_id = u.id " +
+            "LEFT JOIN organization o ON o.user_id = s.user_id  " +
+            "LEFT JOIN member m ON  u.id =  m.user_id " +
+            "LEFT JOIN role_member rm ON rm.member_id = m.id " +
+            "LEFT JOIN role_permission rp ON rp.role_id = rm.role_id " +
+            "WHERE u.id = :id AND rp.role_id is not null ";
 
         MapSqlParameterSource params = new MapSqlParameterSource();
 
         params.addValue("id", user.getId());
-        //params.addValue("buildingId", buildingId);
+
+        if(buildingId != null){
+            query += "AND m.building_id = :buildingId";
+            params.addValue("buildingId", buildingId);
+        }
+
 
         List<AccountInformation> accountInformations = (List<AccountInformation>)namedParameterJdbcTemplate.query(query, params, new AccountResultSetExtractor());
         AccountInformation accountInformation = null;
         if(accountInformations.size() > 0){
             accountInformation = accountInformations.get(0);
         }
-
 
 
 ////        HashMap<String,Authority> map = new HashMap<String,Authority>();

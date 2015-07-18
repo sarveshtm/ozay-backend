@@ -45,19 +45,27 @@ public class SearchResource {
     @Timed
     @RolesAllowed(AuthoritiesConstants.ADMIN)
     public List<SearchDTO> getAll(@PathVariable int buildingId, @PathVariable String item) {
+
+        String[] itemArray = item.split(" ");
+
+        for(int i = 0; i< itemArray.length;i++){
+            itemArray[i] = "%" + itemArray[i].toLowerCase() + "%";
+        }
+
         List<SearchDTO> searchDTOs = new ArrayList<SearchDTO>();
 
         SearchDTO directory = new SearchDTO();
         directory.setType("Directory");
-        directory.setList(memberRepository.searchUsers(buildingId, item));
+        directory.setList(memberRepository.searchUsers(buildingId, itemArray));
         searchDTOs.add(directory);
 
 
         SearchDTO notification = new SearchDTO();
         notification.setType("Notification");
 
-        String likeItem = "%" + item.toLowerCase() + "%";
-        notification.setList(notificationRepository.searchNotification(buildingId, likeItem));
+
+
+        notification.setList(notificationRepository.searchNotification(buildingId, itemArray));
         searchDTOs.add(notification);
 
         return searchDTOs;

@@ -241,13 +241,13 @@
                         <a href="#/dashboard">DASHBOARD</a>
                     </li>
 
-                    <li ng-show="isAuthorized(userRoles.access_notification) || isAuthorized(userRoles.admin) || isAuthorized(userRoles.subscriber)">
+                    <li ng-show="isAuthorized(userRoles.access_notification_archive) || isAuthorized(userRoles.access_notification_create) || isAuthorized(userRoles.admin) || isAuthorized(userRoles.subscriber)">
                         <a href="#">NOTIFICATION<span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
-                            <li>
+                            <li ng-show="isAuthorized(userRoles.access_notification_create) || isAuthorized(userRoles.admin) || isAuthorized(userRoles.subscriber)">
                                 <a href="#/notification_create">CREATE</a>
                             </li>
-                            <li>
+                            <li ng-show="isAuthorized(userRoles.access_notification_archive) || isAuthorized(userRoles.admin) || isAuthorized(userRoles.subscriber)">
                                 <a href="#/notification_archive">ARCHIVES</a>
                             </li>
                         </ul>
@@ -271,13 +271,13 @@
                     <li>
                         <a href="#/">EVENTS</a>
                     </li>
-                    <li ng-show="isAuthorized(userRoles.access_directory) || isAuthorized(userRoles.admin) || isAuthorized(userRoles.subscriber)">
+                    <li ng-show="isAuthorized(userRoles.access_directory_edit) || isAuthorized(userRoles.access_directory_list) || isAuthorized(userRoles.admin) || isAuthorized(userRoles.subscriber)">
                         <a href="#">DIRECTORY<span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
-                            <li>
+                            <li ng-show="isAuthorized(userRoles.access_directory_list) || isAuthorized(userRoles.admin) || isAuthorized(userRoles.subscriber)">
                                 <a href="#/directory">LIST</a>
                             </li>
-                            <li>
+                            <li ng-show="isAuthorized(userRoles.access_directory_edit) || isAuthorized(userRoles.admin) || isAuthorized(userRoles.subscriber)">
                                 <a href="#/directory/new">CREATE</a>
                             </li>
                         </ul>

@@ -178,6 +178,8 @@ public class UserService {
     }
 
     private AccountInformation getUserInformation(User user, Long buildingId){
+        System.out.println(user.getId());
+        System.out.println(buildingId);
         AccountInformation accountInformation = accountRepository.getLoginUserInformation(user, buildingId);
 
         log.debug("Let's check Account: {}", accountInformation);
@@ -186,6 +188,12 @@ public class UserService {
             user.getAuthorities().add(new Authority("ROLE_SUBSCRIBER"));
             user.getAuthorities().add(new Authority("ROLE_MANAGEMENT"));
         }
+        if(accountInformation != null && accountInformation.getAuthorities().size() > 0 ){
+            for(String authority : accountInformation.getAuthorities()){
+                user.getAuthorities().add(new Authority(authority));
+            }
+        }
+
         return accountInformation;
     }
 

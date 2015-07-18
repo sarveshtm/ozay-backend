@@ -104,7 +104,7 @@ ozayApp
 		templateUrl: "/views/notification_create.html",
 		controller: 'NotificationController',
 		access: {
-			authorizedRoles: [USER_ROLES.admin, USER_ROLES.access_notification, USER_ROLES.subscriber]
+			authorizedRoles: [USER_ROLES.admin, USER_ROLES.access_notification_create, USER_ROLES.subscriber]
 		}
 	})
 	.state('home.notification_archive', {
@@ -112,7 +112,7 @@ ozayApp
 		templateUrl: "/views/notification_archive.html",
 		controller: 'NotificationArchiveController',
 		access: {
-			authorizedRoles: [USER_ROLES.admin, USER_ROLES.access_notification, USER_ROLES.subscriber]
+			authorizedRoles: [USER_ROLES.admin, USER_ROLES.access_notification_archive, USER_ROLES.subscriber]
 		}
 	})
 	.state('home.collaborate_create', {
@@ -188,7 +188,7 @@ ozayApp
 		templateUrl: 'views/directory.html',
 		controller: 'MemberController',
 		access: {
-			authorizedRoles: [USER_ROLES.admin, USER_ROLES.access_directory, USER_ROLES.subscriber]
+			authorizedRoles: [USER_ROLES.admin, USER_ROLES.access_directory_list, USER_ROLES.subscriber]
 		}
 	})
 	.state('home.directory_edit', {
@@ -196,7 +196,7 @@ ozayApp
 		templateUrl: 'views/directory_details.html',
 		controller: 'MemberDetailController',
 		access: {
-			authorizedRoles: [USER_ROLES.admin, USER_ROLES.access_directory , USER_ROLES.subscriber]
+			authorizedRoles: [USER_ROLES.admin, USER_ROLES.access_directory_edit , USER_ROLES.subscriber]
 		}
 	})
 	.state('home.directory_details_new', {
@@ -204,7 +204,7 @@ ozayApp
 		templateUrl: 'views/directory_details.html',
 		controller: 'MemberDetailController',
 		access: {
-			authorizedRoles: [USER_ROLES.subscriber]
+			authorizedRoles: [USER_ROLES.subscriber, USER_ROLES.access_directory_edit , USER_ROLES.subscriber]
 		}
 	})
 	.state('home.password', {
@@ -279,7 +279,7 @@ ozayApp
 		templateUrl: 'views/search.html',
 		controller: 'SearchController',
 		access: {
-			authorizedRoles: [USER_ROLES.admin, USER_ROLES.access_directory]
+			authorizedRoles: [USER_ROLES.admin, USER_ROLES.user]
 		}
 	});
 
