@@ -113,12 +113,13 @@ public class OrganizationUserResource {
             User user = userRepository.findOneByEmail(organizationUser.getEmail()).get();
             if(user !=null){
                 //1) Create New User
-               user = userService.createUserInformation(organizationUser.getEmail().toLowerCase(),
-                   "Initpass",
+               user = userService.createUserInformation(
+                   organizationUser.getEmail().toLowerCase(),
+                   "",
                    organizationUser.getFirstName(),
                    organizationUser.getLastName(),
                    organizationUser.getEmail().toLowerCase(),
-                                                        "en");
+                   "en");
 
                 log.debug("User Detail create success");
                 organizationUser.setUserId(user.getId());

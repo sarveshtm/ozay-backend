@@ -70,7 +70,12 @@ angular.module('ozayApp')
 	}
 
 	$scope.update = function () {
-
+	        if($scope.organizationUser.roles.length ==0){
+				$scope.showErrorAlert = true;
+				$scope.errorTextAlert = "At least one access permission must be selected.";
+				$scope.button = true;
+                return;
+	        }
 			var result = confirm("Would like to invite this user?");
     		if(result){
             $scope.organizationUser.organizationId = $stateParams.organizationId;
@@ -86,7 +91,6 @@ angular.module('ozayApp')
             				});
     		}else{
     				$scope.button = false;
-            		alert("false");
     		}
 
 	}
