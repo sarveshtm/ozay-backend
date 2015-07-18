@@ -1,15 +1,14 @@
 package com.ozay.web.rest.dto;
 
+import com.ozay.model.RolePermission;
+
 import java.util.List;
 
 public class OrganizationUserDTO {
 
-    public static final int PASSWORD_MIN_LENGTH = 5;
-    public static final int PASSWORD_MAX_LENGTH = 100;
+    private Long organizationId;
 
-    private String login;
-
-    private String password;
+    private Long userId;
 
     private String firstName;
 
@@ -17,30 +16,27 @@ public class OrganizationUserDTO {
 
     private String email;
 
-    private String langKey;
-
     private List<String> roles;
 
     public OrganizationUserDTO() {
     }
 
-    public OrganizationUserDTO(String login, String password, String firstName, String lastName, String email, String langKey,
+    public OrganizationUserDTO(Long organizationId, Long userId, String firstName, String lastName, String email, String langKey,
                                List<String> roles) {
-        this.login = login;
-        this.password = password;
+        this.organizationId = organizationId;
+        this.userId=userId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
-        this.langKey = langKey;
         this.roles = roles;
     }
 
-    public String getPassword() {
-        return password;
+    public Long getOrganizationId() {
+        return organizationId;
     }
 
-    public String getLogin() {
-        return login;
+    public Long getUserId() {
+        return userId;
     }
 
     public String getFirstName() {
@@ -55,21 +51,16 @@ public class OrganizationUserDTO {
         return email;
     }
 
-    public String getLangKey() {
-        return langKey;
-    }
-
     public List<String> getRoles() {
         return roles;
     }
 
-    public void setLogin(String login) {
-        this.login = login;
+    public void setOrganizationId(Long organizationId) {
+        this.organizationId = organizationId;
     }
 
-
-    public void setPassword(String password) {
-        this.password = password;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public void setFirstName(String firstName) {
@@ -84,25 +75,18 @@ public class OrganizationUserDTO {
         this.email = email;
     }
 
-    public void setLangKey(String langKey) {
-        this.langKey = langKey;
-    }
-
     public void setRoles(List<String> roles) {
         this.roles = roles;
     }
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("UserDTO{");
-        sb.append("login='").append(login).append('\'');
-        if(password != null) {
-            sb.append(", password='").append(password.length()).append('\'');
-        }
+        final StringBuilder sb = new StringBuilder("OrganizationUserDTO{");
+        sb.append("organizationId='").append(organizationId).append('\'');
+        sb.append(", userId='").append(userId).append('\'');
         sb.append(", firstName='").append(firstName).append('\'');
         sb.append(", lastName='").append(lastName).append('\'');
         sb.append(", email='").append(email).append('\'');
-        sb.append(", langKey='").append(langKey).append('\'');
         sb.append(", roles=").append(roles);
         sb.append('}');
         return sb.toString();

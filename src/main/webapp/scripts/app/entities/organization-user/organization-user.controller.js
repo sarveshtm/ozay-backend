@@ -17,7 +17,7 @@ angular.module('ozayApp')
     if($state.current.name != 'home.group_users_create' && $state.current.name != 'home.group_users_edit'){
         $state.go('error');
     }
-
+    $scope.organizationUser= {};
     $scope.button=true
     $scope.accessList = [];
     $scope.organizationId = $stateParams.organizationId;
@@ -41,17 +41,39 @@ angular.module('ozayApp')
 	if($state.current.name == 'home.group_users_edit'){
         OrganizationUser.get({organizationId:$stateParams.organizationId ,id:$stateParams.userId}).$promise.then(function(result) {
             $scope.organizationUser = result;
+            $scope.organizationUser.organizationId= $stateParams.organizationId
+            $scope.organizationUser.userId= $stateParams.userId
+            $scope.organizationUser.roles = [];
             $scope.edit_text = true;
         }, function(error){
+
             alert("error");
         });
-	} else{
+	} else if($state.current.name == 'home.group_users_create'){
+        $scope.organizationUser.organizationId = $stateParams.organizationId;
+        $scope.organizationUser.roles = [];
+        $scope.organizationUser.userId= 0
 	    $scope.create_text = true;
 	}
 
+	$scope.rolePermissionsClicked = function(value, modelValue){
+            if(modelValue == true){
+                $scope.organizationUser.roles.push(value);
+            } else {
+                for(var i = 0; i< $scope.permissions.length; i++){
+                    if(value == $scope.permissions[i].name){
+                        $scope.permissions.splice(i, 1);
+                    }
+                }
+            console.log($scope.role.rolePermissions);
+            }
+	}
+
 	$scope.update = function () {
+
 			var result = confirm("Would like to invite this user?");
     		if(result){
+            $scope.organizationUser.organizationId = $stateParams.organizationId;
     		OrganizationUser.save($scope.organizationUser,
             				function (data) {
             					$scope.showSuccessAlert = true;
