@@ -90,7 +90,7 @@ public class OrganizationUserResource {
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public ResponseEntity<User> getOrganizationUser(@PathVariable Long organizationId, @PathVariable Long id) {
+    public ResponseEntity<OrganizationUserDTO> getOrganizationUser(@PathVariable Long organizationId, @PathVariable Long id) {
         log.debug("REST request to get Organization User : Organization ID {}, User ID {} ", organizationId, id);
         return Optional.ofNullable(organizationUserRepository.findOrganizationUser(organizationId, id)).
             map(user -> new ResponseEntity<>(user, HttpStatus.OK))
@@ -109,18 +109,18 @@ public class OrganizationUserResource {
                                                    HttpServletResponse response) {
         log.debug("REST request to add user to an organization, {}", organizationUser.getEmail());
 
-        if(organizationUser.getUserId() == 0){
+        if(organizationUser.getUserId() == 0) {
             //*** Add User Button ***
-            User user = userRepository.findOneByEmail(organizationUser.getEmail()).get();
-            if(user !=null){
+            User user = userRepository.findByOneByLoginOrEmail(organizationUser.getEmail());
+            if (user == null) {
                 //1) Create New User
-               user = userService.createUserInformation(
-                   organizationUser.getEmail().toLowerCase(),
-                   "",
-                   organizationUser.getFirstName(),
-                   organizationUser.getLastName(),
-                   organizationUser.getEmail().toLowerCase(),
-                   "en");
+                user = userService.createUserInformation(
+                    organizationUser.getEmail().toLowerCase(),
+                    "",
+                    organizationUser.getFirstName(),
+                    organizationUser.getLastName(),
+                    organizationUser.getEmail().toLowerCase(),
+                    "en");
 
                 log.debug("User Detail create success");
                 organizationUser.setUserId(user.getId());
@@ -128,10 +128,12 @@ public class OrganizationUserResource {
                 String content = createHtmlContentFromTemplate(user, locale, request, response);
                 mailService.sendActivationEmail(user.getEmail(), content, locale);
 
+            } else{
+                organizationUser.setUserId(user.getId());
             }
             //2) Add to Organization
-            organizationUserRepository.create(organizationUser.getOrganizationId(),
-                organizationUser.getUserId());
+            organizationUserRepository.create(organizationUser.getUserId(),
+                organizationUser.getOrganizationId());
         }
         //3) Organization Role Update
        organizationService.updateOrganizationPermission(organizationUser);

@@ -19,6 +19,7 @@ angular.module('ozayApp')
     }
     $scope.organizationUser= {};
     $scope.button=true
+    $scope.access = [];
     $scope.accessList = [];
     $scope.organizationId = $stateParams.organizationId;
 
@@ -41,9 +42,10 @@ angular.module('ozayApp')
 	if($state.current.name == 'home.group_users_edit'){
         OrganizationUser.get({organizationId:$stateParams.organizationId ,id:$stateParams.userId}).$promise.then(function(result) {
             $scope.organizationUser = result;
-            $scope.organizationUser.organizationId= $stateParams.organizationId
-            $scope.organizationUser.userId= $stateParams.userId
-            $scope.organizationUser.roles = [];
+            for(var i = 0; i< $scope.organizationUser.roles.length; i++){
+                var index = $scope.organizationUser.roles[i];
+                $scope.access[index]=true;
+            }
             $scope.edit_text = true;
         }, function(error){
 
@@ -82,6 +84,7 @@ angular.module('ozayApp')
             				function (data) {
             					$scope.showSuccessAlert = true;
             					$scope.successTextAlert = "successfully done";
+            					$scope.button = false;
             					//$scope.successTextAlert = data.response;
             				}, function (error){
             					$scope.showErrorAlert = true;
