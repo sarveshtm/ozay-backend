@@ -406,9 +406,16 @@ input, select{
   max-width: 300px;
 
 }
+
+.flex {
+    display: flex;
+    height: 100%;
+
+    align-items: center;
+    justify-content: center;
+}
+
 #login_wrapper{
-    overflow:auto;
-    padding-top:10%;
     background-color:#FFC600;
     height:100%;
     width:100%;
