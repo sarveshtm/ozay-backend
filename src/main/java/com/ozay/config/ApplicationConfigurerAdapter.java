@@ -15,7 +15,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.config.annotation.*;
 import org.springframework.context.EnvironmentAware;
-
+import javax.inject.Inject;
 import javax.sql.DataSource;
 import java.util.Arrays;
 
@@ -29,11 +29,14 @@ public class ApplicationConfigurerAdapter extends WebMvcConfigurerAdapter implem
 
     private Environment env;
 
+    @Inject
+    private DataSource datasource;
+
     @Override
     public void addInterceptors(final InterceptorRegistry registry)  {
 
         RequestInterceptor requestInterceptor = new RequestInterceptor();
-        requestInterceptor.set(this.getDataSource());
+        requestInterceptor.set(datasource);
         registry.addInterceptor(requestInterceptor)
             .addPathPatterns("/**")
             .excludePathPatterns("/")
@@ -49,21 +52,5 @@ public class ApplicationConfigurerAdapter extends WebMvcConfigurerAdapter implem
         this.propertyResolver = new RelaxedPropertyResolver(env, "spring.datasource.");
     }
 
-    public DataSource getDataSource() {
-        if (propertyResolver.getProperty("url") == null && propertyResolver.getProperty("databaseName") == null) {
-            throw new ApplicationContextException("Database connection pool is not configured correctly");
-        }
-        HikariConfig config = new HikariConfig();
-        config.setDataSourceClassName(propertyResolver.getProperty("dataSourceClassName"));
-        if(StringUtils.isEmpty(propertyResolver.getProperty("url"))) {
-            config.addDataSourceProperty("databaseName", propertyResolver.getProperty("databaseName"));
-            config.addDataSourceProperty("serverName", propertyResolver.getProperty("serverName"));
-        } else {
-            config.addDataSourceProperty("url", propertyResolver.getProperty("url"));
-        }
-        config.addDataSourceProperty("user", propertyResolver.getProperty("username"));
-        config.addDataSourceProperty("password", propertyResolver.getProperty("password"));
-
-        return new HikariDataSource(config);
-    }
+ 
 }
