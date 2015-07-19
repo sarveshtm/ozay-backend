@@ -21,10 +21,11 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr ng-repeat="organizationUser in organizationUsers | orderBy:predicate:reverse">
-                        <td></td>
-                        <td><a href="#/management/group/{{organizationId}}/users/edit/{{organizationUser.id}}">{{organizationUser.name}}</a></td>
-                        <td>&nbsp;</td>
+                    <tr ng-repeat="organizationUser in organizationUsers">
+                        <td>{{organizationUser.id}}</td>
+                        <td>{{organizationUser.firstName}}</td>
+                        <td>{{organizationUser.lastName}}</td>
+                        <td><a href="#management/group/{{organizationId}}/users/edit/{{organizationUser.id}}">Edit</a></td>
                     </tr>
                     </tbody>
                 </table>

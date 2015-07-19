@@ -1,5 +1,7 @@
 package com.ozay.model;
 
+import java.util.Set;
+
 /**
  * Created by naofumiezaki on 6/11/15.
  */
@@ -7,6 +9,7 @@ public class AccountInformation {
     private Long subscriberId;
     private Long subscriptionId;
     private Long organizationId;
+    private Set<String> authorities;
 
     public Long getSubscriptionId() {
         return subscriptionId;
@@ -30,6 +33,14 @@ public class AccountInformation {
 
     public void setOrganizationId(Long organizationId) {
         this.organizationId = organizationId;
+    }
+
+    public Set<String> getAuthorities() {
+        return authorities;
+    }
+
+    public void setAuthorities(Set<String> authorities) {
+        this.authorities = authorities;
     }
 
     @Override

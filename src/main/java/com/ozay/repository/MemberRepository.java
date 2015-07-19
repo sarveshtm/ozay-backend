@@ -3,6 +3,7 @@ package com.ozay.repository;
 import com.ozay.model.Member;
 import com.ozay.resultsetextractor.MemberResultSetExtractor;
 import com.ozay.rowmapper.MemberRowMapper;
+import com.ozay.rowmapper.NotificationMapper;
 import com.ozay.web.rest.dto.NotificationDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -104,28 +105,39 @@ public class MemberRepository {
 //            });
 //    }
 
-
-
     public Member getUserByBuilding(String login, int buildingId){
         return (Member)jdbcTemplate.queryForObject("Select * FROM member WHERE building_id = ? AND login = ?",
             new Object[]{buildingId, login}, new MemberRowMapper(){
             });
     }
 
-    public List<Member> searchUsers(int buildingId, String item){
-        String likeItem = "%" + item.toLowerCase() + "%";
-        return jdbcTemplate.query("Select * FROM member " +
-                "WHERE building_id =? AND " +
-                "(LOWER(first_name) LIKE ? " +
-                "OR LOWER(last_name) LIKE ? " +
-                "OR LOWER(phone) LIKE ? " +
-                "OR LOWER(email) LIKE ? " +
-                "OR LOWER(unit) LIKE ? " +
-                "OR LOWER(parking) LIKE ?)",
+    public List<Member> searchUsers(int buildingId, String[] items){
+        String query ="Select * FROM member WHERE building_id =:buildingId ";
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("buildingId", buildingId);
 
-            new Object[]{buildingId, item, likeItem, likeItem, likeItem, likeItem, likeItem}, new MemberRowMapper(){
+        String queryForList = "";
+        for(int i = 0; i< items.length;i++){
+            String param = "param" + i;
+            params.addValue(param, items[i]);
+            if(i != 0){
+                queryForList += " OR ";
+            }
+            queryForList += " LOWER(first_name) LIKE :" + param +
+                " OR LOWER(last_name) LIKE :" + param +
+                " OR LOWER(phone) LIKE :" + param +
+                " OR LOWER(email) LIKE :" + param +
+                " OR LOWER(unit) LIKE :" + param +
+                " OR LOWER(parking) LIKE :" + param;
+        }
+        if(items.length > 0){
+            query += " AND (";
+            query += queryForList;
+            query += ")";
+        }
 
-            });
+
+        return namedParameterJdbcTemplate.query(query, params, new MemberRowMapper());
     }
 
     public Long create(Member member){
