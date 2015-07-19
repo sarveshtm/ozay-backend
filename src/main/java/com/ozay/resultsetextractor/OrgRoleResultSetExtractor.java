@@ -33,7 +33,7 @@ public class OrgRoleResultSetExtractor implements ResultSetExtractor {
             }
             roleList.add(rs.getString("org_permission"));
         }
-        user.setRoles(roleList);
+        if (roleList.size() > 0) user.setRoles(roleList);
         list.add(user);
         return list;
     }

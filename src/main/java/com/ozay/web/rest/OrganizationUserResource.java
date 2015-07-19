@@ -92,7 +92,7 @@ public class OrganizationUserResource {
     @Timed
     public ResponseEntity<OrganizationUserDTO> getOrganizationUser(@PathVariable Long organizationId, @PathVariable Long id) {
         log.debug("REST request to get Organization User : Organization ID {}, User ID {} ", organizationId, id);
-        return Optional.ofNullable(organizationUserRepository.findOrganizationUser(organizationId, id)).
+        return Optional.ofNullable(organizationUserRepository.findOrganizationUser(id,organizationId)).
             map(user -> new ResponseEntity<>(user, HttpStatus.OK))
             .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
 
@@ -132,8 +132,13 @@ public class OrganizationUserResource {
                 organizationUser.setUserId(user.getId());
             }
             //2) Add to Organization
-            organizationUserRepository.create(organizationUser.getUserId(),
-                organizationUser.getOrganizationId());
+            if (organizationUserRepository.findOrganizationUser(organizationUser.getUserId(),
+                organizationUser.getOrganizationId())==null){
+
+                organizationUserRepository.create(organizationUser.getUserId(),
+                    organizationUser.getOrganizationId());
+            }
+
         }
         //3) Organization Role Update
        organizationService.updateOrganizationPermission(organizationUser);
