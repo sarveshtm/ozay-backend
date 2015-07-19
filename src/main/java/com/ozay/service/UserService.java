@@ -87,6 +87,9 @@ public class UserService {
         User newUser = new User();
         Authority authority = authorityRepository.findOne("ROLE_USER");
         Set<Authority> authorities = new HashSet<>();
+        String act_Key = RandomUtil.generateActivationKey();
+        //Set password
+        if (password.equals("")) password = act_Key + "Ozay";
         String encryptedPassword = passwordEncoder.encode(password);
         User currentLoginUser = userRepository.findOneByLogin(SecurityUtils.getCurrentLogin()).get();
         newUser.setLogin(login);
@@ -102,7 +105,7 @@ public class UserService {
         // new user is not active
         newUser.setActivated(false);
         // new user gets registration key
-        newUser.setActivationKey(RandomUtil.generateActivationKey());
+        newUser.setActivationKey(act_Key);
         authorities.add(authority);
         newUser.setAuthorities(authorities);
 
