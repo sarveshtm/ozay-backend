@@ -62,8 +62,8 @@ angular.module('ozayApp')
             if(modelValue == true){
                 $scope.organizationUser.roles.push(value);
             } else {
-                for(var i = 0; i< $scope.permissions.length; i++){
-                    if(value == $scope.permissions[i].name){
+                for(var i = 0; i< $scope.organizationUser.roles.length; i++){
+                    if(value == $scope.organizationUser.roles[i]){
                         $scope.organizationUser.roles.splice(i, 1);
                     }
                 }
@@ -71,12 +71,16 @@ angular.module('ozayApp')
 	}
 
 	$scope.update = function () {
-	        if($scope.organizationUser.roles.length ==0){
+            $scope.showErrorAlert = false;
+            $scope.errorTextAlert = "";
+
+	        if($scope.organizationUser.roles.length == 0){
 				$scope.showErrorAlert = true;
 				$scope.errorTextAlert = "At least one access permission must be selected.";
 				$scope.button = true;
                 return;
 	        }
+
 			var result = confirm("Would like to invite this user?");
     		if(result){
             $scope.organizationUser.organizationId = $stateParams.organizationId;
@@ -92,7 +96,7 @@ angular.module('ozayApp')
             					$scope.button = true;
             				});
     		}else{
-    				$scope.button = false;
+    				$scope.button = true;
     		}
 
 	}
