@@ -36,6 +36,8 @@ angular.module('ozayApp')
 	// Get people in the building
 	$scope.getAll = function (method, id) {
 		Member.get({method:method, id: id}, function(result) {
+		    result = $filter('orderBy')(result, 'unit');
+		    console.log(result);
             $scope.individualList = [];
             $scope.returnedMemberList = result;
             angular.forEach(result, function(value, key) {
@@ -228,6 +230,20 @@ angular.module('ozayApp')
 		$scope.startProcess();
 	};
 
+	$scope.notifications = [];
+
+	$scope.loadAll = function() {
+    		var method= 'building';
+    		Notification.get({method:method, id:$rootScope.selectedBuilding}, function(result) {
+    			$scope.notifications = result;
+    		});
+    	};
+    	$rootScope.$watch('selectedBuilding', function() {
+    		if($rootScope.selectedBuilding !== undefined){
+    			$scope.loadAll();
+    		}
+    	});
+
 
 
 	$scope.clear = function () {
@@ -241,8 +257,11 @@ angular.module('ozayApp')
 	$scope.selectedUsers = [];
 
 
-}).controller('NotificationArchiveController', function ($scope, $filter, $rootScope, $cookieStore, Notification, Member) {
+}).controller('NotificationArchiveController', function ($scope, $filter, $rootScope, $cookieStore, Notification, Member, $sce) {
 
+    $scope.trustAsHtml = function(html){
+        return $sce.trustAsHtml(html);
+    }
 	$scope.predicate = '-createdDate';
 	$scope.notifications = [];
 	$scope.loadAll = function() {

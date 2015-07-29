@@ -3,8 +3,8 @@
 /* App Module */
 var httpHeaders;
 
-var ozayApp = angular.module('ozayApp', ['http-auth-interceptor', 'tmh.dynamicLocale',
-                                         'ngResource', 'ngRoute', 'ngCookies', 'ozayAppUtils', 'pascalprecht.translate', 'truncate', 'ui.router', 'angularjs-dropdown-multiselect', 'naturalSort','textAngular']);
+var ozayApp = angular.module('ozayApp', ['http-auth-interceptor', 'tmh.dynamicLocale', 'ngSanitize',
+                                         'ngResource', 'ngRoute', 'ngCookies', 'ozayAppUtils', 'pascalprecht.translate', 'truncate', 'ui.router', 'angularjs-dropdown-multiselect', 'naturalSort','textAngular', 'ui.select']);
 
 ozayApp
 .config(function ($routeProvider, $httpProvider, $translateProvider, tmhDynamicLocaleProvider, $stateProvider, $urlRouterProvider, USER_ROLES) {
@@ -328,6 +328,9 @@ ozayApp
 			return $q.reject(response);
 		}
 	};
+})
+.config(function(uiSelectConfig) {
+  uiSelectConfig.theme = 'select2';
 })
 .run(function($rootScope, $cookieStore, $location, $http, $window, AuthenticationSharedService, Session, USER_ROLES, $state, Building) {
 

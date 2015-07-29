@@ -21,7 +21,7 @@
                         <td></td>
                         <td>{{notification.createdDate | date: "MM/dd/yyyy"}}</td>
                         <td>{{notification.subject}}</td>
-                        <td>{{notification.notice}}</td>
+                        <td ng-bind-html="trustAsHtml(notification.notice)">a</td>
                     </tr>
 
                     </tbody>
