@@ -19,6 +19,7 @@ public class AccountResultSetExtractor implements ResultSetExtractor {
         Set<String>authorities = new HashSet<String>();
         while(rs.next()){
             if(accountInformation == null){
+
                 accountInformation = new AccountInformation();
                 accountInformation.setSubscriberId(rs.getLong("s_user_id"));
                 accountInformation.setOrganizationId(rs.getLong("organization_id"));
@@ -27,9 +28,10 @@ public class AccountResultSetExtractor implements ResultSetExtractor {
             authorities.add(rs.getString("name"));
 
         }
+
         if(accountInformation != null){
-            System.out.println(123);
-            if(authorities.size() >0){
+
+            if(authorities.size() > 0){
                 accountInformation.setAuthorities(authorities);
             }
             list.add(accountInformation);

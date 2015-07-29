@@ -193,7 +193,9 @@ public class UserService {
         }
         if(accountInformation != null && accountInformation.getAuthorities().size() > 0 ){
             for(String authority : accountInformation.getAuthorities()){
-                user.getAuthorities().add(new Authority(authority));
+                if(authority != null && authority.equals("")){
+                    user.getAuthorities().add(new Authority(authority));
+                }
             }
         }
 

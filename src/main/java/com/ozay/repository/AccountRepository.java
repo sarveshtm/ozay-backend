@@ -35,7 +35,7 @@ public class AccountRepository {
             "LEFT JOIN member m ON  u.id =  m.user_id " +
             "LEFT JOIN role_member rm ON rm.member_id = m.id " +
             "LEFT JOIN role_permission rp ON rp.role_id = rm.role_id " +
-            "WHERE u.id = :id AND rp.role_id is not null ";
+            "WHERE u.id = :id AND ((rp.role_id is not null ";
 
         MapSqlParameterSource params = new MapSqlParameterSource();
 
@@ -45,6 +45,8 @@ public class AccountRepository {
             query += "AND m.building_id = :buildingId";
             params.addValue("buildingId", buildingId);
         }
+
+        query += ") OR o.id is not null)";
 
 
         List<AccountInformation> accountInformations = (List<AccountInformation>)namedParameterJdbcTemplate.query(query, params, new AccountResultSetExtractor());
