@@ -348,6 +348,11 @@ body, html{
 .dataTable {
   width: 100%;
 }
+
+.dataTable th, .dataTable td{
+    vertical-align:top;
+}
+
 .dataTable th:first-child {
   min-width: 20px;
   background-color: #E4E5E0;
