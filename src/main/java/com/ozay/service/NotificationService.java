@@ -61,7 +61,8 @@ public class NotificationService {
         String buildingName = buildingRepository.getBuilding(notification.getBuildingId()).getName();
         String subject = buildingName + " Notice : " + notificationDto.getSubject();
 
-        notification.setSubject(notificationDto.getSubject());
+    /*    notification.setSubject(notificationDto.getSubject()); */
+        notification.setSubject(subject);
 
         List<Member>members = memberRepository.getUserEmailsForNotification(notificationDto);
         log.debug("Notification : size of user details {}", members.size());
