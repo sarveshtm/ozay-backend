@@ -44,13 +44,15 @@
                         <input ng-model="notification.buildingId" type="hidden" value="{{building_id}}">
                         <input ng-model="notification.subject" placeholder="[Type subject here]" class="form-control">
                     </div>
+
+
                 </div>
                 <div class="clear mb-25"></div>
                 <div class="form-group">
                     <label class="control-label col-xs-12 col-sm-3 col-lg-3">Message</label>
                     <div class=" col-xs-12 col-sm-9 col-lg-9">
-                        <div ng-model="notification.notice"></div>
-                        <textarea ng-model="notification.notice" placeholder="[Type text here]" class="form-control" rows="5" ng-required="true"></textarea>
+                        <div text-angular ng-model="notification.notice" ta-toolbar="[['bold', 'italics', 'underline','ul', 'ol']]"></div>
+
                     </div>
                 </div>
                 <div class="clear mb-25"></div>
