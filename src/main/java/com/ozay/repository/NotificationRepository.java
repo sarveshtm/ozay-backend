@@ -43,9 +43,9 @@ public class NotificationRepository{
             "WHERE building_id=:buildingId " +
             "GROUP BY subject " +
             "ORDER BY MAX(id) " +
+            "LIMIT :limit " +
             ") " +
-            "ORDER BY created_date DESC "+
-            "LIMIT :limit";
+            "ORDER BY created_date DESC";
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("buildingId", buildingId);
         params.addValue("limit", limit);
