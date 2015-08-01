@@ -24,11 +24,14 @@
                         <th>&nbsp;</th>
                         <th><a href="" ng-click="predicate = 'lastName'; reverse=!reverse">Name</a></th>
                         <th><a href="" ng-click="predicate = 'unit'; reverse=!reverse">Unit</a></th>
+                        <!--
                         <th><a href="" ng-click="predicate = 'parking'; reverse=!reverse">Parking</a></th>
                         <th><a href="" ng-click="predicate = 'ownership'; reverse=!reverse">Ownership</a></th>
                         <th><a href="" ng-click="predicate = 'renter'; reverse=!reverse">Renter</a></th>
-                        <th><a href="" ng-click="predicate = 'phone'; reverse=!reverse">Phone</a></th>
+                        -->
+
                         <th><a href="" ng-click="predicate = 'email'; reverse=!reverse">Email</a></th>
+                        <th><a href="" ng-click="predicate = 'phone'; reverse=!reverse">Phone</a></th>
                         <th ng-show="checkboxModel.deleteBtn">DELETE</th>
                     </tr>
                     </thead>
@@ -39,11 +42,14 @@
                         <td><span ng-if="$first"></span></td>
                         <td><a href="#/directory/edit/{{member.id}}">{{member.firstName}} {{member.lastName}}</a></td>
                         <td>{{member.unit}}</td>
+                        <!--
                         <td>{{member.parking}}</td>
                         <td>{{member.ownership}}</td>
                         <td><span ng-if="isResident(member.renter)">Yes</span><span ng-if="!isResident(member.renter)">No</span></td>
-                        <td>{{member.phone}}</td>
+                        -->
+
                         <td>{{member.email}}</td>
+                        <td>{{member.phone}}</td>
                         <td ng-show="checkboxModel.deleteBtn"><input ng-model="member.deleted" type="checkbox"></td>
                     </tr>
                     </tbody>
