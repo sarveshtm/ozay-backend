@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('ozayApp')
-.controller('NotificationController', function ($scope, $filter, $rootScope, $cookieStore, Notification, Member, Role) {
+.controller('NotificationController', function ($http, $scope, $filter, $rootScope, $cookieStore, Notification, Member, Role) {
         // initial settings
         $scope.button = true;
         $scope.showSuccessAlert = false;
@@ -255,6 +255,23 @@ angular.module('ozayApp')
 	$scope.notification.issueDate = new Date();
 	$scope.minDate = new Date();
 	$scope.selectedUsers = [];
+
+
+	$scope.selected = undefined;
+    $scope.states = ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Dakota', 'North Carolina', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'];
+
+    $scope.getLocation = function(val) {
+    console.log(val);
+    var items = []
+
+        Notification.query({method:'search', id:val, method2:'building', id2:$rootScope.selectedBuilding},function(result) {
+
+               for(var i=0;i<result.length;i++){
+                    items.push(result[i].subject);
+               }
+               return items;
+            });
+      };
 
 
 }).controller('NotificationArchiveController', function ($scope, $filter, $rootScope, $cookieStore, Notification, Member, $sce) {

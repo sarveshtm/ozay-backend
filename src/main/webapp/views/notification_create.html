@@ -37,12 +37,27 @@
                         </div>
                     </div>
                 </div>
+
+                <div>
+                    <div class="clear mb-25"></div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-3">List</label>
+                        <div class="col-sm-9">
+                            <input type="text" ng-model="asyncSelected" placeholder="Locations loaded via $http" typeahead="address for address in getLocation($viewValue)" typeahead-loading="loadingLocations" class="form-control">
+                        </div>
+                    </div>
+                </div>
+
+
+
                 <div class="clear mb-25"></div>
+
+
                 <div class="form-group">
                     <label class="control-label col-sm-3">Subject</label>
                     <div class="col-sm-9">
                         <input ng-model="notification.buildingId" type="hidden" value="{{building_id}}">
-                        <input ng-model="notification.subject" placeholder="[Type subject here]" class="form-control">
+                        <input type="text" ng-model="notification.subject" placeholder="[Type subject here]" typeahead="state for state in states | filter:$viewValue | limitTo:8" class="form-control">
                     </div>
 
 

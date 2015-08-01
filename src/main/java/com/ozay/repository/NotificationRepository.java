@@ -35,6 +35,15 @@ public class NotificationRepository{
         return (Notification)namedParameterJdbcTemplate.queryForObject(query, params, new NotificationMapper());
     }
 
+    public List<Notification> searchNotificationBySubject(String search, Long buildingId){
+        String query = "SELECT * FROM notification where building_id = :buildingId AND subject = :subject";
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("buildingId", buildingId);
+        params.addValue("subject", search);
+
+        return namedParameterJdbcTemplate.query(query, params, new NotificationMapper());
+    };
+
 
     public List<Notification> searchNotification(int buildingId, String[] items){
         String query = "SELECT * FROM notification where building_id = :buildingId ";
@@ -56,9 +65,6 @@ public class NotificationRepository{
             query += queryForList;
             query += ")";
         }
-
-
-
         return namedParameterJdbcTemplate.query(query, params, new NotificationMapper());
     };
 
