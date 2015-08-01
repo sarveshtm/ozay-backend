@@ -183,7 +183,13 @@ public class UserService {
     private AccountInformation getUserInformation(User user, Long buildingId){
         System.out.println(user.getId());
         System.out.println(buildingId);
-        AccountInformation accountInformation = accountRepository.getLoginUserInformation(user, buildingId);
+        AccountInformation accountInformation = null;
+        if(buildingId == null){
+            accountInformation = accountRepository.getLoginUserInformation(user);
+        } else {
+            accountInformation = accountRepository.getLoginUserInformation(user, buildingId);
+        }
+
 
         log.debug("Let's check Account: {}", accountInformation);
         if(accountInformation != null && user.getId() == accountInformation.getSubscriberId()){
