@@ -35,6 +35,24 @@ public class NotificationRepository{
         return (Notification)namedParameterJdbcTemplate.queryForObject(query, params, new NotificationMapper());
     }
 
+    public List<Notification> searchNotificationWithLimit(Long buildingId, Long limit){
+
+        String query = "SELECT * from notification WHERE id in(" +
+            "SELECT MAX(id) " +
+            "from notification " +
+            "WHERE building_id=:buildingId " +
+            "GROUP BY subject " +
+            "ORDER BY MAX(id) " +
+            "LIMIT :limit " +
+            ") " +
+            "ORDER BY created_date DESC";
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("buildingId", buildingId);
+        params.addValue("limit", limit);
+
+        return namedParameterJdbcTemplate.query(query, params, new NotificationMapper());
+    };
+
 
     public List<Notification> searchNotification(int buildingId, String[] items){
         String query = "SELECT * FROM notification where building_id = :buildingId ";
@@ -56,9 +74,6 @@ public class NotificationRepository{
             query += queryForList;
             query += ")";
         }
-
-
-
         return namedParameterJdbcTemplate.query(query, params, new NotificationMapper());
     };
 

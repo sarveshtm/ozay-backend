@@ -1,5 +1,6 @@
 package com.ozay.model;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -9,7 +10,7 @@ public class AccountInformation {
     private Long subscriberId;
     private Long subscriptionId;
     private Long organizationId;
-    private Set<String> authorities;
+    private List<String> authorities;
 
     public Long getSubscriptionId() {
         return subscriptionId;
@@ -35,11 +36,11 @@ public class AccountInformation {
         this.organizationId = organizationId;
     }
 
-    public Set<String> getAuthorities() {
+    public List<String> getAuthorities() {
         return authorities;
     }
 
-    public void setAuthorities(Set<String> authorities) {
+    public void setAuthorities(List<String> authorities) {
         this.authorities = authorities;
     }
 

@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('ozayApp')
-.controller('NotificationController', function ($scope, $filter, $rootScope, $cookieStore, Notification, Member, Role) {
+.controller('NotificationController', function ($http, $scope, $filter, $rootScope, $cookieStore, Notification, Member, Role) {
         // initial settings
         $scope.button = true;
         $scope.showSuccessAlert = false;
@@ -255,6 +255,35 @@ angular.module('ozayApp')
 	$scope.notification.issueDate = new Date();
 	$scope.minDate = new Date();
 	$scope.selectedUsers = [];
+
+
+	$scope.selected = undefined;
+
+	$scope.onSelect = function(item){
+	    $scope.notification.notice = item.notice;
+
+	}
+    $scope.getSubjects = function() {
+
+        Notification.query({method:'building', id:$rootScope.selectedBuilding, method2:'limit', id2:10},function(result) {
+        var items = [];
+               for(var i=0;i<result.length;i++){
+                    items.push(result[i].subject);
+               }
+               console.log(items);
+               $scope.subjects =  result;
+            });
+      };
+
+      if($rootScope.selectedBuilding !== undefined){
+        $scope.getSubjects();
+      }
+      $rootScope.$watch('selectedBuilding', function() {
+      		if($rootScope.selectedBuilding !== undefined){
+      			$scope.getSubjects();
+      		}
+      	});
+
 
 
 }).controller('NotificationArchiveController', function ($scope, $filter, $rootScope, $cookieStore, Notification, Member, $sce) {

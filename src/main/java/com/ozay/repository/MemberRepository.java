@@ -66,7 +66,7 @@ public class MemberRepository {
     }
 
     public Integer countActiveUnits(int buildingId){
-        return jdbcTemplate.queryForObject("SELECT COUNT(DISTINCT unit) FROM member WHERE building_id = ?", Integer.class, new Object[]{buildingId});
+        return jdbcTemplate.queryForObject("SELECT COUNT(DISTINCT unit) FROM member WHERE building_id = ? and deleted = false", Integer.class, new Object[]{buildingId});
     }
 
     public List<Member> getUserByBuildingEmailUnit(int buildingId, String email, String unit){
@@ -150,11 +150,10 @@ public class MemberRepository {
             "phone," +
             "building_id, " +
             "ownership, " +
-            "renter, " +
             "unit, " +
             "expiration_date, " +
             "parking)" +
-            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING id";
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING id";
         Object[] params = new Object[] { member.getLogin(),
             member.getUserId(),
             member.getFirstName(),
@@ -163,7 +162,6 @@ public class MemberRepository {
             member.getPhone(),
             member.getBuildingId(),
             member.getOwnership(),
-            member.isRenter(),
             member.getUnit(),
             member.getExpirationDate(),
             member.getParking()};
@@ -179,7 +177,6 @@ public class MemberRepository {
             "email = ?, " +
             "phone = ?, " +
             "ownership = ?, " +
-            "renter = ?, " +
             "unit = ?, " +
             "expiration_date = ?, " +
             "parking = ?, " +
@@ -194,7 +191,6 @@ public class MemberRepository {
             member.getEmail(),
             member.getPhone(),
             member.getOwnership(),
-            member.isRenter(),
             member.getUnit(),
             member.getExpirationDate(),
             member.getParking(),

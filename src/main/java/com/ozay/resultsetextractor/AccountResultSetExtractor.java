@@ -15,6 +15,8 @@ public class AccountResultSetExtractor implements ResultSetExtractor {
 
     public Object extractData(ResultSet rs) throws SQLException{
         List<AccountInformation> list = new ArrayList<AccountInformation>();
+        Map<String, String> map = new HashMap<String, String>();
+
         AccountInformation accountInformation = null;
         Set<String>authorities = new HashSet<String>();
         while(rs.next()){
@@ -25,14 +27,16 @@ public class AccountResultSetExtractor implements ResultSetExtractor {
                 accountInformation.setOrganizationId(rs.getLong("organization_id"));
                 accountInformation.setSubscriptionId(rs.getLong("s_id"));
             }
-            authorities.add(rs.getString("name"));
+            map.put(rs.getString("name"), rs.getString("name"));
+
 
         }
 
         if(accountInformation != null){
 
-            if(authorities.size() > 0){
-                accountInformation.setAuthorities(authorities);
+            if(map.size() > 0){
+
+                accountInformation.setAuthorities( new ArrayList<String>(map.values()));
             }
             list.add(accountInformation);
         }

@@ -92,6 +92,18 @@ public class NotificationResource {
     /**
      * GET  /notifications -> get all the notifications.
      */
+    @RequestMapping(value = "/notifications/building/{buildingId}/limit/{limit}",
+        method = RequestMethod.GET,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    public List<Notification> getAllSearchResultsByBuilding(@PathVariable Long buildingId, @PathVariable Long limit) {
+        log.debug("REST request to get all Notifications results by serach and Building");
+        return notificationRepository.searchNotificationWithLimit(buildingId, limit);
+    }
+
+    /**
+     * GET  /notifications -> get all the notifications.
+     */
     @RequestMapping(value = "/notifications/building/{buildingId}",
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE)

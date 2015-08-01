@@ -191,7 +191,7 @@ public class UserService {
             user.getAuthorities().add(new Authority("ROLE_SUBSCRIBER"));
             user.getAuthorities().add(new Authority("ROLE_MANAGEMENT"));
         }
-        if(accountInformation != null && accountInformation.getAuthorities().size() > 0 ){
+        if(accountInformation != null && accountInformation.getAuthorities() != null && accountInformation.getAuthorities().size() > 0 ){
             for(String authority : accountInformation.getAuthorities()){
                 if(authority != null){
                     user.getAuthorities().add(new Authority(authority));
