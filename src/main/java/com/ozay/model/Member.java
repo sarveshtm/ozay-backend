@@ -20,7 +20,6 @@ public class Member {
     private Integer buildingId;
     private Long userId;
     private Double ownership;
-    private boolean renter;
     private String parking;
     private String unit;
     private DateTime expirationDate;
@@ -53,13 +52,6 @@ public class Member {
         this.ownership = ownership;
     }
 
-    public boolean isRenter() {
-        return renter;
-    }
-
-    public void setRenter(boolean renter) {
-        this.renter = renter;
-    }
 
     public String getParking() {
         return parking;

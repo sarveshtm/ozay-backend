@@ -11,13 +11,13 @@ import java.util.List;
 
 
 @Repository
-public class OrganizationAccessRepository {
+public class OrganizationPermissionRepository {
 
     @Inject
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     public void deleteALL(OrganizationPermission organizationPermission){
-        String query="DELETE FROM organization_access WHERE user_id=:userId AND organization_id =:organizationId";
+        String query="DELETE FROM organization_permission WHERE user_id=:userId AND organization_id =:organizationId";
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("userId", organizationPermission.getUserId());
         params.addValue("organizationId", organizationPermission.getOrganizationId());
@@ -25,7 +25,7 @@ public class OrganizationAccessRepository {
     }
 
     public void create(OrganizationPermission organizationPermission){
-        String query="INSERT INTO organization_access (user_id, organization_id, name) VALUES(:userId,:organizationId, :name)";
+        String query="INSERT INTO organization_permission (user_id, organization_id, name) VALUES(:userId,:organizationId, :name)";
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("userId", organizationPermission.getUserId());
         params.addValue("organizationId", organizationPermission.getOrganizationId());
@@ -34,7 +34,7 @@ public class OrganizationAccessRepository {
     }
 
     public void update(OrganizationPermission organizationPermission){
-        String query="UPDATE organization_access SET user_id=:userId,organization_id =:organizationId, name=:name";
+        String query="UPDATE organization_permission SET user_id=:userId,organization_id =:organizationId, name=:name";
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("userId", organizationPermission.getUserId());
         params.addValue("organizationId", organizationPermission.getOrganizationId());
@@ -43,7 +43,7 @@ public class OrganizationAccessRepository {
     }
 
     public void delete(OrganizationPermission organizationPermission){
-        String query="DELETE FROM organization_access WHERE user_id=:userId AND organization_id =:organizationId AND name=:name";
+        String query="DELETE FROM organization_permission WHERE user_id=:userId AND organization_id =:organizationId AND name=:name";
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("userId", organizationPermission.getUserId());
         params.addValue("organizationId", organizationPermission.getOrganizationId());

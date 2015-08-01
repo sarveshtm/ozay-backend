@@ -54,11 +54,12 @@ public class RoleRepository {
     }
 
     public void update(Role role){
-        String query="UPDATE role SET building_id=:buildingId, name=:name, sort_order=:sortOrder, belong_to=:belongTo WHERE id=:id";
+        String query="UPDATE role SET building_id=:buildingId, name=:name, sort_order=:sortOrder, belong_to=:belongTo, organization_user_role= :organizationUserRole WHERE id=:id";
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("buildingId", role.getBuildingId());
         params.addValue("name", role.getName());
         params.addValue("sortOrder", role.getSortOrder());
+        params.addValue("organizationUserRole", role.isOrganizationUserRole());
         params.addValue("id", role.getId());
         params.addValue("belongTo", role.getBelongTo());
         namedParameterJdbcTemplate.update(query, params);

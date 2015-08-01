@@ -35,11 +35,12 @@ public class NotificationRepository{
         return (Notification)namedParameterJdbcTemplate.queryForObject(query, params, new NotificationMapper());
     }
 
-    public List<Notification> searchNotificationBySubject(String search, Long buildingId){
-        String query = "SELECT * FROM notification where building_id = :buildingId AND subject = :subject";
+    public List<Notification> searchNotificationWithLimit(Long buildingId, Long limit){
+
+        String query = "SELECT * FROM notification where building_id = :buildingId ORDER BY id DESC LIMIT :limit";
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("buildingId", buildingId);
-        params.addValue("subject", search);
+        params.addValue("limit", limit);
 
         return namedParameterJdbcTemplate.query(query, params, new NotificationMapper());
     };

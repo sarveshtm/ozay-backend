@@ -27,7 +27,7 @@ public class OrganizationUserRepository {
     public OrganizationUserDTO findOrganizationUser(long userId, long organizationId){
         String query="SELECT u.*,acc.name as org_permission,acc.organization_id from t_user u " +
             "INNER JOIN organization_user ou ON ou.user_id = u.id " +
-            "LEFT JOIN organization_access acc ON ou.user_id = acc.user_id and ou.organization_id = acc.organization_id " +
+            "LEFT JOIN organization_permission acc ON ou.user_id = acc.user_id and ou.organization_id = acc.organization_id " +
             "WHERE ou.organization_id = :organizationId AND u.id = :userId";
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("organizationId", organizationId);

@@ -106,8 +106,9 @@ public class MemberResource {
             log.error("REST request : user detail create bad request {} ", member);
             return new ResponseEntity<JsonResponse>(json,  new HttpHeaders(), HttpStatus.BAD_REQUEST);
         }
-
-        member.setUnit(member.getUnit().toUpperCase());
+        if(member.getUnit() != null){
+            member.setUnit(member.getUnit().toUpperCase());
+        }
 
         if(this.checkIfUserAlreadyExistInUnit(member) == true){
             log.debug("User already exists");

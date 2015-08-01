@@ -6,11 +6,11 @@ spring:
 
     datasource:
         dataSourceClassName: org.postgresql.ds.PGSimpleDataSource
-        url:  jdbc:postgresql://localhost:5432/naofumiezaki
-        databaseName: naofumiezaki
-        serverName: localhost
-        username: naofumiezaki
-        password: adriarumia
+        url:  jdbc:postgresql://ec2-54-197-249-212.compute-1.amazonaws.com:5432/deortfahodiqbr?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory
+        databaseName: deortfahodiqbr
+        serverName: ec2-54-197-249-212.compute-1.amazonaws.com
+        username: nietiirqtwhpsj
+        password: 2wUyNF0nAFJD5mTdJyN_OQVP5f
 
     jpa:
         database-platform: org.hibernate.dialect.PostgreSQLDialect

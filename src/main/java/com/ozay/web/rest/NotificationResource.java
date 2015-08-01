@@ -92,13 +92,13 @@ public class NotificationResource {
     /**
      * GET  /notifications -> get all the notifications.
      */
-    @RequestMapping(value = "/notifications/search/{search}/building/{buildingId}",
+    @RequestMapping(value = "/notifications/building/{buildingId}/limit/{limit}",
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public List<Notification> getAllSearchResultsByBuilding(@PathVariable String search, @PathVariable Long buildingId) {
+    public List<Notification> getAllSearchResultsByBuilding(@PathVariable Long buildingId, @PathVariable Long limit) {
         log.debug("REST request to get all Notifications results by serach and Building");
-        return notificationRepository.searchNotificationBySubject(search, buildingId);
+        return notificationRepository.searchNotificationWithLimit(buildingId, limit);
     }
 
     /**
