@@ -91,7 +91,7 @@ public class UserService {
         //Set password
         if (password.equals("")) password = act_Key + "Ozay";
         String encryptedPassword = passwordEncoder.encode(password);
-        User currentLoginUser = userRepository.findOneByLogin(SecurityUtils.getCurrentLogin()).get();
+
         newUser.setLogin(login);
 
         newUser.setCreatedBy(SecurityUtils.getCurrentLogin());
@@ -130,7 +130,7 @@ public class UserService {
         Authority authority = authorityRepository.findOne("ROLE_USER");
         Set<Authority> authorities = new HashSet<>();
         String encryptedPassword = passwordEncoder.encode(password);
-        User currentLoginUser = userRepository.findOneByLogin(SecurityUtils.getCurrentLogin()).get();
+
         newUser.setLogin(login);
 
         newUser.setCreatedBy(SecurityUtils.getCurrentLogin());

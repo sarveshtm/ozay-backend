@@ -78,9 +78,6 @@ public class AccountResource {
     private InvitedMemberService invitedMemberService;
 
     @Inject
-    private UserBuildingRepository userBuildingRepository;
-
-    @Inject
     private AccountRepository accountRepository;
 
     @Inject
@@ -264,8 +261,9 @@ public class AccountResource {
                     userDTO.getLangKey());
 
                 member.setUserId(user.getId());
+                member.setLogin(user.getLogin());
                 memberRepository.update(member);
-                userBuildingRepository.create(member);
+
                 user.setActivated(true);
                 invitedMember.setActivated(true);
                 invitedMemberRepository.activateInvitedMember(invitedMember);

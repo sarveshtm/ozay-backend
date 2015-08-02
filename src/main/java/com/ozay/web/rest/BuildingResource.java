@@ -37,8 +37,7 @@ public class BuildingResource {
     private BuildingRepository buildingRepository;
     @Inject
     private MemberService memberService;
-    @Inject
-    private UserBuildingRepository userBuildingRepository;
+
     @Inject
     private UserRepository userRepository;
     @Inject

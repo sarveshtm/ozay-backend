@@ -22,6 +22,7 @@ package com.ozay.security;
     import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
     import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
+
 public class RequestInterceptor extends HandlerInterceptorAdapter {
 
     private final Logger log = LoggerFactory.getLogger(RequestInterceptor.class);
@@ -29,6 +30,7 @@ public class RequestInterceptor extends HandlerInterceptorAdapter {
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     private DataSource dataSource;
+
 
     @SuppressWarnings("unchecked")
     @Override

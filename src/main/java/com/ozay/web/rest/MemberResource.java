@@ -2,7 +2,6 @@ package com.ozay.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import com.ozay.model.Member;
-import com.ozay.repository.UserBuildingRepository;
 import com.ozay.repository.MemberRepository;
 import com.ozay.repository.UserRepository;
 import com.ozay.service.MemberService;
@@ -40,9 +39,6 @@ public class MemberResource {
 
     @Inject
     private UserRepository userRepository;
-
-    @Inject
-    private UserBuildingRepository userBuildingRepository;
 
     @Inject
     private MemberService memberService;
