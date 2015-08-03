@@ -37,8 +37,8 @@ public class NotificationRepository{
 
     public List<Notification> searchNotificationWithLimit(Long buildingId, Long limit){
 
-        String query = "SELECT * from notification WHERE id in(" +
-            "SELECT MAX(id) " +
+        String query = "SELECT * from notification WHERE subject in(" +
+            "SELECT subject " +
             "from notification " +
             "WHERE building_id=:buildingId " +
             "GROUP BY subject " +
