@@ -37,12 +37,13 @@ public class NotificationRepository{
 
     public List<Notification> searchNotificationWithLimit(Long buildingId, Long limit){
 
-        String query = "SELECT * from notification WHERE subject in(" +
+        String query = "SELECT * from notification n WHERE subject in(" +
             "SELECT subject " +
             "from notification " +
-            "WHERE building_id=:buildingId " +
+            "WHERE building_id=:buildingId and subject NOT like '%:%'" +
             "GROUP BY subject " +
             ") " +
+            "and created_date = (select max(created_date) from notification where subject = n.subject)" +
             "ORDER BY created_date DESC " +
             "LIMIT :limit " ;
         MapSqlParameterSource params = new MapSqlParameterSource();
