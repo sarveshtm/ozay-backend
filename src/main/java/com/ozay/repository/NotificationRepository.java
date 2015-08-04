@@ -37,13 +37,12 @@ public class NotificationRepository{
 
     public List<Notification> searchNotificationWithLimit(Long buildingId, Long limit){
 
-        String query = "SELECT * from notification n WHERE subject in(" +
-            "SELECT subject " +
+        String query = "SELECT * from notification WHERE id in(" +
+            "SELECT MAX(id) " +
             "from notification " +
-            "WHERE building_id=:buildingId and subject NOT like '%:%'" +
+            "WHERE building_id=:buildingId " +
             "GROUP BY subject " +
             ") " +
-            "and created_date = (select max(created_date) from notification where subject = n.subject)" +
             "ORDER BY created_date DESC " +
             "LIMIT :limit " ;
         MapSqlParameterSource params = new MapSqlParameterSource();
@@ -68,7 +67,7 @@ public class NotificationRepository{
             }
             queryForList += " LOWER(notice) LIKE :" + param +
                 " OR LOWER(subject) LIKE :" + param;
-                }
+        }
         if(items.length > 0){
             query += " AND (";
             query += queryForList;
