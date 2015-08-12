@@ -7,8 +7,7 @@ angular.module('ozayApp')
            deleteBtn : false,
          };
 	$scope.getAll = function (method, id) {
-		Member.get({method:method, id: id}, function(result) {
-		    console.log(result[0]);
+		Member.get({buildingId: id}, function(result) {
 		    $scope.members = result;
 		});
 	};
@@ -83,7 +82,7 @@ angular.module('ozayApp')
 	$scope.member.user = {};
 
 		$scope.getMember = function(method, login){
-    		Member.getMember({method:method, id: $rootScope.selectedBuilding, login:login}, function(result) {
+    		Member.getMember({method:method, buildingId: $rootScope.selectedBuilding, login:login}, function(result) {
 
     			if(result.unit == null){
     				result.unit = "";
@@ -139,7 +138,7 @@ angular.module('ozayApp')
 		$scope.showErrorAlert = false;
 		$scope.button = false;
 		if($state.current.name == 'home.directory_edit'){
-			Member.update($scope.member,
+			Member.update({building:$rootScope.selectedBuilding}, $scope.member,
 					function (data) {
 				$scope.showSuccessAlert = true;
 				$scope.successTextAlert = "Successfully Saved";
@@ -185,7 +184,6 @@ angular.module('ozayApp')
                         }
                     });
                 }
-                console.log($scope.member.roles);
             }
 
 	if($rootScope.selectedBuilding === undefined || $rootScope.selectedBuilding == 0){
@@ -193,14 +191,14 @@ angular.module('ozayApp')
             if($rootScope.selectedBuilding !== undefined){
                 $scope.getRoles();
                 if($state.current.name == 'home.directory_edit'){
-                    $scope.getMember('building', $stateParams.memberId);
+                    $scope.getMember('member', $stateParams.memberId);
                 }
             }
         });
 	} else {
 		$scope.getRoles();
 		if($state.current.name == 'home.directory_edit'){
-		    $scope.getMember('building', $stateParams.memberId);
+		    $scope.getMember('member', $stateParams.memberId);
 		}
 
 	}

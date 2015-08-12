@@ -1,6 +1,6 @@
 package com.ozay.service;
 
-import com.ozay.model.*;
+import com.ozay.model.OrganizationPermission;
 import com.ozay.repository.OrganizationPermissionRepository;
 import com.ozay.web.rest.dto.OrganizationUserDTO;
 import org.slf4j.Logger;

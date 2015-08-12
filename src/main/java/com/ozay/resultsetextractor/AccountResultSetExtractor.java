@@ -1,6 +1,5 @@
 package com.ozay.resultsetextractor;
 
-import com.ozay.domain.Authority;
 import com.ozay.model.AccountInformation;
 import org.springframework.jdbc.core.ResultSetExtractor;
 

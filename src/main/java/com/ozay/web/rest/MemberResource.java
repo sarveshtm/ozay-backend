@@ -59,7 +59,7 @@ public class MemberResource {
     /**
      * GET  /rest/member/building/{buildingId}/{id} -> get the "Building" by bu
      */
-    @RequestMapping(value = "/member/building/{buildingId}/{id}",
+    @RequestMapping(value = "/member/building/{buildingId}/member/{id}",
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
@@ -75,7 +75,7 @@ public class MemberResource {
     /**
      * GET  "/member/building_user_count/{buildingId}", -> get number of members in the building
      */
-    @RequestMapping(value = "/member/building_user_count/{buildingId}",
+    @RequestMapping(value = "/member/building/{buildingId}/building_user_count",
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
@@ -90,7 +90,7 @@ public class MemberResource {
     /**
      * POST  /member -> Create a new member.
      */
-    @RequestMapping(value = "/member",
+    @RequestMapping(value = "/member/building/{buildingId}",
         method = RequestMethod.POST,
         consumes = "application/json",
         produces = MediaType.APPLICATION_JSON_VALUE)
@@ -141,7 +141,7 @@ public class MemberResource {
     /**
      * PUT  /collaborates -> Updates an existing member.
      */
-    @RequestMapping(value = "/member",
+    @RequestMapping(value = "/member/building/{buildingId}",
         method = RequestMethod.PUT,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed

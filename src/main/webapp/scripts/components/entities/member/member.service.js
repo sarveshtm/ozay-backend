@@ -2,7 +2,7 @@
 
 angular.module('ozayApp')
 .factory('Member', function ($resource) {
-	return $resource('api/member/:method/:id/:login', {}, {
+	return $resource('api/member/building/:buildingId/:method/:id/:login', {}, {
 		'query': { method: 'GET', isArray: true},
 		'get': {
 			method: 'GET',

@@ -49,12 +49,12 @@ public class NotificationResource {
     /**
      * POST  /notifications -> Create a new notification.
      */
-    @RequestMapping(value = "/notifications",
+    @RequestMapping(value = "/notifications/building/{buildingId}",
         method = RequestMethod.POST,
         consumes = "application/json",
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public ResponseEntity<JsonResponse> create(@RequestBody NotificationDTO notificationDto, HttpServletRequest request) {
+    public ResponseEntity<JsonResponse> create(@RequestBody NotificationDTO notificationDto, @PathVariable Long buildingId, HttpServletRequest request) {
         log.debug("REST request to save Notification : {}", notificationDto);
 
         String baseUrl = request.getScheme() +
@@ -75,19 +75,6 @@ public class NotificationResource {
 
         return new ResponseEntity<JsonResponse>(json,  new HttpHeaders(), HttpStatus.CREATED);
     }
-
-    /**
-     * GET  /notifications -> get all the notifications.
-     */
-//    @RequestMapping(value = "/notifications",
-//        method = RequestMethod.GET,
-//        produces = MediaType.APPLICATION_JSON_VALUE)
-//    @Timed
-//    @RolesAllowed(AuthoritiesConstants.ADMIN)
-//    public List<Notification> getAll() {
-//        log.debug("REST request to get all Notifications");
-//        return notificationRepository.findAll();
-//    }
 
     /**
      * GET  /notifications -> get all the notifications.
@@ -116,11 +103,11 @@ public class NotificationResource {
     /**
      * GET  /notifications/:id -> get the "id" notification.
      */
-    @RequestMapping(value = "/notifications/notification/{id}",
+    @RequestMapping(value = "/notifications/building/{buildingIds}notification/{id}",
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public ResponseEntity<Notification> get(@PathVariable Long id) {
+    public ResponseEntity<Notification> get(@PathVariable Long buildingId, @PathVariable Long id) {
         log.debug("REST request to get Notification : {}", id);
         return Optional.ofNullable(notificationRepository.findOne(id))
             .map(notification -> {

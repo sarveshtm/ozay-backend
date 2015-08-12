@@ -37,7 +37,6 @@ angular.module('ozayApp')
 	$scope.getAll = function (method, id) {
 		Member.get({method:method, id: id}, function(result) {
 		    result = $filter('orderBy')(result, 'unit');
-		    console.log(result);
             $scope.individualList = [];
             $scope.returnedMemberList = result;
             angular.forEach(result, function(value, key) {
@@ -270,7 +269,6 @@ angular.module('ozayApp')
                for(var i=0;i<result.length;i++){
                     items.push(result[i].subject);
                }
-               console.log(items);
                $scope.subjects =  result;
             });
       };

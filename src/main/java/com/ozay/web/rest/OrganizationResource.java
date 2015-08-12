@@ -4,7 +4,9 @@ import com.codahale.metrics.annotation.Timed;
 import com.ozay.domain.User;
 import com.ozay.model.AccountInformation;
 import com.ozay.model.Organization;
-import com.ozay.repository.*;
+import com.ozay.repository.AccountRepository;
+import com.ozay.repository.OrganizationRepository;
+import com.ozay.repository.UserRepository;
 import com.ozay.security.SecurityUtils;
 import com.ozay.web.rest.dto.JsonResponse;
 import org.slf4j.Logger;
@@ -16,7 +18,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
-import javax.jws.soap.SOAPBinding;
 import java.util.List;
 import java.util.Optional;
 

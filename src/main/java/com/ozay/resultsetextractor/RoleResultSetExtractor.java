@@ -1,14 +1,14 @@
 package com.ozay.resultsetextractor;
 
-import com.ozay.domain.Authority;
-import com.ozay.model.AccountInformation;
 import com.ozay.model.Role;
 import com.ozay.model.RolePermission;
 import org.springframework.jdbc.core.ResultSetExtractor;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 
 /**
  * Created by naofumiezaki on 6/12/15.

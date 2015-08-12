@@ -1,7 +1,6 @@
 package com.ozay.rowmapper;
 
 import com.ozay.domain.User;
-import com.ozay.model.Member;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;

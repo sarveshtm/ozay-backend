@@ -25,6 +25,9 @@ public class MemberRowMapper implements RowMapper {
         member.setParking(rs.getString("parking"));
         member.setDeleted(rs.getBoolean("deleted"));
         member.setUserId(rs.getLong("user_id"));
+        if(rs.getString("u_email") != null){
+            member.setUserEmail(rs.getString("u_email"));
+        }
 
         return member;
     }

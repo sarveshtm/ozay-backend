@@ -1,6 +1,5 @@
 package com.ozay.rowmapper;
 
-import com.ozay.model.Building;
 import com.ozay.model.NotificationRecord;
 import org.springframework.jdbc.core.RowMapper;
 

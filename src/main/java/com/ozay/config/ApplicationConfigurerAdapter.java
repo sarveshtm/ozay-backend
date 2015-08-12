@@ -32,16 +32,18 @@ public class ApplicationConfigurerAdapter extends WebMvcConfigurerAdapter implem
     @Inject
     private DataSource datasource;
 
+
+    @Bean
+    public RequestInterceptor pagePopulationInterceptor() {
+        return new RequestInterceptor();
+    }
+
     @Override
     public void addInterceptors(final InterceptorRegistry registry)  {
-
-        RequestInterceptor requestInterceptor = new RequestInterceptor();
-        requestInterceptor.set(datasource);
-        registry.addInterceptor(requestInterceptor)
+        registry.addInterceptor(pagePopulationInterceptor())
             .addPathPatterns("/**")
             .excludePathPatterns("/")
-            .excludePathPatterns("/#/login")
-            .excludePathPatterns("/api/**")
+            .excludePathPatterns("/app/rest/**")
             .excludePathPatterns("/error");
 
     }
@@ -52,5 +54,5 @@ public class ApplicationConfigurerAdapter extends WebMvcConfigurerAdapter implem
         this.propertyResolver = new RelaxedPropertyResolver(env, "spring.datasource.");
     }
 
- 
+
 }

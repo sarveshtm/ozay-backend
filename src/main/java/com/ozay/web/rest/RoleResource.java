@@ -1,14 +1,10 @@
 package com.ozay.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
-import com.ozay.model.Notification;
 import com.ozay.model.Role;
-import com.ozay.model.RolePermission;
-import com.ozay.repository.*;
-import com.ozay.service.NotificationService;
+import com.ozay.repository.RoleRepository;
 import com.ozay.service.RoleService;
 import com.ozay.web.rest.dto.JsonResponse;
-import com.ozay.web.rest.dto.NotificationDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;

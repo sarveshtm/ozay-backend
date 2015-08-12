@@ -2,16 +2,15 @@ package com.ozay.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import com.ozay.domain.User;
-import com.ozay.model.*;
-import com.ozay.service.*;
-import com.ozay.repository.*;
-import com.ozay.security.SecurityUtils;
+import com.ozay.repository.MemberRepository;
+import com.ozay.repository.OrganizationRepository;
+import com.ozay.repository.OrganizationUserRepository;
+import com.ozay.repository.UserRepository;
 import com.ozay.service.MailService;
-import com.ozay.service.MemberService;
-import com.ozay.web.rest.dto.FieldErrorDTO;
+import com.ozay.service.OrganizationService;
+import com.ozay.service.UserService;
 import com.ozay.web.rest.dto.JsonResponse;
 import com.ozay.web.rest.dto.OrganizationUserDTO;
-import com.ozay.web.rest.dto.UserDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
@@ -28,7 +27,6 @@ import javax.inject.Inject;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.swing.text.html.Option;
 import java.util.*;
 
 /**
