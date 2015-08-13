@@ -1,7 +1,5 @@
 package com.ozay.model;
 
-import java.util.Set;
-
 /**
  * Created by naofumiezaki on 6/13/15.
  */

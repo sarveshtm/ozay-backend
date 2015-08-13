@@ -1,13 +1,7 @@
 package com.ozay.model;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.ozay.domain.User;
-import com.ozay.domain.util.CustomDateTimeDeserializer;
-import com.ozay.domain.util.CustomDateTimeSerializer;
 import org.joda.time.DateTime;
 
-import java.sql.Date;
 import java.util.Set;
 
 public class Member {
@@ -27,6 +21,8 @@ public class Member {
 
     private Set<Role> roles;
 
+    // Special email
+    private String userEmail;
 
     public String getLogin() {
         return login;
@@ -132,6 +128,14 @@ public class Member {
 
     public void setDeleted(boolean deleted) {
         this.deleted = deleted;
+    }
+
+    public String getUserEmail() {
+        return userEmail;
+    }
+
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
     }
 
     public Set<Role> getRoles() {

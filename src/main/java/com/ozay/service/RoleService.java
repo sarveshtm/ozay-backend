@@ -1,19 +1,15 @@
 package com.ozay.service;
 
-import com.ozay.model.Member;
 import com.ozay.model.Role;
 import com.ozay.model.RolePermission;
-import com.ozay.repository.MemberRepository;
 import com.ozay.repository.RolePermissionRepository;
 import com.ozay.repository.RoleRepository;
-import com.ozay.web.rest.dto.MemberListDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
 import java.util.List;
 
 /**

@@ -29,21 +29,21 @@
                                 <div class="form-group">
                                     <div class="col-lg-12" ng-class="{ 'has-error' : submitted && form.first_name.$invalid}">
                                         <label class="control-label">First Name</label>
-                                        <input ng-model="organizationUser.firstName" name="first_name" class="form-control" type="text" value="{{organizationUser.firstName}}" required>
+                                        <input ng-readonly="organizationUser.activated == true" ng-model="organizationUser.firstName" name="first_name" class="form-control" type="text" value="{{organizationUser.firstName}}" required>
                                         <p ng-show="submitted && form.first_name.$error.required" class="help-block has-error">Required</p>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <div class="col-lg-12" ng-class="{ 'has-error' : submitted && form.last_name.$invalid}">
                                         <label class="control-label">Last Name</label>
-                                        <input ng-model="organizationUser.lastName" name="last_name" class="form-control" type="text" value="{{organizationUser.lastName}}" required>
+                                        <input ng-readonly="organizationUser.activated == true" ng-model="organizationUser.lastName" name="last_name" class="form-control" type="text" value="{{organizationUser.lastName}}" required>
                                         <p ng-show="submitted && form.last_name.$error.required" class="help-block has-error">Required</p>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <div class="col-lg-12" ng-class="{ 'has-error' : submitted && form.email.$invalid}">
                                         <label class="control-label">Email</label>
-                                        <input ng-model="organizationUser.email" name="email" class="form-control" type="text" value="{{organizationUser.email}}" required>
+                                        <input ng-readonly="organizationUser.activated == true" ng-model="organizationUser.email" name="email" class="form-control" type="text" value="{{organizationUser.email}}" required>
                                         <p ng-show="submitted && form.email.$error.required" class="help-block has-error">Required</p>
                                     </div>
                                 </div>

@@ -1,7 +1,5 @@
 package com.ozay.web.rest.dto;
 
-import com.ozay.model.RolePermission;
-
 import java.util.List;
 
 public class OrganizationUserDTO {
@@ -15,6 +13,8 @@ public class OrganizationUserDTO {
     private String lastName;
 
     private String email;
+
+    private boolean activated;
 
     private List<String> roles;
 
@@ -77,6 +77,14 @@ public class OrganizationUserDTO {
 
     public void setRoles(List<String> roles) {
         this.roles = roles;
+    }
+
+    public boolean isActivated() {
+        return activated;
+    }
+
+    public void setActivated(boolean activated) {
+        this.activated = activated;
     }
 
     @Override

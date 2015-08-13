@@ -2,6 +2,7 @@ package com.ozay.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler;
 import org.springframework.security.access.expression.method.MethodSecurityExpressionHandler;
 
 import org.springframework.data.repository.query.spi.EvaluationContextExtension;
@@ -76,4 +77,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     public SecurityEvaluationContextExtension securityEvaluationContextExtension() {
         return new SecurityEvaluationContextExtension();
     }
+
+//    protected MethodSecurityExpressionHandler expressionHandler() {
+//        DefaultMethodSecurityExpressionHandler expressionHandler = new DefaultMethodSecurityExpressionHandler();
+//        expressionHandler.setPermissionEvaluator(new BuildingSecurity());
+//        return expressionHandler;
+//    }
 }

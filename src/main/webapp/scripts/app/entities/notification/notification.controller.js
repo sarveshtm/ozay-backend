@@ -9,13 +9,13 @@ angular.module('ozayApp')
         $scope.memberList = [];
         $scope.returnedMemberList = [];
     	$scope.getRoles = function(){
-            Role.query({method:"building", buildingId:$rootScope.selectedBuilding}).$promise.then(function(roles) {
+            Role.query({method:"building", building:$rootScope.selectedBuilding}).$promise.then(function(roles) {
                             $scope.roleList = roles;
                             angular.forEach(roles, function(role, key) {
                                 $scope.memberList.push({id:role.id, list:[]});
                             });
 
-                            $scope.getAll('building', $rootScope.selectedBuilding);
+                            //$scope.getAll('building', $rootScope.selectedBuilding);
                         }, function(error){
 
                         });
@@ -32,12 +32,10 @@ angular.module('ozayApp')
     	}
 
 
-
 	// Get people in the building
 	$scope.getAll = function (method, id) {
-		Member.get({method:method, id: id}, function(result) {
+		Member.get({id: id}, function(result) {
 		    result = $filter('orderBy')(result, 'unit');
-		    console.log(result);
             $scope.individualList = [];
             $scope.returnedMemberList = result;
             angular.forEach(result, function(value, key) {
@@ -205,7 +203,7 @@ angular.module('ozayApp')
 			for(var i = 0; i<$scope.selectedUsers.length;i++){
 				$scope.notification.memberIds.push($scope.selectedUsers[i].id);
 			}
-			Notification.save($scope.notification,
+			Notification.save({buildingId:$rootScope.selectedBuilding},$scope.notification,
 					function (data) {
 				$scope.showSuccessAlert = true;
 				$scope.successTextAlert = data.response;
@@ -232,17 +230,17 @@ angular.module('ozayApp')
 
 	$scope.notifications = [];
 
-	$scope.loadAll = function() {
-    		var method= 'building';
-    		Notification.get({method:method, id:$rootScope.selectedBuilding}, function(result) {
-    			$scope.notifications = result;
-    		});
-    	};
-    	$rootScope.$watch('selectedBuilding', function() {
-    		if($rootScope.selectedBuilding !== undefined){
-    			$scope.loadAll();
-    		}
-    	});
+//	$scope.loadAll = function() {
+//
+//    		Notification.get({buildingId:$rootScope.selectedBuilding}, function(result) {
+//    			$scope.notifications = result;
+//    		});
+//    	};
+//    	$rootScope.$watch('selectedBuilding', function() {
+//    		if($rootScope.selectedBuilding !== undefined){
+//    			$scope.loadAll();
+//    		}
+//    	});
 
 
 
@@ -265,12 +263,11 @@ angular.module('ozayApp')
 	}
     $scope.getSubjects = function() {
 
-        Notification.query({method:'building', id:$rootScope.selectedBuilding, method2:'limit', id2:10},function(result) {
+        Notification.query({building:$rootScope.selectedBuilding, method:'latest', limit:"limit", limitNumber:10},function(result) {
         var items = [];
                for(var i=0;i<result.length;i++){
                     items.push(result[i].subject);
                }
-               console.log(items);
                $scope.subjects =  result;
             });
       };
@@ -294,8 +291,8 @@ angular.module('ozayApp')
 	$scope.predicate = '-createdDate';
 	$scope.notifications = [];
 	$scope.loadAll = function() {
-		var method= 'building';
-		Notification.get({method:method, id:$rootScope.selectedBuilding}, function(result) {
+
+		Notification.get({ building:$rootScope.selectedBuilding}, function(result) {
 			$scope.notifications = result;
 		});
 	};

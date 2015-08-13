@@ -47,11 +47,11 @@ public class MemberResource {
     /**
      * GET  /rest/member/:login -> get the "Building" ID
      */
-    @RequestMapping(value = "/member/building/{buildingId}",
+    @RequestMapping(value = "/member",
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public List<Member> getAll(@PathVariable int buildingId) {
+    public List<Member> getAll(@RequestParam(value = "building") Long buildingId) {
         log.debug("REST request to get all building members");
         return memberRepository.getAllUsersByBuilding(buildingId);
     }
@@ -59,11 +59,11 @@ public class MemberResource {
     /**
      * GET  /rest/member/building/{buildingId}/{id} -> get the "Building" by bu
      */
-    @RequestMapping(value = "/member/building/{buildingId}/{id}",
+    @RequestMapping(value = "/member/{id}",
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public ResponseEntity<Member> getMemberDetail(@PathVariable int buildingId, @PathVariable Long id) {
+    public ResponseEntity<Member> getMemberDetail(@RequestParam(value = "building") Long buildingId, @PathVariable Long id) {
         log.debug("REST request to get Building ID : {}", buildingId);
         log.debug("REST request to get Building login: {}", id);
         return Optional.ofNullable(memberRepository.findOne(id))
@@ -75,11 +75,11 @@ public class MemberResource {
     /**
      * GET  "/member/building_user_count/{buildingId}", -> get number of members in the building
      */
-    @RequestMapping(value = "/member/building_user_count/{buildingId}",
+    @RequestMapping(value = "/member/building_user_count",
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public ResponseEntity<JsonResponse> getNumberOfResidents(@PathVariable int buildingId) {
+    public ResponseEntity<JsonResponse> getNumberOfResidents(@RequestParam(value = "building") Long buildingId) {
         JsonResponse jsonResponse = new JsonResponse();
         log.debug("REST request to get all User Details");
         Integer num = memberRepository.getAllUsersByBuilding(buildingId).size();
@@ -95,7 +95,7 @@ public class MemberResource {
         consumes = "application/json",
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public ResponseEntity<JsonResponse> create(@RequestBody Member member) {
+    public ResponseEntity<JsonResponse> create(@RequestBody Member member, @RequestParam(value = "building") Long buildingId) {
         JsonResponse json = new JsonResponse();
 
         if(member.getBuildingId() == null || member.getBuildingId() == 0){
@@ -145,7 +145,7 @@ public class MemberResource {
         method = RequestMethod.PUT,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public ResponseEntity<JsonResponse> update(@RequestBody Member member) throws URISyntaxException {
+    public ResponseEntity<JsonResponse> update(@RequestBody Member member, @RequestParam(value = "building") Long buildingId) throws URISyntaxException {
         log.debug("REST request :update  record : {}", member);
 
         JsonResponse json = new JsonResponse();
@@ -173,7 +173,7 @@ public class MemberResource {
         method = RequestMethod.POST,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public ResponseEntity<JsonResponse> deleteMembers(@RequestBody List<Member> members) throws URISyntaxException {
+    public ResponseEntity<JsonResponse> deleteMembers(@RequestBody List<Member> members, @RequestParam(value = "building") Long buildingId) throws URISyntaxException {
         log.debug("REST request :delete  record : {}", members);
         JsonResponse json = new JsonResponse();
 

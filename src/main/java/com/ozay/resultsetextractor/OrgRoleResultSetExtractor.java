@@ -1,16 +1,11 @@
 package com.ozay.resultsetextractor;
 
-import com.ozay.domain.User;
-import com.ozay.model.Role;
-import com.ozay.model.RolePermission;
-import com.ozay.web.rest.OrganizationResource;
 import com.ozay.web.rest.dto.OrganizationUserDTO;
 import org.springframework.jdbc.core.ResultSetExtractor;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -30,6 +25,7 @@ public class OrgRoleResultSetExtractor implements ResultSetExtractor {
                 user.setFirstName(rs.getString("first_name"));
                 user.setLastName(rs.getString("last_name"));
                 user.setEmail(rs.getString("email"));
+                user.setActivated(rs.getBoolean("activated"));
             }
             roleList.add(rs.getString("org_permission"));
         }

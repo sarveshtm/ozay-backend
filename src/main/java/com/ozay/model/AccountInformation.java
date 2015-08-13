@@ -1,7 +1,6 @@
 package com.ozay.model;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by naofumiezaki on 6/11/15.
@@ -46,10 +45,11 @@ public class AccountInformation {
 
     @Override
     public String toString() {
-        return "Account{" +
+        return "AccountInformation{" +
             "subscriberId='" + subscriberId + '\'' +
             "subscriptionId='" + subscriptionId + '\'' +
             "organizationId='" + organizationId + '\'' +
+            "Authority='" + authorities + '\'' +
             "}";
     }
 }

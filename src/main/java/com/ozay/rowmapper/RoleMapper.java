@@ -1,8 +1,6 @@
 package com.ozay.rowmapper;
 
-import com.ozay.model.Notification;
 import com.ozay.model.Role;
-import org.joda.time.DateTime;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;

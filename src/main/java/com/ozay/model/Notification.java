@@ -1,14 +1,7 @@
 package com.ozay.model;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.ozay.domain.util.CustomDateTimeDeserializer;
-import com.ozay.domain.util.CustomDateTimeSerializer;
-import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 
-import javax.persistence.*;
-import java.io.Serializable;
 import java.util.List;
 
 

@@ -1,14 +1,10 @@
 package com.ozay.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
-import com.ozay.model.Notification;
 import com.ozay.model.Role;
-import com.ozay.model.RolePermission;
-import com.ozay.repository.*;
-import com.ozay.service.NotificationService;
+import com.ozay.repository.RoleRepository;
 import com.ozay.service.RoleService;
 import com.ozay.web.rest.dto.JsonResponse;
-import com.ozay.web.rest.dto.NotificationDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -39,11 +35,11 @@ public class RoleResource {
     /**
      * GET  /role/{buildingId} -> get all the roles by building.
      */
-    @RequestMapping(value = "/role/building/{buildingId}",
+    @RequestMapping(value = "/role",
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public List<Role> getAllRolesByBuilding(@PathVariable Long buildingId) {
+    public List<Role> getAllRolesByBuilding(@RequestParam(value = "building") Long buildingId) {
         log.debug("REST request to get all roles by Building");
         return roleRepository.findAllByBuilding(buildingId);
     }
@@ -55,7 +51,7 @@ public class RoleResource {
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public ResponseEntity<Role> get(@PathVariable Long id) {
+    public ResponseEntity<Role> get(@PathVariable Long id, @RequestParam(value = "building") Long buildingId) {
         log.debug("REST request to get Role : {}", id);
         return Optional.ofNullable(roleRepository.findOne(id))
             .map(role -> {
@@ -74,7 +70,7 @@ public class RoleResource {
         consumes = "application/json",
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public ResponseEntity<JsonResponse> create(@RequestBody Role role) {
+    public ResponseEntity<JsonResponse> create(@RequestBody Role role, @RequestParam(value = "building") Long buildingId) {
         log.debug("REST request to save Role : {}", role);
         roleService.create(role);
         JsonResponse json = new JsonResponse();
@@ -83,14 +79,14 @@ public class RoleResource {
     }
 
     /**
-     * POST  /notifications -> Create a new notification.
+     * PUT  /notifications -> Update a new notification.
      */
     @RequestMapping(value = "/role",
         method = RequestMethod.PUT,
         consumes = "application/json",
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public ResponseEntity<JsonResponse> update(@RequestBody Role role) {
+    public ResponseEntity<JsonResponse> update(@RequestBody Role role, @RequestParam(value = "building") Long buildingId) {
         log.debug("REST request to save Role : {}", role);
 
         roleService.update(role);
@@ -107,7 +103,7 @@ public class RoleResource {
         consumes = "application/json",
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public ResponseEntity<JsonResponse> multiDelete(@RequestBody List<Role> roles) {
+    public ResponseEntity<JsonResponse> multiDelete(@RequestBody List<Role> roles, @RequestParam(value = "building") Long buildingId) {
         log.debug("REST request to save Role : {}", roles);
 
         roleService.multiDelete(roles);

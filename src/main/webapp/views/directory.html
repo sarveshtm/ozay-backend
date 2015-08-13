@@ -48,7 +48,7 @@
                         <td><span ng-if="isResident(member.renter)">Yes</span><span ng-if="!isResident(member.renter)">No</span></td>
                         -->
 
-                        <td>{{member.email}}</td>
+                        <td><span ng-if="member.userId == 0">{{member.email}}</span><span ng-if="member.userId != 0">{{member.userEmail}}</span></td>
                         <td>{{member.phone}}</td>
                         <td ng-show="checkboxModel.deleteBtn"><input ng-model="member.deleted" type="checkbox"></td>
                     </tr>

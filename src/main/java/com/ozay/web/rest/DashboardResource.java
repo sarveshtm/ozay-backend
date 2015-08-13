@@ -33,7 +33,7 @@ public class DashboardResource {
     /**
      * GET  /rest/dashboard/building/{buildingId}/{id} -> get the "Building" by bu
      */
-    @RequestMapping(value = "/dashboard/{buildingId}",
+    @RequestMapping(value = "/dashboard/building/{buildingId}",
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
