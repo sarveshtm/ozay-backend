@@ -2,7 +2,7 @@
 
 angular.module('ozayApp')
 .controller('RoleController', function ($rootScope, $scope, $cookieStore, Session, $state, $location, $stateParams, Role) {
-	Role.query({method:"building", buildingId:$stateParams.buildingId}).$promise.then(function(roles) {
+	Role.query({building:$stateParams.buildingId}).$promise.then(function(roles) {
 		$scope.roles = roles;
 	}, function(error){
 
@@ -38,7 +38,7 @@ angular.module('ozayApp')
 
 	});
 
-	Role.query({method:"building", buildingId:$stateParams.buildingId}).$promise.then(function(roles) {
+	Role.query({building:$stateParams.buildingId}).$promise.then(function(roles) {
 	    var filteredRoles = [];
 	    if(roles.length > 0){
             $scope.showRoles = true;
@@ -66,7 +66,7 @@ angular.module('ozayApp')
 
 	if($state.current.name == 'home.role_edit'){
 
-		Role.get({roleId:$stateParams.roleId}).$promise.then(function(role) {
+		Role.get({building:$stateParams.buildingId, roleId:$stateParams.roleId}).$promise.then(function(role) {
 
 			$scope.role = role;
 			$scope.edit_text = true;
@@ -109,7 +109,7 @@ angular.module('ozayApp')
 		if(confirm){
 		    $scope.role.buildingId = $stateParams.buildingId;
 			if($scope.role.id === undefined || $scope.role.id == 0){
-				Role.save($scope.role,
+				Role.save({building:$stateParams.buildingId}, $scope.role,
 						function (data) {
 					$scope.showSuccessAlert = true;
 					$scope.successTextAlert = data.response;
@@ -121,7 +121,7 @@ angular.module('ozayApp')
 				});
 			}
 			else{
-				Role.update($scope.role,
+				Role.update({building:$stateParams.buildingId}, $scope.role,
 						function (data) {
 					$scope.showSuccessAlert = true;
 					$scope.successTextAlert = data.response;

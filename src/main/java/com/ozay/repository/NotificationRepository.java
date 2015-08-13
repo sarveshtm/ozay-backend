@@ -21,7 +21,7 @@ public class NotificationRepository{
     @Inject
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    public List<Notification> findAllByBuilding(Integer buildingId){
+    public List<Notification> findAllByBuilding(Long buildingId){
         String query = "SELECT * FROM notification where building_id = :buildingId";
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("buildingId", buildingId);

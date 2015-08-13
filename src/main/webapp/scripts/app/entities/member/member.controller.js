@@ -7,7 +7,7 @@ angular.module('ozayApp')
            deleteBtn : false,
          };
 	$scope.getAll = function (method, id) {
-		Member.get({buildingId: id}, function(result) {
+		Member.get({building: id}, function(result) {
 		    $scope.members = result;
 		});
 	};
@@ -59,7 +59,7 @@ angular.module('ozayApp')
 	}
 
 	$scope.getRoles = function(){
-        Role.query({method:"building", buildingId:$rootScope.selectedBuilding}).$promise.then(function(roles) {
+        Role.query({building:$rootScope.selectedBuilding}).$promise.then(function(roles) {
                         $scope.roleList = roles;
                     }, function(error){
 
@@ -82,7 +82,7 @@ angular.module('ozayApp')
 	$scope.member.user = {};
 
 		$scope.getMember = function(method, login){
-    		Member.getMember({method:method, buildingId: $rootScope.selectedBuilding, login:login}, function(result) {
+    		Member.getMember({building: $rootScope.selectedBuilding, login:login}, function(result) {
 
     			if(result.unit == null){
     				result.unit = "";
@@ -153,7 +153,7 @@ angular.module('ozayApp')
 			});
 		} else {
 		    $scope.member.buildingId = $rootScope.selectedBuilding;
-			Member.save($scope.member,
+			Member.save({building:$rootScope.selectedBuilding},$scope.member,
 					function (data) {
 				$scope.showSuccessAlert = true;
 				$scope.successTextAlert = "Successfully Saved";

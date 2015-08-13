@@ -47,7 +47,7 @@ public class MemberRepository {
         }
     }
 
-    public List<Member> getAllUsersByBuilding(int buildingId){
+    public List<Member> getAllUsersByBuilding(long buildingId){
         String query = "SELECT m.*,  FROM member WHERE building_id =:buildingId AND deleted = false";
         MapSqlParameterSource parameterSource = new MapSqlParameterSource();
         parameterSource.addValue("buildingId", buildingId);

@@ -1,32 +1,17 @@
 package com.ozay.security;
 
-    import javax.inject.Inject;
-    import javax.servlet.http.HttpServletRequest;
-    import javax.servlet.http.HttpServletResponse;
-    import java.io.BufferedReader;
-    import java.util.*;
-    import javax.sql.DataSource;
+import com.ozay.domain.User;
+import com.ozay.model.AccountInformation;
+import com.ozay.repository.AccountRepository;
+import com.ozay.repository.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
-    import com.ozay.domain.User;
-    import com.ozay.model.AccountInformation;
-    import com.ozay.model.Building;
-    import com.ozay.model.Organization;
-    import com.ozay.repository.AccountRepository;
-    import com.ozay.repository.UserRepository;
-    import com.ozay.rowmapper.BuildingRowMapper;
-
-    import com.ozay.rowmapper.OrganizationMapper;
-    import org.json.JSONObject;
-    import org.slf4j.Logger;
-    import org.slf4j.LoggerFactory;
-
-    import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-    import org.springframework.security.core.Authentication;
-    import org.springframework.security.core.GrantedAuthority;
-    import org.springframework.security.core.context.SecurityContext;
-    import org.springframework.security.core.context.SecurityContextHolder;
-    import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
-    import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 
 public class RequestInterceptor extends HandlerInterceptorAdapter {
@@ -42,14 +27,18 @@ public class RequestInterceptor extends HandlerInterceptorAdapter {
     @Inject
     private AccountRepository accountRepository;
 
+
+    private static String NOTIFICATION_ARCHIVE = "NOTIFICATION_ARCHIVE";
+    private static String NOTIFICATION_CREATE = "NOTIFICATION_CREATE";
+
     @SuppressWarnings("unchecked")
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         System.out.println("Interceptor Start");
         log.debug("Intercepting: " + request.getServletPath());
-        if(request.getServletPath().equals("/api/building")){
-            return true;
-        }
+
+        String n1=request.getParameter("building");
+
 
         if (SecurityUtils.getCurrentLogin() ==null) return true;
 
@@ -63,22 +52,55 @@ public class RequestInterceptor extends HandlerInterceptorAdapter {
         //### 2) CHECK AUTHORITY
         if(SecurityUtils.isUserInRole("ROLE_ADMIN")) return true;
 
-        Long key_no = getKeyNo(request, "building");
+        //Long buildingId = getKeyNo(request, "building");
+        Long buildingId = null;
+        try {
+            long temp = Long.parseLong(request.getParameter("building"));
+            buildingId = temp;
+        } catch(Exception e){
 
-        System.out.println("KeyNO is : " + key_no);
+        }
+        if(buildingId == 0 || buildingId == null){
+            log.debug("False Intercepting BuildingID is null: " + request.getServletPath());
+            log.debug("???????????Interceptor return false???????????????");
+            return false;
+        }
+
+        System.out.println("BuildingId is : " + buildingId);
         System.out.println(method.toUpperCase());
 
 
-        if(key_no == -1){
-            return true;
+        if(buildingId == -1){
+            log.debug("False Intercepting Key is -1: " + request.getServletPath());
+            log.debug("???????????Interceptor return false???????????????");
+            return false;
         }
 
-
-
-        AccountInformation accountInformation = accountRepository.getLoginUserInformation(loginUser, key_no);
+        AccountInformation accountInformation = accountRepository.getLoginUserInformation(loginUser, buildingId);
 
         // If null this user cannot access to the building
-        if(accountInformation == null) return false;
+        if(accountInformation == null) {
+            log.debug("False Intercepting AccountInformation is NULL: " + request.getServletPath());
+            log.debug("???????????Interceptor return false???????????????");
+            return false;
+        } else {
+            // check if user has access
+            boolean roleAccessCheck = false;
+            if(accountInformation.getSubscriberId() != null){
+                roleAccessCheck = true;
+            }
+
+            if(roleAccessCheck == false && accountInformation.getAuthorities()!=null){
+                roleAccessCheck = this.checkAccessRole(accountInformation, request);
+            }
+
+            if(roleAccessCheck == false){
+                log.debug("False Intercepting Doesn't have role to access: " + request.getServletPath());
+                log.debug("???????????Interceptor return false???????????????");
+                return false;
+            }
+        }
+
 
 
 
@@ -86,9 +108,31 @@ public class RequestInterceptor extends HandlerInterceptorAdapter {
 
 
         //### 4) Building Access Check ###
-
-        log.debug("Interceptor return true");
+        log.debug("True Intercepting: " + request.getServletPath());
+        log.debug("!!!!!!!!!!!!!Interceptor return true!!!!!!!!!!!");
         return true;
+    }
+
+    private boolean checkAccessRole(AccountInformation accountInformation, HttpServletRequest request) {
+        if(request.getServletPath().contains("api/notifications")){
+            if(request.getMethod().toUpperCase().equals("GET")== true){
+                return this.findRoleAccess(accountInformation, RequestInterceptor.NOTIFICATION_ARCHIVE);
+            } else {
+                return this.findRoleAccess(accountInformation, RequestInterceptor.NOTIFICATION_CREATE);
+            }
+        }
+        return false;
+    }
+
+    private boolean findRoleAccess(AccountInformation accountInformation, String rolePermission){
+        boolean result = false;
+        for(String authority : accountInformation.getAuthorities()){
+            if(authority.equals(rolePermission)){
+                result = true;
+                break;
+            }
+        }
+        return result;
     }
 
     private Long getKeyNo(HttpServletRequest request, String split_wd) {
@@ -112,5 +156,7 @@ public class RequestInterceptor extends HandlerInterceptorAdapter {
         }
         return rtnInt;
     }
+
+
 
 }

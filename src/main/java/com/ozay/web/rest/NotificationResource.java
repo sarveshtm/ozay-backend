@@ -49,12 +49,12 @@ public class NotificationResource {
     /**
      * POST  /notifications -> Create a new notification.
      */
-    @RequestMapping(value = "/notifications/building/{buildingId}",
+    @RequestMapping(value = "/notifications",
         method = RequestMethod.POST,
         consumes = "application/json",
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public ResponseEntity<JsonResponse> create(@RequestBody NotificationDTO notificationDto, @PathVariable Long buildingId, HttpServletRequest request) {
+    public ResponseEntity<JsonResponse> create(@RequestBody NotificationDTO notificationDto, @RequestParam(value = "building") Long buildingId, HttpServletRequest request) {
         log.debug("REST request to save Notification : {}", notificationDto);
 
         String baseUrl = request.getScheme() +
@@ -77,13 +77,13 @@ public class NotificationResource {
     }
 
     /**
-     * GET  /notifications -> get all the notifications.
+     * GET  /notifications -> get all the notifications. with limit
      */
-    @RequestMapping(value = "/notifications/building/{buildingId}/limit/{limit}",
+    @RequestMapping(value = "/notifications/latest/limit/{limit}",
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public List<Notification> getAllSearchResultsByBuilding(@PathVariable Long buildingId, @PathVariable Long limit) {
+    public List<Notification> getAllSearchResultsByBuilding(@RequestParam(value = "building") Long buildingId, @PathVariable Long limit) {
         log.debug("REST request to get all Notifications results by serach and Building");
         return notificationRepository.searchNotificationWithLimit(buildingId, limit);
     }
@@ -91,11 +91,11 @@ public class NotificationResource {
     /**
      * GET  /notifications -> get all the notifications.
      */
-    @RequestMapping(value = "/notifications/building/{buildingId}",
+    @RequestMapping(value = "/notifications",
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public List<Notification> getAllByBuilding(@PathVariable Integer buildingId) {
+    public List<Notification> getAllByBuilding(@RequestParam(value = "building") Long buildingId) {
         log.debug("REST request to get all Notifications by Building");
         return notificationRepository.findAllByBuilding(buildingId);
     }
@@ -103,22 +103,22 @@ public class NotificationResource {
     /**
      * GET  /notifications/:id -> get the "id" notification.
      */
-    @RequestMapping(value = "/notifications/building/{buildingIds}notification/{id}",
-        method = RequestMethod.GET,
-        produces = MediaType.APPLICATION_JSON_VALUE)
-    @Timed
-    public ResponseEntity<Notification> get(@PathVariable Long buildingId, @PathVariable Long id) {
-        log.debug("REST request to get Notification : {}", id);
-        return Optional.ofNullable(notificationRepository.findOne(id))
-            .map(notification -> {
-                notification.setNotificationRecordList(notificationRecordRepository.getAllByNotificationId(id));
-                return
-                new ResponseEntity<>(
-                    notification,
-                    HttpStatus.OK);
-            })
-            .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
-    }
+//    @RequestMapping(value = "/notifications/building/{buildingIds}/notification/{id}",
+//        method = RequestMethod.GET,
+//        produces = MediaType.APPLICATION_JSON_VALUE)
+//    @Timed
+//    public ResponseEntity<Notification> get(@PathVariable Long buildingId, @PathVariable Long id) {
+//        log.debug("REST request to get Notification : {}", id);
+//        return Optional.ofNullable(notificationRepository.findOne(id))
+//            .map(notification -> {
+//                notification.setNotificationRecordList(notificationRecordRepository.getAllByNotificationId(id));
+//                return
+//                new ResponseEntity<>(
+//                    notification,
+//                    HttpStatus.OK);
+//            })
+//            .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+//    }
 
     /**
      * DELETE  /notifications/:id -> delete the "id" notification.

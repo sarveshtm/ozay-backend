@@ -43,7 +43,12 @@ public class ApplicationConfigurerAdapter extends WebMvcConfigurerAdapter implem
         registry.addInterceptor(pagePopulationInterceptor())
             .addPathPatterns("/**")
             .excludePathPatterns("/")
-            .excludePathPatterns("/app/rest/**")
+            .excludePathPatterns("/app/**")
+            .excludePathPatterns("/api/building")
+            .excludePathPatterns("/api/organization")
+            .excludePathPatterns("/api/building/organization/**")
+            .excludePathPatterns("/api/permission/**")
+            .excludePathPatterns("/oauth/**")
             .excludePathPatterns("/error");
 
     }
