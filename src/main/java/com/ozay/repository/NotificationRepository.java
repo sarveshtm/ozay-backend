@@ -53,7 +53,7 @@ public class NotificationRepository{
     };
 
 
-    public List<Notification> searchNotification(int buildingId, String[] items){
+    public List<Notification> searchNotification(Long buildingId, String[] items){
         String query = "SELECT * FROM notification where building_id = :buildingId ";
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("buildingId", buildingId);

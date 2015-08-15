@@ -33,11 +33,11 @@ public class DashboardResource {
     /**
      * GET  /rest/dashboard/building/{buildingId}/{id} -> get the "Building" by bu
      */
-    @RequestMapping(value = "/dashboard/building/{buildingId}",
+    @RequestMapping(value = "/dashboard",
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public ResponseEntity<Dashboard> getMemberDetail(@PathVariable int buildingId) {
+    public ResponseEntity<Dashboard> getMemberDetail(@RequestParam(value = "building") Long buildingId) {
         Dashboard dashboard = new Dashboard();
 
         Building building = buildingRepository.getBuilding(buildingId);

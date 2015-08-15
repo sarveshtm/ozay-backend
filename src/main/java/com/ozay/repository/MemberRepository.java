@@ -65,11 +65,11 @@ public class MemberRepository {
         return list;
     }
 
-    public Integer countActiveUnits(int buildingId){
+    public Integer countActiveUnits(Long buildingId){
         return jdbcTemplate.queryForObject("SELECT COUNT(DISTINCT unit) FROM member WHERE building_id = ? and deleted = false", Integer.class, new Object[]{buildingId});
     }
 
-    public List<Member> getUserByBuildingEmailUnit(int buildingId, String email, String unit){
+    public List<Member> getUserByBuildingEmailUnit(Long buildingId, String email, String unit){
         return jdbcTemplate.query("Select m.*, u.email as u_email FROM member m LEFT JOIN t_user u ON u.id = m.user_id WHERE m.building_id = ? AND m.email = ? AND UPPER(m.unit) = ? AND deleted = false",
             new Object[]{buildingId, email, unit}, new MemberRowMapper() {
             });
@@ -111,7 +111,7 @@ public class MemberRepository {
             });
     }
 
-    public List<Member> searchUsers(int buildingId, String[] items){
+    public List<Member> searchUsers(Long buildingId, String[] items){
         String query ="Select m.*, u.email as u_email FROM member m LEFT JOIN t_user u ON u.id = m.user_id WHERE deleted = false AND building_id =:buildingId ";
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("buildingId", buildingId);

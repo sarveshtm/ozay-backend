@@ -39,12 +39,12 @@ public class SearchResource {
     /**
      * GET  /notifications -> get all the notifications.
      */
-    @RequestMapping(value = "/search/all/{buildingId}/{item}",
+    @RequestMapping(value = "/search/all/{item}",
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
     @RolesAllowed(AuthoritiesConstants.ADMIN)
-    public List<SearchDTO> getAll(@PathVariable int buildingId, @PathVariable String item) {
+    public List<SearchDTO> getAll(@RequestParam(value = "building") Long buildingId, @PathVariable String item) {
 
         String[] itemArray = item.split(" ");
 

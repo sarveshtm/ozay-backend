@@ -11,7 +11,7 @@ public class Member {
     private String email;
     private String phone;
     private String login;
-    private Integer buildingId;
+    private Long buildingId;
     private Long userId;
     private Double ownership;
     private String parking;
@@ -32,11 +32,11 @@ public class Member {
         this.login = login;
     }
 
-    public Integer getBuildingId() {
+    public Long getBuildingId() {
         return buildingId;
     }
 
-    public void setBuildingId(Integer buildingId) {
+    public void setBuildingId(Long buildingId) {
         this.buildingId = buildingId;
     }
 

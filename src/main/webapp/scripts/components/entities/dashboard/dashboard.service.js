@@ -2,6 +2,6 @@
 
 angular.module('ozayApp')
 .factory('Dashboard', function ($resource) {
-	return $resource('api/dashboard/:buildingId', {}, {
+	return $resource('api/dashboard', {}, {
     	});
 });
