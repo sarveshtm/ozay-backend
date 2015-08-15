@@ -203,7 +203,7 @@ angular.module('ozayApp')
 			for(var i = 0; i<$scope.selectedUsers.length;i++){
 				$scope.notification.memberIds.push($scope.selectedUsers[i].id);
 			}
-			Notification.save({buildingId:$rootScope.selectedBuilding},$scope.notification,
+			Notification.save({building:$rootScope.selectedBuilding},$scope.notification,
 					function (data) {
 				$scope.showSuccessAlert = true;
 				$scope.successTextAlert = data.response;

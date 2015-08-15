@@ -79,7 +79,7 @@ public class MemberRepository {
 
     public List<Member> getUserEmailsForNotification(NotificationDTO notificationDTO){
 
-        String query = "Select m.*, u.email as u_email FROM member m LEFT JOIN t_user u ON u.id = m.user_id WHERE building_id = :buildingId AND deleted = false AND id IN ( :ids )";
+        String query = "Select m.*, u.email as u_email FROM member m LEFT JOIN t_user u ON u.id = m.user_id WHERE building_id = :buildingId AND deleted = false AND m.id IN ( :ids )";
         StringBuilder sb = new StringBuilder();
 
 

@@ -80,7 +80,7 @@ public class RequestInterceptor extends HandlerInterceptorAdapter {
         } catch(Exception e){
 
         }
-        if((buildingId == 0 || buildingId == null) && (organizationId == 0 || organizationId == null)){
+        if((buildingId == null || buildingId == 0) && (organizationId == null || organizationId == 0 )){
             log.debug("False Intercepting BuildingID is null: " + request.getServletPath());
             return false;
         }
