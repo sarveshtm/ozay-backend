@@ -9,13 +9,13 @@ angular.module('ozayApp')
         $scope.memberList = [];
         $scope.returnedMemberList = [];
     	$scope.getRoles = function(){
-            Role.query({method:"building", building:$rootScope.selectedBuilding}).$promise.then(function(roles) {
+            Role.query({building:$rootScope.selectedBuilding}).$promise.then(function(roles) {
                             $scope.roleList = roles;
                             angular.forEach(roles, function(role, key) {
                                 $scope.memberList.push({id:role.id, list:[]});
                             });
 
-                            //$scope.getAll('building', $rootScope.selectedBuilding);
+                            $scope.getAll();
                         }, function(error){
 
                         });
@@ -33,8 +33,8 @@ angular.module('ozayApp')
 
 
 	// Get people in the building
-	$scope.getAll = function (method, id) {
-		Member.get({id: id}, function(result) {
+	$scope.getAll = function () {
+		Member.query({building:$rootScope.selectedBuilding}, function(result) {
 		    result = $filter('orderBy')(result, 'unit');
             $scope.individualList = [];
             $scope.returnedMemberList = result;

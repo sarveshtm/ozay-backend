@@ -30,6 +30,8 @@ public class RequestInterceptor extends HandlerInterceptorAdapter {
 
     private static String NOTIFICATION_ARCHIVE = "NOTIFICATION_ARCHIVE";
     private static String NOTIFICATION_CREATE = "NOTIFICATION_CREATE";
+    private static String DIRECTORY_LIST = "DIRECTORY_LIST";
+    private static String DIRECTORY_EDIT = "DIRECTORY_EDIT";
 
     @SuppressWarnings("unchecked")
     @Override
@@ -37,32 +39,49 @@ public class RequestInterceptor extends HandlerInterceptorAdapter {
         System.out.println("Interceptor Start");
         log.debug("Intercepting: " + request.getServletPath());
 
-        String n1=request.getParameter("building");
-
-
-        if (SecurityUtils.getCurrentLogin() ==null) return true;
-
         User loginUser = userRepository.findOneByLogin(SecurityUtils.getCurrentLogin()).get();
 
-        if(loginUser == null) return false;
+        if(loginUser == null){
+            log.debug("False Intercepting Login is null: " + request.getServletPath());
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            return false;
+        }
 
+        //### 2) CHECK AUTHORITY
+        if(SecurityUtils.isUserInRole("ROLE_ADMIN")){
+            return true;
+        }
+
+
+        boolean result = this.validation(request, response, loginUser);
+        if(result == true){
+            log.debug("True Intercepting: " + request.getServletPath());
+            log.debug("!!!!!!!!!!!!!Interceptor return true!!!!!!!!!!!");
+            return true;
+        } else {
+            log.debug("???????????Interceptor return false???????????????");
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            return false;
+        }
+    }
+
+    private boolean validation(HttpServletRequest request, HttpServletResponse response, User loginUser){
 
         String method = request.getMethod();
 
-        //### 2) CHECK AUTHORITY
-        if(SecurityUtils.isUserInRole("ROLE_ADMIN")) return true;
-
         //Long buildingId = getKeyNo(request, "building");
         Long buildingId = null;
+        Long organizationId = null;
         try {
             long temp = Long.parseLong(request.getParameter("building"));
             buildingId = temp;
+            temp = Long.parseLong(request.getParameter("organization"));
+            organizationId = temp;
         } catch(Exception e){
 
         }
-        if(buildingId == 0 || buildingId == null){
+        if((buildingId == 0 || buildingId == null) && (organizationId == 0 || organizationId == null)){
             log.debug("False Intercepting BuildingID is null: " + request.getServletPath());
-            log.debug("???????????Interceptor return false???????????????");
             return false;
         }
 
@@ -72,7 +91,6 @@ public class RequestInterceptor extends HandlerInterceptorAdapter {
 
         if(buildingId == -1){
             log.debug("False Intercepting Key is -1: " + request.getServletPath());
-            log.debug("???????????Interceptor return false???????????????");
             return false;
         }
 
@@ -81,7 +99,6 @@ public class RequestInterceptor extends HandlerInterceptorAdapter {
         // If null this user cannot access to the building
         if(accountInformation == null) {
             log.debug("False Intercepting AccountInformation is NULL: " + request.getServletPath());
-            log.debug("???????????Interceptor return false???????????????");
             return false;
         } else {
             // check if user has access
@@ -96,7 +113,6 @@ public class RequestInterceptor extends HandlerInterceptorAdapter {
 
             if(roleAccessCheck == false){
                 log.debug("False Intercepting Doesn't have role to access: " + request.getServletPath());
-                log.debug("???????????Interceptor return false???????????????");
                 return false;
             }
         }
@@ -108,10 +124,11 @@ public class RequestInterceptor extends HandlerInterceptorAdapter {
 
 
         //### 4) Building Access Check ###
-        log.debug("True Intercepting: " + request.getServletPath());
-        log.debug("!!!!!!!!!!!!!Interceptor return true!!!!!!!!!!!");
+
         return true;
+
     }
+
 
     private boolean checkAccessRole(AccountInformation accountInformation, HttpServletRequest request) {
         if(request.getServletPath().contains("api/notifications")){
@@ -119,6 +136,12 @@ public class RequestInterceptor extends HandlerInterceptorAdapter {
                 return this.findRoleAccess(accountInformation, RequestInterceptor.NOTIFICATION_ARCHIVE);
             } else {
                 return this.findRoleAccess(accountInformation, RequestInterceptor.NOTIFICATION_CREATE);
+            }
+        } else if(request.getServletPath().contains("api/members")){
+            if(request.getMethod().toUpperCase().equals("GET")== true){
+                return this.findRoleAccess(accountInformation, RequestInterceptor.DIRECTORY_LIST);
+            } else {
+                return this.findRoleAccess(accountInformation, RequestInterceptor.DIRECTORY_EDIT);
             }
         }
         return false;
@@ -134,29 +157,5 @@ public class RequestInterceptor extends HandlerInterceptorAdapter {
         }
         return result;
     }
-
-    private Long getKeyNo(HttpServletRequest request, String split_wd) {
-        long rtnInt = -1;
-        try{
-            String[] split_url = request.getServletPath().split("/");
-            int buildingIndex = 0;
-            for(int i =0; i<split_url.length;i++){
-                if(split_url[i].equals(split_wd)){
-                    buildingIndex = i + 1;
-                    break;
-                }
-            }
-
-            rtnInt = Integer.parseInt(split_url[buildingIndex]);
-
-
-
-        }catch(Exception e){
-
-        }
-        return rtnInt;
-    }
-
-
 
 }
