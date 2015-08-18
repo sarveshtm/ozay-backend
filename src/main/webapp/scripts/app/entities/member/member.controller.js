@@ -20,7 +20,7 @@ angular.module('ozayApp')
         });
 
 
-        Member.deleteMembers(deleteList,
+        Member.deleteMembers({building:$rootScope.selectedBuilding},deleteList,
         					function (data) {
         				$scope.showSuccessAlert = true;
         				$scope.successTextAlert = "Successfully Deleted";
