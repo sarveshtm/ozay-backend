@@ -6,7 +6,9 @@
                 DIRECTORY
                 <div class="button_group">
                     <button class="btn btn-default" type="button" ng-click="deleteBtnClicked()" ng-show="checkboxModel.deleteBtn" ng-disabled="!button">Delete</button>
-                    <input type="checkbox" ng-model="checkboxModel.deleteBtn">Delete
+                    <span ng-show="isAuthorized(userRoles.access_directory_delete) || isAuthorized(userRoles.admin) || isAuthorized(userRoles.subscriber)">
+                        <input type="checkbox" ng-model="checkboxModel.deleteBtn">Delete
+                    </span>
                 </div>
                 <div class="clear"></div>
             </div>

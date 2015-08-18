@@ -32,6 +32,7 @@ public class RequestInterceptor extends HandlerInterceptorAdapter {
     private static String NOTIFICATION_CREATE = "NOTIFICATION_CREATE";
     private static String DIRECTORY_LIST = "DIRECTORY_LIST";
     private static String DIRECTORY_EDIT = "DIRECTORY_EDIT";
+    private static String DIRECTORY_DELETE = "DIRECTORY_DELETE";
 
     @SuppressWarnings("unchecked")
     @Override
@@ -138,6 +139,9 @@ public class RequestInterceptor extends HandlerInterceptorAdapter {
                 return this.findRoleAccess(accountInformation, RequestInterceptor.NOTIFICATION_CREATE);
             }
         } else if(request.getServletPath().contains("api/members")){
+            if(request.getServletPath().contains("api/member/delete")){
+                return this.findRoleAccess(accountInformation, RequestInterceptor.DIRECTORY_DELETE);
+            }
             if(request.getMethod().toUpperCase().equals("GET")== true){
                 return this.findRoleAccess(accountInformation, RequestInterceptor.DIRECTORY_LIST);
             } else {
