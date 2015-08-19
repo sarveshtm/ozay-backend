@@ -2,6 +2,7 @@ package com.ozay.web.rest.dto.page;
 
 import com.ozay.model.Building;
 import com.ozay.model.Organization;
+import com.ozay.web.rest.dto.BuildingRoleWrapperDTO;
 import com.ozay.web.rest.dto.UserDTO;
 
 import java.util.List;
@@ -11,7 +12,7 @@ import java.util.List;
  */
 public class OrganizationSummary {
     private Organization organization;
-    private List<Building> buildings;
+    private List<BuildingRoleWrapperDTO> buildingRoleWrapperDTOs;
     private List<UserDTO> userDTOs;
 
     public Organization getOrganization() {
@@ -22,12 +23,12 @@ public class OrganizationSummary {
         this.organization = organization;
     }
 
-    public List<Building> getBuildings() {
-        return buildings;
+    public List<BuildingRoleWrapperDTO> getBuildingRoleWrapperDTOs() {
+        return buildingRoleWrapperDTOs;
     }
 
-    public void setBuildings(List<Building> buildings) {
-        this.buildings = buildings;
+    public void setBuildingRoleWrapperDTOs(List<BuildingRoleWrapperDTO> buildingRoleWrapperDTOs) {
+        this.buildingRoleWrapperDTOs = buildingRoleWrapperDTOs;
     }
 
     public List<UserDTO> getUserDTOs() {

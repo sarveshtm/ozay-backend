@@ -18,7 +18,7 @@ public class NotificationRecordRepository {
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     public List<NotificationRecord> getAllByNotificationId(Long notificationId){
-        String query = "SELECT * FROM notification_record WHERE notification_id = :notificationId";
+        String query = "SELECT nr.*, m.first_name, m.last_name, m.unit FROM notification_record nr INNER JOIN member m ON nr.member_id = m.id WHERE nr.notification_id = :notificationId";
 
         MapSqlParameterSource params = new MapSqlParameterSource();
 

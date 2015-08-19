@@ -115,6 +115,14 @@ ozayApp
 			authorizedRoles: [USER_ROLES.admin, USER_ROLES.access_notification_archive, USER_ROLES.subscriber]
 		}
 	})
+	.state('home.notification_archive_view', {
+    		url: "/notification_archive/view/:notificationId",
+    		templateUrl: "/views/notification_archive_view.html",
+    		controller: 'NotificationArchiveViewController',
+    		access: {
+    			authorizedRoles: [USER_ROLES.admin, USER_ROLES.access_notification_archive, USER_ROLES.subscriber]
+    		}
+    	})
 	.state('home.collaborate_create', {
 		url: "/collaborate_create",
 		templateUrl: "/views/collaborate_create.html",
@@ -130,14 +138,14 @@ ozayApp
 			authorizedRoles: [USER_ROLES.user]
 		}
 	})
-	.state('home.buildings', {
-		url : '/management/organization/:organizationId/buildings',
-		templateUrl: 'views/building.html',
-		controller: 'BuildingManageController',
-		access: {
-			authorizedRoles: [USER_ROLES.user]
-		}
-	})
+//	.state('home.buildings', {
+//		url : '/management/organization/:organizationId/buildings',
+//		templateUrl: 'views/building.html',
+//		controller: 'BuildingManageController',
+//		access: {
+//			authorizedRoles: [USER_ROLES.user]
+//		}
+//	})
 	.state('home.building_create', {
 		url: "/management/organization/:organizationId/buildings/new",
 		controller:'BuildingController',
@@ -156,7 +164,6 @@ ozayApp
 		}
 	})
 	.state('home.role', {
-
 		url: "/management/organization/:organizationId/buildings/:buildingId/roles",
 		controller:'RoleController',
 		templateUrl: "/views/role.html",

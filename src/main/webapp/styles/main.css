@@ -93,7 +93,7 @@ only screen and (                min-resolution: 2dppx) {
 
 /* start Password strength bar style */
 body {
-    font-size:16px;
+    font-size:15px;
 }
 ul#strength {
     display:inline;

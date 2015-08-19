@@ -103,22 +103,22 @@ public class NotificationResource {
     /**
      * GET  /notifications/:id -> get the "id" notification.
      */
-//    @RequestMapping(value = "/notifications/building/{buildingIds}/notification/{id}",
-//        method = RequestMethod.GET,
-//        produces = MediaType.APPLICATION_JSON_VALUE)
-//    @Timed
-//    public ResponseEntity<Notification> get(@PathVariable Long buildingId, @PathVariable Long id) {
-//        log.debug("REST request to get Notification : {}", id);
-//        return Optional.ofNullable(notificationRepository.findOne(id))
-//            .map(notification -> {
-//                notification.setNotificationRecordList(notificationRecordRepository.getAllByNotificationId(id));
-//                return
-//                new ResponseEntity<>(
-//                    notification,
-//                    HttpStatus.OK);
-//            })
-//            .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
-//    }
+    @RequestMapping(value = "/notifications/{id}",
+        method = RequestMethod.GET,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    public ResponseEntity<Notification> get(@PathVariable Long id) {
+        log.debug("REST request to get Notification : {}", id);
+        return Optional.ofNullable(notificationRepository.findOne(id))
+            .map(notification -> {
+                notification.setNotificationRecordList(notificationRecordRepository.getAllByNotificationId(id));
+                return
+                new ResponseEntity<>(
+                    notification,
+                    HttpStatus.OK);
+            })
+            .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
 
     /**
      * DELETE  /notifications/:id -> delete the "id" notification.

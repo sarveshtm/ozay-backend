@@ -4,7 +4,9 @@
         <div class="panel panel-default page_content">
             <div id="page_content_title">
                 ORGANIZATION
-
+                <div class="button_group">
+                    <a href="#/management/organization/{{organizationId}}/buildings/new"><button class="btn btn-default">Add Building</button></a>
+                </div>
                 <div class="clear"></div>
             </div>
 
@@ -33,9 +35,9 @@
                     <tr ng-repeat="building in buildings">
 
                         <td><span ng-if="$first"></span></td>
-                        <td class="text-nowrap"><a href="#/management/organization/{{organizationId}}/buildings/edit/{{building.id}}">{{building.name}}</a></td>
-                        <td>{{building.totalUnits}}</td>
-                        <td>{{building.name}}</td>
+                        <td class="text-nowrap"><a href="#/management/organization/{{organizationId}}/buildings/edit/{{building.building.id}}">{{building.building.name}}</a></td>
+                        <td>{{building.building.totalUnits}}</td>
+                        <td><span ng-repeat="role in building.roleList"><span>{{role.name}}</span><span ng-if="!$last">, </span></span></span></td>
                     </tr>
                     </tbody>
                 </table>

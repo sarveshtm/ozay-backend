@@ -283,7 +283,7 @@
                         </ul>
                         <!-- /.nav-second-level -->
                     </li>
-                    <li ng-show="isAuthorized(userRoles.admin)">
+                    <li ng-show="isAuthorized(userRoles.admin) || isAuthorized(userRoles.subscriber)">
                         <a href="#/management">MANAGE</a>
                     </li>
                     <li>

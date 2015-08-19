@@ -12,7 +12,7 @@ angular.module('ozayApp')
 .controller('OrganizationViewController', function ($rootScope, $scope, $stateParams, Page) {
 	Page.get({id:$stateParams.organizationId, entity:"organization", organization:$stateParams.organizationId}).$promise.then(function(page) {
                 $scope.organization = page.organization;
-                $scope.buildings = page.buildings;
+                $scope.buildings = page.buildingRoleWrapperDTOs;
             }, function(error){
                 $state.go('error');
             });
