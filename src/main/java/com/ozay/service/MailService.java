@@ -78,6 +78,7 @@ public class MailService {
                 if(notificationRecord.getEmail().matches(EMAIL_PATTERN)){
                     sendGrid.addSmtpApiTo(notificationRecord.getEmail());
                     sentCount++;
+                    notificationRecord.setSuccess(true);
                 } else {
                     notificationRecord.setSuccess(false);
                     notificationRecord.setNote("INVALID Email address");
