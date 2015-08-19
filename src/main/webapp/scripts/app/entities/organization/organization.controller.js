@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('ozayApp')
-.controller('OrganizationController', function ($rootScope, $scope, $cookieStore, Session, $state, $location, $filter, Organization) {
+.controller('OrganizationController', function ($rootScope, $scope, $cookieStore, Session, $stateParams, $location, $filter, Organization) {
 	Organization.query().$promise.then(function(organizations) {
 		$scope.organizations = organizations;
 	}, function(error){
@@ -9,9 +9,19 @@ angular.module('ozayApp')
 	});
 
 })
+.controller('OrganizationViewController', function ($rootScope, $scope, $stateParams, Page) {
+	Page.get({id:$stateParams.organizationId, entity:"organization", organization:$stateParams.organizationId}).$promise.then(function(page) {
+                $scope.organization = page.organization;
+                $scope.buildings = page.buildings;
+            }, function(error){
+                $state.go('error');
+            });
+            $scope.organizationId = $stateParams.organizationId;
+
+})
 .controller('OrganizationDetailController', function ($rootScope, $scope, $cookieStore, Session, $state, $stateParams, $filter, Organization) {
 
-    if($state.current.name != 'home.group_edit' && $state.current.name != 'home.group_create'){
+    if($state.current.name != 'home.organization_edit' && $state.current.name != 'home.organization_create'){
         $state.go('error');
     }
 	$scope.button = true;

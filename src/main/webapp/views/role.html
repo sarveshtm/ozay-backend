@@ -5,7 +5,7 @@
             <div id="page_content_title">
                 ROLE | LIST
                 <div class="button_group">
-                    <a href="#/management/group/{{organizationId}}/buildings/{{buildingId}}/roles/new"><button class="btn btn-default" type="submit">ADD</button></a>
+                    <a href="#/management/organization/{{organizationId}}/buildings/{{buildingId}}/roles/new"><button class="btn btn-default" type="submit">ADD</button></a>
                 </div>
                 <div class="clear"></div>
             </div>
@@ -22,7 +22,7 @@
                     <tbody>
                     <tr ng-repeat="role in roles | orderBy:predicate:reverse">
                         <td></td>
-                        <td><a href="#/management/group/{{organizationId}}/buildings/{{buildingId}}/roles/edit/{{role.id}}">{{role.name}}</a></td>
+                        <td><a href="#/management/organization/{{organizationId}}/buildings/{{buildingId}}/roles/edit/{{role.id}}">{{role.name}}</a></td>
                         <td>&nbsp;</td>
                     </tr>
                     </tbody>

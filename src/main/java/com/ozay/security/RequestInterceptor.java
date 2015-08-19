@@ -70,17 +70,16 @@ public class RequestInterceptor extends HandlerInterceptorAdapter {
 
         String method = request.getMethod();
 
-        //Long buildingId = getKeyNo(request, "building");
-        Long buildingId = null;
-        Long organizationId = null;
-        try {
-            long temp = Long.parseLong(request.getParameter("building"));
-            buildingId = temp;
-            temp = Long.parseLong(request.getParameter("organization"));
-            organizationId = temp;
-        } catch(Exception e){
+        Long buildingId = this.parseNumber(request.getParameter("building"));
+        Long organizationId = this.parseNumber(request.getParameter("organization"));
 
+
+        // temp
+        if(organizationId != null){
+            return true;
         }
+
+
         if((buildingId == null || buildingId == 0) && (organizationId == null || organizationId == 0 )){
             log.debug("False Intercepting BuildingID is null: " + request.getServletPath());
             return false;
@@ -160,6 +159,17 @@ public class RequestInterceptor extends HandlerInterceptorAdapter {
             }
         }
         return result;
+    }
+
+    private Long parseNumber(String value){
+        Long temp = null;
+        try {
+            temp = Long.parseLong(value);
+
+        } catch(Exception e){
+
+        }
+        return temp;
     }
 
 }

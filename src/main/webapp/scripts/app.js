@@ -131,7 +131,7 @@ ozayApp
 		}
 	})
 	.state('home.buildings', {
-		url : '/management/group/:organizationId/buildings',
+		url : '/management/organization/:organizationId/buildings',
 		templateUrl: 'views/building.html',
 		controller: 'BuildingManageController',
 		access: {
@@ -139,7 +139,7 @@ ozayApp
 		}
 	})
 	.state('home.building_create', {
-		url: "/management/group/:organizationId/buildings/new",
+		url: "/management/organization/:organizationId/buildings/new",
 		controller:'BuildingController',
 		templateUrl: "/views/building_detail.html",
 		access: {
@@ -148,7 +148,7 @@ ozayApp
 	})
 	.state('home.building_edit', {
 
-		url: "/management/group/:organizationId/buildings/edit/:buildingId",
+		url: "/management/organization/:organizationId/buildings/edit/:buildingId",
 		controller:'BuildingController',
 		templateUrl: "/views/building_detail.html",
 		access: {
@@ -157,7 +157,7 @@ ozayApp
 	})
 	.state('home.role', {
 
-		url: "/management/group/:organizationId/buildings/:buildingId/roles",
+		url: "/management/organization/:organizationId/buildings/:buildingId/roles",
 		controller:'RoleController',
 		templateUrl: "/views/role.html",
 		access: {
@@ -166,7 +166,7 @@ ozayApp
 	})
 	.state('home.role_create', {
 
-		url: "/management/group/:organizationId/buildings/:buildingId/roles/new",
+		url: "/management/organization/:organizationId/buildings/:buildingId/roles/new",
 		controller:'RoleDetailController',
 		templateUrl: "/views/role_detail.html",
 		access: {
@@ -175,7 +175,7 @@ ozayApp
 	})
 	.state('home.role_edit', {
 
-		url: "/management/group/:organizationId/buildings/:buildingId/roles/edit/:roleId",
+		url: "/management/organization/:organizationId/buildings/:buildingId/roles/edit/:roleId",
 		controller:'RoleDetailController',
 		templateUrl: "/views/role_detail.html",
 		access: {
@@ -222,54 +222,62 @@ ozayApp
 			authorizedRoles: [USER_ROLES.admin,USER_ROLES.access_management, USER_ROLES.subscriber]
 		}
 	})
-	.state('home.group', {
-		url : '/management/group',
-		templateUrl: 'views/group.html',
+	.state('home.organization', {
+		url : '/management/organization',
+		templateUrl: 'views/organization.html',
 		controller: 'OrganizationController',
 		access: {
-			authorizedRoles: [USER_ROLES.access_management]
+			authorizedRoles: [USER_ROLES.admin,USER_ROLES.access_management, USER_ROLES.subscriber]
 		}
 	})
+    .state('home.organization_view', {
+    		url : '/management/organization/view/:organizationId',
+    		templateUrl: 'views/organization_view.html',
+    		controller: 'OrganizationViewController',
+    		access: {
+    			authorizedRoles: [USER_ROLES.admin,USER_ROLES.access_management, USER_ROLES.subscriber]
+    		}
+    	})
 
-	.state('home.group_edit', {
-		url : '/management/group/edit/:organizationId',
-		templateUrl: 'views/group_detail.html',
+	.state('home.organization_edit', {
+		url : '/management/organization/edit/:organizationId',
+		templateUrl: 'views/organization_detail.html',
 		controller: 'OrganizationDetailController',
 		access: {
-			authorizedRoles: [USER_ROLES.user]
+			authorizedRoles: [USER_ROLES.admin,USER_ROLES.access_management, USER_ROLES.subscriber]
 		}
 	})
-	.state('home.group_create', {
-		url : '/management/group/new',
-		templateUrl: 'views/group_detail.html',
+	.state('home.organization_create', {
+		url : '/management/organization/new',
+		templateUrl: 'views/organization_detail.html',
 		controller: 'OrganizationDetailController',
 		access: {
-			authorizedRoles: [USER_ROLES.user]
+			authorizedRoles: [USER_ROLES.admin,USER_ROLES.access_management, USER_ROLES.subscriber]
 		}
 	})
-	.state('home.group_users', {
-    		url : '/management/group/:organizationId/users/',
-    		templateUrl: 'views/group_users.html',
+	.state('home.organization_users', {
+    		url : '/management/organization/:organizationId/users/',
+    		templateUrl: 'views/organization_users.html',
     		controller: 'OrganizationUserController',
     		access: {
-    			authorizedRoles: [USER_ROLES.user]
+    			authorizedRoles: [USER_ROLES.admin,USER_ROLES.access_management, USER_ROLES.subscriber]
     		}
     	})
 
-    	.state('home.group_users_edit', {
-    		url : '/management/group/:organizationId/users/edit/:userId',
-    		templateUrl: 'views/group_users_detail.html',
+    	.state('home.organization_users_edit', {
+    		url : '/management/organization/:organizationId/users/edit/:userId',
+    		templateUrl: 'views/organization_users_detail.html',
     		controller: 'OrganizationUserDetailController',
     		access: {
-    			authorizedRoles: [USER_ROLES.user]
+    			authorizedRoles: [USER_ROLES.admin,USER_ROLES.access_management, USER_ROLES.subscriber]
     		}
     	})
-    	.state('home.group_users_create', {
-    		url : '/management/group/:organizationId/users/new',
-    		templateUrl: 'views/group_users_detail.html',
+    	.state('home.organization_users_create', {
+    		url : '/management/organization/:organizationId/users/new',
+    		templateUrl: 'views/organization_users_detail.html',
     		controller: 'OrganizationUserDetailController',
     		access: {
-    			authorizedRoles: [USER_ROLES.access_management]
+    			authorizedRoles: [USER_ROLES.admin,USER_ROLES.access_management, USER_ROLES.subscriber]
     		}
     	})
 
