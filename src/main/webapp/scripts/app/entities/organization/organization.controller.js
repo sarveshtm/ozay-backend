@@ -25,8 +25,8 @@ angular.module('ozayApp')
         $state.go('error');
     }
 	$scope.button = true;
-	if($state.current.name == 'home.group_edit'){
-        Organization.get({id:$stateParams.organizationId}).$promise.then(function(organization) {
+	if($state.current.name == 'home.organization_edit'){
+        Organization.get({id:$stateParams.organizationId, organization:$stateParams.organizationId}).$promise.then(function(organization) {
             $scope.organization = organization;
             $scope.edit_text = true;
         }, function(error){
