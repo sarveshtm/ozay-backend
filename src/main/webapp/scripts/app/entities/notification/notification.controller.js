@@ -35,7 +35,7 @@ angular.module('ozayApp')
 	// Get people in the building
 	$scope.getAll = function () {
 		Member.query({building:$rootScope.selectedBuilding}, function(result) {
-			result = $filter('orderBy')(result, 'unit');
+//			result = $filter('orderBy')(result, 'unit');
 			$scope.individualList = [];
 			$scope.returnedMemberList = result;
 			angular.forEach(result, function(value, key) {

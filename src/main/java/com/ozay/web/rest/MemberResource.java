@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
 import java.net.URISyntaxException;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -53,7 +55,9 @@ public class MemberResource {
     @Timed
     public List<Member> getAll(@RequestParam(value = "building") Long buildingId) {
         log.debug("REST request to get all building members");
-        return memberRepository.getAllUsersByBuilding(buildingId);
+        List<Member> list = memberRepository.getAllMembersByBuilding(buildingId);
+        Collections.sort(list);
+        return list;
     }
 
     /**
@@ -82,7 +86,7 @@ public class MemberResource {
     public ResponseEntity<JsonResponse> getNumberOfResidents(@RequestParam(value = "building") Long buildingId) {
         JsonResponse jsonResponse = new JsonResponse();
         log.debug("REST request to get all User Details");
-        Integer num = memberRepository.getAllUsersByBuilding(buildingId).size();
+        Integer num = memberRepository.getAllMembersByBuilding(buildingId).size();
         jsonResponse.setResponse(num.toString());
         return new ResponseEntity<JsonResponse>(jsonResponse,  new HttpHeaders(), HttpStatus.OK);
     }
