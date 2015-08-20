@@ -16,6 +16,7 @@
                     <tr>
                         <th></th>
                         <th><a href="" ng-click="predicate = 'name'; reverse=!reverse">Name</a></th>
+                        <th><a href="" ng-click="predicate = 'sortOrder'; reverse=!reverse">Sort Order</a></th>
                         <th></th>
                     </tr>
                     </thead>
@@ -23,7 +24,8 @@
                     <tr ng-repeat="role in roles | orderBy:predicate:reverse">
                         <td></td>
                         <td><a href="#/management/organization/{{organizationId}}/buildings/{{buildingId}}/roles/edit/{{role.id}}">{{role.name}}</a></td>
-                        <td>&nbsp;</td>
+                        <td>{{role.sortOrder}}</td>
+                        <td><div><select style="background-color:white;" class="form-control" ng-model="role.sortOrder" ng-change="processSort(role, '{{role.sortOrder}}')" ng-options="item.id as item.display for item in sortDropDown"></select></div></td>
                     </tr>
                     </tbody>
                 </table>

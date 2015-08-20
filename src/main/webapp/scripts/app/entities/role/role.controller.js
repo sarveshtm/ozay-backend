@@ -3,10 +3,51 @@
 angular.module('ozayApp')
 .controller('RoleController', function ($rootScope, $scope, $cookieStore, Session, $state, $location, $stateParams, Role) {
 	Role.query({building:$stateParams.buildingId}).$promise.then(function(roles) {
+	    var index = 1;
+	    $scope.sortDropDown = [];
+	    for(var i = 0;i<roles.length;i++){
+	        roles[i].sortOrder = index;
+            $scope.sortDropDown.push({id:index, display:index});
+	        index = index + 1;
+	    }
+
 		$scope.roles = roles;
 	}, function(error){
 
 	});
+
+	$scope.processSort = function (role, oldSortOrder) {
+	    var increased = true;
+
+	    if(role.sortOrder ==  oldSortOrder){
+	        return false;
+	    }
+
+	    if(role.sortOrder < oldSortOrder){
+            increased = false;
+        }
+
+        if(increased == false){
+            for(var i = 0; i<$scope.roles.length;i++){
+                if($scope.roles[i].id != role.id && $scope.roles[i].sortOrder >= role.sortOrder){
+                    $scope.roles[i].sortOrder = $scope.roles[i].sortOrder + 1;
+                }
+            }
+
+        } else {
+
+            for(var i = 0; i<$scope.roles.length;i++){
+                if($scope.roles[i].id != role.id && $scope.roles[i].sortOrder <= role.sortOrder){
+
+                    $scope.roles[i].sortOrder = $scope.roles[i].sortOrder - 1;
+                }
+            }
+
+        }
+
+
+	};
+
 	$scope.organizationId =$stateParams.organizationId
 	$scope.buildingId = $stateParams.buildingId;
 })
