@@ -11,7 +11,7 @@ angular.module('ozayApp')
 	$scope.building = {};
 
 	if($state.current.name == 'home.building_edit'){
-        Building.get({id:$stateParams.buildingId}).$promise.then(function(building) {
+        Building.get({id:$stateParams.buildingId, organization:$stateParams.organizationId}).$promise.then(function(building) {
         		$scope.building = building;
         		$scope.edit_text = true;
         	}, function(error){
@@ -29,7 +29,7 @@ angular.module('ozayApp')
 		if(confirm(message)){
     		if($state.current.name == 'home.building_create'){
 
-    		    Building.save($scope.building,
+    		    Building.save({organization:$stateParams.organizationId}, $scope.building,
                             function (data) {
                         $scope.showSuccessAlert = true;
 
@@ -44,7 +44,7 @@ angular.module('ozayApp')
                         $scope.button = true;
                     });
     		} else {
-    		    Building.update($scope.building,
+    		    Building.update({organization:$stateParams.organizationId}, $scope.building,
                         function (data) {
                     $scope.showSuccessAlert = true;
                     $scope.successTextAlert = data.response;

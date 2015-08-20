@@ -17,7 +17,7 @@
                     <thead>
                         <tr>
                             <th>Organization Info</th>
-                            <th colspan="3"><a href="#/management/organization/edit/{{organizationId}}">{{organization.name}}</a></th>
+                            <th colspan="4"><a href="#/management/organization/edit/{{organizationId}}">{{organization.name}}</a></th>
 
                         </tr>
                     </thead>
@@ -27,7 +27,7 @@
                         <th>Name</th>
                         <th>Total Units</th>
                         <th>Roles</th>
-
+                        <th></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -38,6 +38,7 @@
                         <td class="text-nowrap"><a href="#/management/organization/{{organizationId}}/buildings/edit/{{building.building.id}}">{{building.building.name}}</a></td>
                         <td>{{building.building.totalUnits}}</td>
                         <td><span ng-repeat="role in building.roleList"><span>{{role.name}}</span><span ng-if="!$last">, </span></span></span></td>
+                        <td><a href="#/management/organization/{{organizationId}}/buildings/{{building.building.id}}/roles">Roles</a></td>
                     </tr>
                     </tbody>
                 </table>
