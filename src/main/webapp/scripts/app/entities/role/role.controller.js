@@ -28,25 +28,40 @@ angular.module('ozayApp')
         }
 
         if(increased == false){
+        console.log("false");
             for(var i = 0; i<$scope.roles.length;i++){
                 if($scope.roles[i].id != role.id && $scope.roles[i].sortOrder >= role.sortOrder){
                     $scope.roles[i].sortOrder = $scope.roles[i].sortOrder + 1;
+
+                    if($scope.roles[i].id != role.id && oldSortOrder < $scope.roles[i].sortOrder && role.sortOrder >= $scope.roles[i].sortOrder){
+                        $scope.roles[i].sortOrder = $scope.roles[i].sortOrder +1;
+                    }
                 }
             }
 
         } else {
 
             for(var i = 0; i<$scope.roles.length;i++){
-                if($scope.roles[i].id != role.id && $scope.roles[i].sortOrder <= role.sortOrder){
-
+                if($scope.roles[i].id != role.id && oldSortOrder > $scope.roles[i].sortOrder && role.sortOrder <= $scope.roles[i].sortOrder){
                     $scope.roles[i].sortOrder = $scope.roles[i].sortOrder - 1;
                 }
             }
 
         }
-
-
 	};
+
+	$scope.updateMulti = function(){
+	    Role.update({method:"multi", building:$stateParams.buildingId}, $scope.roles,
+        						function (data) {
+        					$scope.showSuccessAlert = true;
+        					$scope.successTextAlert = data.response;
+        					$scope.button = true;
+        				}, function (error){
+        					$scope.showErrorAlert = true;
+        					$scope.errorTextAlert = "Error! Please try later.";
+        					$scope.button = true;
+        				});
+	}
 
 	$scope.organizationId =$stateParams.organizationId
 	$scope.buildingId = $stateParams.buildingId;

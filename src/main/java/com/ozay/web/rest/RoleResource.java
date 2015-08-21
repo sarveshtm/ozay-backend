@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -90,6 +91,26 @@ public class RoleResource {
         log.debug("REST request to save Role : {}", role);
 
         roleService.update(role);
+        JsonResponse json = new JsonResponse();
+        json.setSuccess(true);
+        return new ResponseEntity<JsonResponse>(json,  new HttpHeaders(), HttpStatus.OK);
+    }
+
+    /**
+     * PUT  /roles/multi -> Update multiple roles
+     */
+    @RequestMapping(value = "/role/multi",
+        method = RequestMethod.PUT,
+        consumes = "application/json",
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    @Transactional
+    public ResponseEntity<JsonResponse> updateMulti(@RequestBody List<Role> roles, @RequestParam(value = "building") Long buildingId) {
+        log.debug("REST request to save Roles : {}", roles);
+        for(Role role : roles ){
+            roleRepository.update(role);
+        }
+
         JsonResponse json = new JsonResponse();
         json.setSuccess(true);
         return new ResponseEntity<JsonResponse>(json,  new HttpHeaders(), HttpStatus.OK);

@@ -312,6 +312,7 @@ angular.module('ozayApp')
 	$scope.getNotification = function(){
 		Notification.get({building:$rootScope.selectedBuilding, id:$stateParams.notificationId}).$promise.then(function(notification) {
             $scope.notification = notification;
+            $scope.emailCount =notification.notificationRecordList.length;
 
 
 		}, function(error){
