@@ -41,19 +41,19 @@ public class OrganizationUserRepository {
         }
     }
 
-    public void create(long userId, long organizationId){
+    public void create(OrganizationUserDTO organizationUserDTO){
         String query="INSERT INTO organization_user (user_id, organization_id) VALUES(:userId, :organizationId)";
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("userId", userId);
-        params.addValue("organizationId", organizationId);
+        params.addValue("userId", organizationUserDTO.getUserId());
+        params.addValue("organizationId", organizationUserDTO.getOrganizationId());
         namedParameterJdbcTemplate.update(query,params);
     }
 
-    public void delete(long userId, long organizationId){
+    public void delete(OrganizationUserDTO organizationUserDTO){
         String query="DELETE FROM organization_user WHERE user_id:userId AND organization_id=:organizationId";
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("userId", userId);
-        params.addValue("organizationId", organizationId);
+        params.addValue("userId", organizationUserDTO.getUserId());
+        params.addValue("organizationId", organizationUserDTO.getOrganizationId());
         namedParameterJdbcTemplate.update(query,params);
     }
 }

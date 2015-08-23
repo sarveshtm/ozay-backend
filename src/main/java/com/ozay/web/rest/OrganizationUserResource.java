@@ -2,13 +2,14 @@ package com.ozay.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import com.ozay.domain.User;
-import com.ozay.repository.MemberRepository;
-import com.ozay.repository.OrganizationRepository;
-import com.ozay.repository.OrganizationUserRepository;
-import com.ozay.repository.UserRepository;
+import com.ozay.model.Organization;
+import com.ozay.model.OrganizationUserActivationKey;
+import com.ozay.repository.*;
+import com.ozay.security.SecurityUtils;
 import com.ozay.service.MailService;
 import com.ozay.service.OrganizationService;
 import com.ozay.service.UserService;
+import com.ozay.service.util.RandomUtil;
 import com.ozay.web.rest.dto.JsonResponse;
 import com.ozay.web.rest.dto.OrganizationUserDTO;
 import org.slf4j.Logger;
@@ -68,6 +69,8 @@ public class OrganizationUserResource {
     @Inject
     private OrganizationRepository organizationRepository;
 
+    @Inject
+    private OrganizationUserActivationKeyRepoistory organizationUserActivationKeyRepoistory;
 
     /**
      * GET  /organization-users
@@ -103,7 +106,7 @@ public class OrganizationUserResource {
         method = RequestMethod.POST,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public ResponseEntity<JsonResponse> addOrgUser(@RequestBody OrganizationUserDTO organizationUser, HttpServletRequest request,
+    public ResponseEntity<JsonResponse> addOrganizationUser(@RequestBody OrganizationUserDTO organizationUser, HttpServletRequest request,
                                                    HttpServletResponse response) {
         log.debug("REST request to add user to an organization, {}", organizationUser.getEmail());
 
@@ -122,9 +125,6 @@ public class OrganizationUserResource {
 
                 log.debug("User Detail create success");
                 organizationUser.setUserId(user.getId());
-                final Locale locale = Locale.forLanguageTag(user.getLangKey());
-                String content = createHtmlContentFromTemplate(user, locale, request, response);
-                mailService.sendActivationEmail(user.getEmail(), content, locale);
 
             } else{
                 organizationUser.setUserId(user.getId());
@@ -133,8 +133,7 @@ public class OrganizationUserResource {
             if (organizationUserRepository.findOrganizationUser(organizationUser.getUserId(),
                 organizationUser.getOrganizationId())==null){
 
-                organizationUserRepository.create(organizationUser.getUserId(),
-                    organizationUser.getOrganizationId());
+                organizationUserRepository.create(organizationUser);
             }
 
         }
@@ -146,16 +145,84 @@ public class OrganizationUserResource {
         return new ResponseEntity<JsonResponse>(json,  new HttpHeaders(), HttpStatus.CREATED);
     }
 
-    private String createHtmlContentFromTemplate(final User user, final Locale locale, final HttpServletRequest request,
+    /**
+     * POST  /organization-user/invite" -> invite organization user
+     */
+    @RequestMapping(value = "/organization-user/invite",
+        method = RequestMethod.POST,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    public ResponseEntity<?> inviteOrganizationuser(@RequestBody OrganizationUserDTO organizationUser,HttpServletRequest request,
+                                             HttpServletResponse response) {
+
+        User user = userRepository.findOneById(organizationUser.getUserId()).get();
+
+        if(user == null){
+            return new ResponseEntity<>("User doesn't exist", HttpStatus.BAD_REQUEST);
+        }
+        else if(user.getActivated() == true){
+            return new ResponseEntity<>("User already activated", HttpStatus.BAD_REQUEST);
+        }
+        OrganizationUserActivationKey organizationUserActivationKey = new OrganizationUserActivationKey();
+
+        organizationUserActivationKey.setUserId(organizationUser.getUserId());
+        organizationUserActivationKey.setCreatedBy(SecurityUtils.getCurrentLogin());
+        organizationUserActivationKey.setActivationKey(RandomUtil.generateActivationKey());
+
+        organizationUserActivationKeyRepoistory.create(organizationUserActivationKey);
+
+        Organization organization = organizationRepository.findOne(organizationUser.getOrganizationId());
+
+        final Locale locale = Locale.forLanguageTag(user.getLangKey());
+
+        String content = createHtmlContentFromTemplate(user, organization, organizationUserActivationKey, locale, request, response);
+
+        mailService.sendActivationEmail(user.getEmail(), content, locale);
+
+        JsonResponse json = new JsonResponse();
+        json.setSuccess(true);
+        return new ResponseEntity<JsonResponse>(json,  new HttpHeaders(), HttpStatus.CREATED);
+    }
+
+    private String createHtmlContentFromTemplate(final User user, final Organization organization, final OrganizationUserActivationKey organizationUserActivationKey, final Locale locale, final HttpServletRequest request,
                                                  final HttpServletResponse response) {
         Map<String, Object> variables = new HashMap<>();
         variables.put("user", user);
+        variables.put("organization", organization);
+        variables.put("organizationUserActivationKey", organizationUserActivationKey);
         variables.put("baseUrl", request.getScheme() + "://" +   // "http" + "://
             request.getServerName() +       // "myhost"
             ":" + request.getServerPort());
         IWebContext context = new SpringWebContext(request, response, servletContext,
             locale, variables, applicationContext);
-        return templateEngine.process("activationEmail", context);
+        return templateEngine.process("organizationUserInvitationEmail", context);
     }
+
+    /**
+     * PUT  /organization-user
+     */
+    @RequestMapping(value = "/organization-user",
+        method = RequestMethod.PUT,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    public ResponseEntity<JsonResponse> updateOrganizationUser(@RequestBody OrganizationUserDTO organizationUser, HttpServletRequest request,
+                                                            HttpServletResponse response) {
+        log.debug("REST request to updade user to an organization, {}", organizationUser.getEmail());
+
+        JsonResponse json = new JsonResponse();
+
+        User user = userRepository.findOneById(organizationUser.getUserId()).get();
+
+        if(user == null || user.getActivated() == true){
+            json.setSuccess(false);
+            return new ResponseEntity<JsonResponse>(json, HttpStatus.BAD_REQUEST);
+        }
+
+        organizationService.updateOrganizationPermission(organizationUser);
+
+        return new ResponseEntity<JsonResponse>(json,  new HttpHeaders(), HttpStatus.CREATED);
+    }
+
+
 
 }

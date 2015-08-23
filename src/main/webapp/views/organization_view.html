@@ -5,8 +5,12 @@
             <div id="page_content_title">
                 ORGANIZATION
                 <div class="button_group">
+                    <a href="#/management/organization/{{organizationId}}/users/new"><button class="btn btn-default">Add Users</button></a>
+                </div>
+                <div class="button_group">
                     <a href="#/management/organization/{{organizationId}}/buildings/new"><button class="btn btn-default">Add Building</button></a>
                 </div>
+
                 <div class="clear"></div>
             </div>
 
@@ -40,7 +44,27 @@
                         <td><span ng-repeat="role in building.roleList"><span>{{role.name}}</span><span ng-if="!$last">, </span></span></span></td>
                         <td><a href="#/management/organization/{{organizationId}}/buildings/{{building.building.id}}/roles">Roles</a></td>
                     </tr>
+
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                    </thead>
+
+                    <tr ng-repeat="organizationUser in organizationUsers">
+
+                        <td><span ng-if="$first"></span></td>
+                        <td class="text-nowrap">{{organizationUser.firstName}}</td>
+                        <td>{{organizationUser.lastName}}</td>
+                        <td></td>
+                        <td><a href="#/management/organization/{{organizationId}}/users/edit/{{organizationUser.id}}">Edit</a></td>
+                    </tr>
                     </tbody>
+
                 </table>
             </div>
         </div>

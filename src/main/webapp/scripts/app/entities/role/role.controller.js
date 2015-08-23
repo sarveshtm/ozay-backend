@@ -31,9 +31,7 @@ angular.module('ozayApp')
         console.log("false");
             for(var i = 0; i<$scope.roles.length;i++){
                 if($scope.roles[i].id != role.id && $scope.roles[i].sortOrder >= role.sortOrder){
-                    $scope.roles[i].sortOrder = $scope.roles[i].sortOrder + 1;
-
-                    if($scope.roles[i].id != role.id && oldSortOrder < $scope.roles[i].sortOrder && role.sortOrder >= $scope.roles[i].sortOrder){
+                    if($scope.roles[i].id != role.id && oldSortOrder > $scope.roles[i].sortOrder && role.sortOrder <= $scope.roles[i].sortOrder){
                         $scope.roles[i].sortOrder = $scope.roles[i].sortOrder +1;
                     }
                 }
@@ -42,7 +40,7 @@ angular.module('ozayApp')
         } else {
 
             for(var i = 0; i<$scope.roles.length;i++){
-                if($scope.roles[i].id != role.id && oldSortOrder > $scope.roles[i].sortOrder && role.sortOrder <= $scope.roles[i].sortOrder){
+                if($scope.roles[i].id != role.id && oldSortOrder < $scope.roles[i].sortOrder && role.sortOrder >= $scope.roles[i].sortOrder){
                     $scope.roles[i].sortOrder = $scope.roles[i].sortOrder - 1;
                 }
             }

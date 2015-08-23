@@ -33,4 +33,12 @@ public class RoleMemberRepository {
         namedParameterJdbcTemplate.update(query,params);
     }
 
+    public void deleteAll(long memberId){
+        String query="DELETE FROM role_member WHERE member_id=:memberId";
+        MapSqlParameterSource params = new MapSqlParameterSource();
+
+        params.addValue("memberId", memberId);
+        namedParameterJdbcTemplate.update(query,params);
+    }
+
 }

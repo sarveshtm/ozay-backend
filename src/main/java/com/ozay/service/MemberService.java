@@ -57,12 +57,9 @@ public class MemberService {
 
     @Transactional
     public void create(Member member){
-
         Long id = memberRepository.create(member);
 
-        for(Role role : member.getRoles()){
-            roleMemberRepository.create(role.getId(), id);
-        }
+        this.createRoleMemberPermissions(member);
     }
 
     @Transactional
@@ -71,9 +68,12 @@ public class MemberService {
         member.setUnit(member.getUnit().toUpperCase());
         memberRepository.update(member);
 
-        for(Role role : currentMember.getRoles()){
-            roleMemberRepository.delete(role.getId(), currentMember.getId());
-        }
+        roleMemberRepository.deleteAll(currentMember.getId());
+
+        this.createRoleMemberPermissions(member);
+    }
+
+    private void createRoleMemberPermissions(Member member){
         for(Role role : member.getRoles()){
             roleMemberRepository.create(role.getId(), member.getId());
         }

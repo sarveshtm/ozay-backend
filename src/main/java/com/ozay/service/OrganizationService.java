@@ -22,8 +22,6 @@ public class OrganizationService {
     @Inject
     OrganizationPermissionRepository organizationPermissionRepository;
 
-    //@Inject
-    //private OrganizationPermission organizationPermission;
     @Transactional
     public void updateOrganizationPermission(OrganizationUserDTO organizationUser) {
         OrganizationPermission organizationPermission = new OrganizationPermission();

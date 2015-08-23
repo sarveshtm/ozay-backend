@@ -30,10 +30,7 @@ public class RoleService {
     @Transactional
     public void create(Role role){
         Long id = roleRepository.create(role);
-        for(RolePermission rolePermission : role.getRolePermissions()){
-            rolePermission.setRoleId(id);
-            rolePermissionRepository.create(rolePermission);
-        }
+        this.createRollPermissions(role);
     }
 
     @Transactional
@@ -44,9 +41,13 @@ public class RoleService {
         for(RolePermission currentRolePermission : rolePermissions){
             rolePermissionRepository.delete(currentRolePermission);
         }
+        this.createRollPermissions(role);
+    }
+
+    private void createRollPermissions(Role role){
         for(RolePermission rolePermission : role.getRolePermissions()){
-                rolePermission.setRoleId(role.getId());
-                rolePermissionRepository.create(rolePermission);
+            rolePermission.setRoleId(role.getId());
+            rolePermissionRepository.create(rolePermission);
         }
     }
 

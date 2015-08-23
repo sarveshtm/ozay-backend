@@ -6,7 +6,9 @@
             <div id="page_content_title">
                 ROLE | LIST
                 <div class="button_group">
-                    <button class="btn btn-default" type="submit">Submit</button>
+                    Sort Update
+                    <input type="checkbox" ng-model="sortUpdate">
+                    <button ng-show="sortUpdate==true" class="btn btn-default" type="submit">Sort Update</button>
                     <a href="#/management/organization/{{organizationId}}/buildings/{{buildingId}}/roles/new"><button class="btn btn-default" type="submit">ADD</button></a>
                 </div>
                 <div class="clear"></div>
@@ -31,7 +33,7 @@
                         <th></th>
                         <th><a href="" ng-click="predicate = 'name'; reverse=!reverse">Name</a></th>
                         <th><a href="" ng-click="predicate = 'sortOrder'; reverse=!reverse">Sort Order</a></th>
-                        <th></th>
+                        <th ng-show="sortUpdate==true"></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -39,7 +41,7 @@
                         <td></td>
                         <td><a href="#/management/organization/{{organizationId}}/buildings/{{buildingId}}/roles/edit/{{role.id}}">{{role.name}}</a></td>
                         <td>{{role.sortOrder}}</td>
-                        <td><div><select style="background-color:white;" class="form-control" ng-model="role.sortOrder" ng-change="processSort(role, '{{role.sortOrder}}')" ng-options="item.id as item.display for item in sortDropDown"></select></div></td>
+                        <td ng-show="sortUpdate==true"><div><select style="background-color:white;" class="form-control" ng-model="role.sortOrder" ng-change="processSort(role, '{{role.sortOrder}}')" ng-options="item.id as item.display for item in sortDropDown"></select></div></td>
                     </tr>
                     </tbody>
                 </table>

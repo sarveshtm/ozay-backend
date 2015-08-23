@@ -13,6 +13,7 @@ angular.module('ozayApp')
 	Page.get({id:$stateParams.organizationId, entity:"organization", organization:$stateParams.organizationId}).$promise.then(function(page) {
                 $scope.organization = page.organization;
                 $scope.buildings = page.buildingRoleWrapperDTOs;
+                $scope.organizationUsers = page.userDTOs;
             }, function(error){
                 $state.go('error');
             });

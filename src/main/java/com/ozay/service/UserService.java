@@ -181,8 +181,7 @@ public class UserService {
     }
 
     private AccountInformation getUserInformation(User user, Long buildingId){
-        System.out.println(user.getId());
-        System.out.println(buildingId);
+
         AccountInformation accountInformation = null;
         if(buildingId == null){
             accountInformation = accountRepository.getLoginUserInformation(user);

@@ -74,10 +74,10 @@ public class RequestInterceptor extends HandlerInterceptorAdapter {
         Long organizationId = this.parseNumber(request.getParameter("organization"));
 
 
-        // temp
-        //if(organizationId != null){
-          //  return true;
-        //}
+         // temp
+        if(organizationId != null){
+            return true;
+        }
 
 
         if((buildingId == null || buildingId == 0) && (organizationId == null || organizationId == 0 )){

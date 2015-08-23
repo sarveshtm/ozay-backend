@@ -13,13 +13,11 @@ import com.ozay.service.InvitedMemberService;
 import com.ozay.service.MailService;
 import com.ozay.service.UserService;
 import com.ozay.web.rest.dto.InvitedUserDTO;
-import com.ozay.web.rest.dto.JsonResponse;
 import com.ozay.web.rest.dto.UserDTO;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -130,13 +128,13 @@ public class AccountResource {
     }
 
 //    /**
-//     * POST  /rest/register -> register the user.
+//     * POST  /rest/invitation -> invite member register the user.
 //     */
     @RequestMapping(value = "/rest/account/invitation",
         method = RequestMethod.POST,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public ResponseEntity<?> sendInvitation(@RequestBody Member member, HttpServletRequest request,
+    public ResponseEntity<?> sendInvitationToMember(@RequestBody Member member, HttpServletRequest request,
                                              HttpServletResponse response) {
         if(member.getUserId() != 0 || member.getUserId() != null){
             new ResponseEntity<>("User is already exist", HttpStatus.BAD_REQUEST);
@@ -301,6 +299,7 @@ public class AccountResource {
         return Optional.ofNullable(userService.getUserWithAuthorities())
             .map(user -> new ResponseEntity<>(
                 new UserDTO(
+                    user.getId(),
                     user.getLogin(),
                     null,
                     user.getFirstName(),
@@ -324,6 +323,7 @@ public class AccountResource {
         return Optional.ofNullable(userService.getUserWithAuthorities(buildingId))
             .map(user -> new ResponseEntity<>(
                 new UserDTO(
+                    user.getId(),
                     user.getLogin(),
                     null,
                     user.getFirstName(),
@@ -458,7 +458,7 @@ public class AccountResource {
         return templateEngine.process("invitedMemberActivationEmail", context);
     }
 
-    @RequestMapping(value = "/account/reset_password/init",
+    @RequestMapping(value = "/rest/account/reset_password/init",
         method = RequestMethod.POST,
         produces = MediaType.TEXT_PLAIN_VALUE)
     @Timed
@@ -477,7 +477,7 @@ public class AccountResource {
 
     }
 
-    @RequestMapping(value = "/account/reset_password/finish",
+    @RequestMapping(value = "/rest/account/reset_password/finish",
         method = RequestMethod.POST,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
