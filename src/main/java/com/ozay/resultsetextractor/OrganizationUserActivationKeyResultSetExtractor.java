@@ -17,13 +17,16 @@ import java.util.List;
 public class OrganizationUserActivationKeyResultSetExtractor implements ResultSetExtractor {
 
     public Object extractData(ResultSet rs) throws SQLException{
-        List<OrganizationUserActivationKey> list = new ArrayList<OrganizationUserActivationKey>();
+        List<OrganizationUserActivationKey> list = null;
         OrganizationUserActivationKey organizationUserActivationKey = null;
         while(rs.next()){
             organizationUserActivationKey = new OrganizationUserActivationKey();
             organizationUserActivationKey.setId(rs.getLong("id"));
             organizationUserActivationKey.setUserId(rs.getLong("user_id"));
             organizationUserActivationKey.setActivationKey(rs.getString("activation_key"));
+            if(list == null){
+                list = new ArrayList<OrganizationUserActivationKey>();
+            }
             list.add(organizationUserActivationKey);
             break;
         }
