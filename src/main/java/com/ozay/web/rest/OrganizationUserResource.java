@@ -12,6 +12,7 @@ import com.ozay.service.UserService;
 import com.ozay.service.util.RandomUtil;
 import com.ozay.web.rest.dto.JsonResponse;
 import com.ozay.web.rest.dto.OrganizationUserDTO;
+import com.ozay.web.rest.dto.UserDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
@@ -70,7 +71,7 @@ public class OrganizationUserResource {
     private OrganizationRepository organizationRepository;
 
     @Inject
-    private OrganizationUserActivationKeyRepoistory organizationUserActivationKeyRepoistory;
+    private OrganizationUserActivationKeyRepository organizationUserActivationKeyRepository;
 
     /**
      * GET  /organization-users
@@ -97,6 +98,30 @@ public class OrganizationUserResource {
             map(user -> new ResponseEntity<>(user, HttpStatus.OK))
             .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
 
+    }
+
+    /**
+     * GET  organization-user
+     */
+    @RequestMapping(value = "/organization-user/key",
+        method = RequestMethod.GET,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    public ResponseEntity<?> getOrganizationUserByKey(@RequestParam(value = "key") String key) {
+        log.debug("REST request to get Organization User : key {} ", key);
+        OrganizationUserActivationKey organizationUserActivationKey = organizationUserActivationKeyRepository.findByKey(key);
+
+        User user = userRepository.findOneById(organizationUserActivationKey.getUserId()).get();
+
+        if(user == null || user.getActivated() == true){
+            return new ResponseEntity<>("User doesn't exist", HttpStatus.BAD_REQUEST);
+        }
+
+        UserDTO userDTO = new UserDTO();
+        userDTO.setFirstName(user.getFirstName());
+        userDTO.setLastName(user.getLastName());
+
+        return new ResponseEntity<UserDTO>(userDTO, HttpStatus.OK);
     }
 
     /**
@@ -146,13 +171,45 @@ public class OrganizationUserResource {
     }
 
     /**
+     * PUT  /organization-user
+     */
+    @RequestMapping(value = "/organization-user",
+        method = RequestMethod.PUT,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    public ResponseEntity<?> updateOrganizationUser(@RequestBody OrganizationUserDTO organizationUser) {
+        log.debug("REST request to update organization user, {}", organizationUser);
+        Optional<User> temp_user = userRepository.findOneById(organizationUser.getUserId());
+
+        if(temp_user == null){
+            return new ResponseEntity<>("User doesn't exist", HttpStatus.BAD_REQUEST);
+        }
+        User user = temp_user.get();
+
+        organizationService.updateOrganizationPermission(organizationUser);
+
+        log.debug("REST request user information, {}", user);
+        if(user.getActivated() == false){
+            user.setFirstName(organizationUser.getFirstName());
+            user.setLastName(organizationUser.getLastName());
+            user.setEmail(organizationUser.getEmail());
+            userRepository.save(user);
+        }
+
+
+        JsonResponse json = new JsonResponse();
+        json.setSuccess(true);
+        return new ResponseEntity<JsonResponse>(json,  new HttpHeaders(), HttpStatus.OK);
+    }
+
+    /**
      * POST  /organization-user/invite" -> invite organization user
      */
     @RequestMapping(value = "/organization-user/invite",
         method = RequestMethod.POST,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public ResponseEntity<?> inviteOrganizationuser(@RequestBody OrganizationUserDTO organizationUser,HttpServletRequest request,
+    public ResponseEntity<?> inviteOrganizationUser(@RequestBody OrganizationUserDTO organizationUser,HttpServletRequest request,
                                              HttpServletResponse response) {
 
         User user = userRepository.findOneById(organizationUser.getUserId()).get();
@@ -169,7 +226,7 @@ public class OrganizationUserResource {
         organizationUserActivationKey.setCreatedBy(SecurityUtils.getCurrentLogin());
         organizationUserActivationKey.setActivationKey(RandomUtil.generateActivationKey());
 
-        organizationUserActivationKeyRepoistory.create(organizationUserActivationKey);
+        organizationUserActivationKeyRepository.create(organizationUserActivationKey);
 
         Organization organization = organizationRepository.findOne(organizationUser.getOrganizationId());
 
@@ -197,32 +254,6 @@ public class OrganizationUserResource {
             locale, variables, applicationContext);
         return templateEngine.process("organizationUserInvitationEmail", context);
     }
-
-    /**
-     * PUT  /organization-user
-     */
-    @RequestMapping(value = "/organization-user",
-        method = RequestMethod.PUT,
-        produces = MediaType.APPLICATION_JSON_VALUE)
-    @Timed
-    public ResponseEntity<JsonResponse> updateOrganizationUser(@RequestBody OrganizationUserDTO organizationUser, HttpServletRequest request,
-                                                            HttpServletResponse response) {
-        log.debug("REST request to updade user to an organization, {}", organizationUser.getEmail());
-
-        JsonResponse json = new JsonResponse();
-
-        User user = userRepository.findOneById(organizationUser.getUserId()).get();
-
-        if(user == null || user.getActivated() == true){
-            json.setSuccess(false);
-            return new ResponseEntity<JsonResponse>(json, HttpStatus.BAD_REQUEST);
-        }
-
-        organizationService.updateOrganizationPermission(organizationUser);
-
-        return new ResponseEntity<JsonResponse>(json,  new HttpHeaders(), HttpStatus.CREATED);
-    }
-
 
 
 }

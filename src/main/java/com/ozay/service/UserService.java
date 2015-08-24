@@ -75,9 +75,11 @@ public class UserService {
             .orElse(null);
     }
 
+
+// Used for organization invitation
     public User activateInvitedUser(User user){
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        accountRepository.updateInvitedUser(user);
+        accountRepository.updateInvitedOrganizationUser(user);
         return user;
     }
 

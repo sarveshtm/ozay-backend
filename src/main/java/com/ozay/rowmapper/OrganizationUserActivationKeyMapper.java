@@ -16,7 +16,7 @@ public class OrganizationUserActivationKeyMapper implements RowMapper {
         OrganizationUserActivationKey organizationUserActivationKey = new OrganizationUserActivationKey();
         organizationUserActivationKey.setId(rs.getLong("id"));
         organizationUserActivationKey.setUserId(rs.getLong("user_id"));
-        organizationUserActivationKey.setActivationKey(rs.getLong("key"));
+        organizationUserActivationKey.setActivationKey(rs.getString("activation_key"));
 
         return organizationUserActivationKey;
     }

@@ -10,6 +10,51 @@ angular.module('ozayApp')
 
 	});
 
+})
+.controller('OrganizationUserActivateController', function ($rootScope, $scope, $stateParams, $state, OrganizationUserActivation) {
+	var key = $state.params.key;
+
+	if(key == undefined || key == false){
+		$state.go('error');
+	}
+
+	OrganizationUserActivation.get({key:key}).$promise.then(function(result) {
+	    result.login = "";
+	    $scope.registerAccount = result;
+
+	}, function(error){
+
+		alert("error");
+	});
+
+	$scope.register = function () {
+
+		if ($scope.registerAccount.password != $scope.confirmPassword) {
+			$scope.doNotMatch = "ERROR";
+		} else {
+			$scope.doNotMatch = null;
+			$scope.success = null;
+			$scope.error = null;
+			$scope.errorUserExists = null;
+			$scope.errorEmailExists = null;
+			OrganizationUserActivation.activate({key: $stateParams.key}, $scope.registerAccount,
+					function (value, responseHeaders) {
+				$scope.success = 'OK';
+			},
+			function (httpResponse) {
+            				if (httpResponse.status === 400 && httpResponse.data === "login already in use") {
+            					$scope.error = null;
+            					$scope.errorUserExists = "ERROR";
+            				} else if (httpResponse.status === 400 && httpResponse.data === "e-mail address already in use") {
+            					$scope.error = null;
+            					$scope.errorEmailExists = "ERROR";
+            				} else {
+            					$scope.error = "ERROR";
+            				}
+            			});
+		}
+	}
+
 
 })
 .controller('OrganizationUserDetailController', function ($rootScope, $scope, $stateParams, $state, OrganizationUser, Permission) {
@@ -18,7 +63,8 @@ angular.module('ozayApp')
 		$state.go('error');
 	}
 	$scope.organizationUser= {};
-	$scope.button=true
+	$scope.button=true;
+	$scope.inviteButton=true;
 	$scope.access = [];
 	$scope.accessList = [];
 	$scope.organizationId = $stateParams.organizationId;
@@ -70,6 +116,25 @@ angular.module('ozayApp')
 		}
 	}
 
+	$scope.inviteUser = function(){
+		$scope.inviteButton=false;
+		var result = confirm("Would like to save this user?");
+		if(result){
+			OrganizationUser.save({organization:$stateParams.organizationId, method:"invite"}, $scope.organizationUser,
+					function (data) {
+				$scope.showSuccessAlert = true;
+				$scope.successTextAlert = "Successfully invited";
+				$scope.inviteButton=true;
+
+				//$scope.successTextAlert = data.response;
+			}, function (error){
+				$scope.showErrorAlert = true;
+				$scope.errorTextAlert = "Error! Please try later.";
+				$scope.inviteButton=true;
+			});
+		}
+	}
+
 	$scope.update = function () {
 		$scope.showErrorAlert = false;
 		$scope.errorTextAlert = "";
@@ -81,24 +146,37 @@ angular.module('ozayApp')
 			return;
 		}
 
-		var result = confirm("Would like to invite this user?");
+		var result = confirm("Would like to save this user?");
 		if(result){
 			$scope.organizationUser.organizationId = $stateParams.organizationId;
-			OrganizationUser.save({organization:$stateParams.organizationId},$scope.organizationUser,
-					function (data) {
-				$scope.showSuccessAlert = true;
-				$scope.successTextAlert = "successfully done";
-				$scope.button = false;
-				//$scope.successTextAlert = data.response;
-			}, function (error){
-				$scope.showErrorAlert = true;
-				$scope.errorTextAlert = "Error! Please try later.";
-				$scope.button = true;
-			});
-		}else{
+			$scope.button=true;
+			if($state.current.name == 'home.organization_users_edit'){
+				OrganizationUser.update({organization:$stateParams.organizationId},$scope.organizationUser,
+						function (data) {
+					$scope.showSuccessAlert = true;
+					$scope.successTextAlert = "successfully done";
+
+					//$scope.successTextAlert = data.response;
+				}, function (error){
+					$scope.showErrorAlert = true;
+					$scope.errorTextAlert = "Error! Please try later.";
+
+				});
+			} else if($state.current.name == 'home.organization_users_create'){
+				OrganizationUser.save({organization:$stateParams.organizationId},$scope.organizationUser,
+						function (data) {
+					$scope.showSuccessAlert = true;
+					$scope.successTextAlert = "successfully done";
+
+					//$scope.successTextAlert = data.response;
+				}, function (error){
+					$scope.showErrorAlert = true;
+					$scope.errorTextAlert = "Error! Please try later.";
+
+				});
+			}
 			$scope.button = true;
 		}
-
 	}
 
 });

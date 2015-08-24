@@ -132,9 +132,23 @@ public class AccountRepository {
     }
 
     public void updateInvitedUser(User user){
-        String query = "UPDATE USER SET login=:login, password=:password, activated=true WHERE activation_key = :activationKey";
+        String query = "UPDATE t_user SET login=:login, password=:password, activated=true WHERE activation_key = :activationKey";
         MapSqlParameterSource parameterSource = new MapSqlParameterSource();
         parameterSource.addValue("activationKey", user.getActivationKey());
+        namedParameterJdbcTemplate.update(query, parameterSource);
+    }
+
+    public void updateInvitedOrganizationUser(User user){
+        String query = "UPDATE t_user SET login=:login, password=:password, first_name=:firstName, last_name=:lastName, activated=:activated WHERE id = :id";
+        MapSqlParameterSource parameterSource = new MapSqlParameterSource();
+        parameterSource.addValue("id", user.getId());
+        parameterSource.addValue("login", user.getLogin());
+        parameterSource.addValue("password", user.getPassword());
+        parameterSource.addValue("activated", user.getActivated());
+        parameterSource.addValue("firstName", user.getFirstName());
+        parameterSource.addValue("lastName", user.getLastName());
+
+
         namedParameterJdbcTemplate.update(query, parameterSource);
     }
 

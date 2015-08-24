@@ -305,14 +305,14 @@ angular.module('ozayApp')
 	});
 })
 .controller('NotificationArchiveViewController', function ($scope, $rootScope, $stateParams, Notification, $sce) {
-    $scope.trustAsHtml = function(html){
-            return $sce.trustAsHtml(html);
-        }
+	$scope.trustAsHtml = function(html){
+		return $sce.trustAsHtml(html);
+	}
 
 	$scope.getNotification = function(){
 		Notification.get({building:$rootScope.selectedBuilding, id:$stateParams.notificationId}).$promise.then(function(notification) {
-            $scope.notification = notification;
-            $scope.emailCount =notification.notificationRecordList.length;
+			$scope.notification = notification;
+			$scope.emailCount =notification.notificationRecordList.length;
 
 
 		}, function(error){

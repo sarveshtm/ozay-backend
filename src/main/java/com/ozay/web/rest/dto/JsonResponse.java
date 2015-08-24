@@ -8,17 +8,15 @@ import java.util.List;
  */
 public class JsonResponse {
 
-    private String code;
 
     private boolean success;
 
     private Object response;
 
-    private List<FieldErrorDTO> fieldErrorDTOs;
+    private List<FieldErrorDTO> errors;
 
     public JsonResponse(){
         this.success = true;
-        this.code = "200";
     }
 
     public boolean isSuccess() {
@@ -37,20 +35,12 @@ public class JsonResponse {
         this.response = response;
     }
 
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
     public List<FieldErrorDTO> getFieldErrorDTOs() {
-        return fieldErrorDTOs;
+        return errors;
     }
 
     public void setFieldErrorDTOs(List<FieldErrorDTO> fieldErrorDTOs) {
-        this.fieldErrorDTOs = fieldErrorDTOs;
+        this.errors = fieldErrorDTOs;
     }
 
     public void addFieldErrorDTO(FieldErrorDTO fieldErrorDTO){

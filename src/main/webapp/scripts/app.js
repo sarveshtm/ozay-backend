@@ -19,6 +19,14 @@ ozayApp
 			authorizedRoles: [USER_ROLES.all]
 		}
 	})
+	.state('organization-user-activate', {
+		url: "/organization-user-activate?key=value",
+		templateUrl: "views/organization_user_activate.html",
+		controller: 'OrganizationUserActivateController',
+		access: {
+			authorizedRoles: [USER_ROLES.all]
+		}
+	})
 	.state('activate', {
 		url: "/activate?key",
 		templateUrl: "views/activate.html",
@@ -116,13 +124,13 @@ ozayApp
 		}
 	})
 	.state('home.notification_archive_view', {
-    		url: "/notification_archive/view/:notificationId",
-    		templateUrl: "/views/notification_archive_view.html",
-    		controller: 'NotificationArchiveViewController',
-    		access: {
-    			authorizedRoles: [USER_ROLES.admin, USER_ROLES.access_notification_archive, USER_ROLES.subscriber]
-    		}
-    	})
+		url: "/notification_archive/view/:notificationId",
+		templateUrl: "/views/notification_archive_view.html",
+		controller: 'NotificationArchiveViewController',
+		access: {
+			authorizedRoles: [USER_ROLES.admin, USER_ROLES.access_notification_archive, USER_ROLES.subscriber]
+		}
+	})
 	.state('home.collaborate_create', {
 		url: "/collaborate_create",
 		templateUrl: "/views/collaborate_create.html",
@@ -139,12 +147,12 @@ ozayApp
 		}
 	})
 //	.state('home.buildings', {
-//		url : '/management/organization/:organizationId/buildings',
-//		templateUrl: 'views/building.html',
-//		controller: 'BuildingManageController',
-//		access: {
-//			authorizedRoles: [USER_ROLES.user]
-//		}
+//	url : '/management/organization/:organizationId/buildings',
+//	templateUrl: 'views/building.html',
+//	controller: 'BuildingManageController',
+//	access: {
+//	authorizedRoles: [USER_ROLES.user]
+//	}
 //	})
 	.state('home.building_create', {
 		url: "/management/organization/:organizationId/buildings/new",
@@ -237,14 +245,14 @@ ozayApp
 			authorizedRoles: [USER_ROLES.admin,USER_ROLES.access_management, USER_ROLES.subscriber]
 		}
 	})
-    .state('home.organization_view', {
-    		url : '/management/organization/view/:organizationId',
-    		templateUrl: 'views/organization_view.html',
-    		controller: 'OrganizationViewController',
-    		access: {
-    			authorizedRoles: [USER_ROLES.admin,USER_ROLES.access_management, USER_ROLES.subscriber]
-    		}
-    	})
+	.state('home.organization_view', {
+		url : '/management/organization/view/:organizationId',
+		templateUrl: 'views/organization_view.html',
+		controller: 'OrganizationViewController',
+		access: {
+			authorizedRoles: [USER_ROLES.admin,USER_ROLES.access_management, USER_ROLES.subscriber]
+		}
+	})
 
 	.state('home.organization_edit', {
 		url : '/management/organization/edit/:organizationId',
@@ -263,30 +271,30 @@ ozayApp
 		}
 	})
 	.state('home.organization_users', {
-    		url : '/management/organization/:organizationId/users/',
-    		templateUrl: 'views/organization_users.html',
-    		controller: 'OrganizationUserController',
-    		access: {
-    			authorizedRoles: [USER_ROLES.admin,USER_ROLES.access_management, USER_ROLES.subscriber]
-    		}
-    	})
+		url : '/management/organization/:organizationId/users/',
+		templateUrl: 'views/organization_users.html',
+		controller: 'OrganizationUserController',
+		access: {
+			authorizedRoles: [USER_ROLES.admin,USER_ROLES.access_management, USER_ROLES.subscriber]
+		}
+	})
 
-    	.state('home.organization_users_edit', {
-    		url : '/management/organization/:organizationId/users/edit/:userId',
-    		templateUrl: 'views/organization_users_detail.html',
-    		controller: 'OrganizationUserDetailController',
-    		access: {
-    			authorizedRoles: [USER_ROLES.admin,USER_ROLES.access_management, USER_ROLES.subscriber]
-    		}
-    	})
-    	.state('home.organization_users_create', {
-    		url : '/management/organization/:organizationId/users/new',
-    		templateUrl: 'views/organization_users_detail.html',
-    		controller: 'OrganizationUserDetailController',
-    		access: {
-    			authorizedRoles: [USER_ROLES.admin,USER_ROLES.access_management, USER_ROLES.subscriber]
-    		}
-    	})
+	.state('home.organization_users_edit', {
+		url : '/management/organization/:organizationId/users/edit/:userId',
+		templateUrl: 'views/organization_users_detail.html',
+		controller: 'OrganizationUserDetailController',
+		access: {
+			authorizedRoles: [USER_ROLES.admin,USER_ROLES.access_management, USER_ROLES.subscriber]
+		}
+	})
+	.state('home.organization_users_create', {
+		url : '/management/organization/:organizationId/users/new',
+		templateUrl: 'views/organization_users_detail.html',
+		controller: 'OrganizationUserDetailController',
+		access: {
+			authorizedRoles: [USER_ROLES.admin,USER_ROLES.access_management, USER_ROLES.subscriber]
+		}
+	})
 
 
 	.state('home.search', {
@@ -427,6 +435,4 @@ ozayApp
 			$rootScope.getAccountInfo();
 		});
 	}
-
-
 });

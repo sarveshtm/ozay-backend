@@ -11,30 +11,30 @@ angular.module('ozayApp')
 })
 .controller('OrganizationViewController', function ($rootScope, $scope, $stateParams, Page) {
 	Page.get({id:$stateParams.organizationId, entity:"organization", organization:$stateParams.organizationId}).$promise.then(function(page) {
-                $scope.organization = page.organization;
-                $scope.buildings = page.buildingRoleWrapperDTOs;
-                $scope.organizationUsers = page.userDTOs;
-            }, function(error){
-                $state.go('error');
-            });
-            $scope.organizationId = $stateParams.organizationId;
+		$scope.organization = page.organization;
+		$scope.buildings = page.buildingRoleWrapperDTOs;
+		$scope.organizationUsers = page.userDTOs;
+	}, function(error){
+		$state.go('error');
+	});
+	$scope.organizationId = $stateParams.organizationId;
 
 })
 .controller('OrganizationDetailController', function ($rootScope, $scope, $cookieStore, Session, $state, $stateParams, $filter, Organization) {
 
-    if($state.current.name != 'home.organization_edit' && $state.current.name != 'home.organization_create'){
-        $state.go('error');
-    }
+	if($state.current.name != 'home.organization_edit' && $state.current.name != 'home.organization_create'){
+		$state.go('error');
+	}
 	$scope.button = true;
 	if($state.current.name == 'home.organization_edit'){
-        Organization.get({id:$stateParams.organizationId, organization:$stateParams.organizationId}).$promise.then(function(organization) {
-            $scope.organization = organization;
-            $scope.edit_text = true;
-        }, function(error){
-            $state.go('error');
-        });
+		Organization.get({id:$stateParams.organizationId, organization:$stateParams.organizationId}).$promise.then(function(organization) {
+			$scope.organization = organization;
+			$scope.edit_text = true;
+		}, function(error){
+			$state.go('error');
+		});
 	} else{
-	    $scope.create_text = true;
+		$scope.create_text = true;
 	}
 
 	$scope.create = function () {

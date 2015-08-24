@@ -26,10 +26,9 @@ public class BuildingRepository {
     public List<Building> getBuildingsUserCanAccess(User user){
         String query = "SELECT b.* FROM building b " +
             "LEFT JOIN organization o ON o.id = b.organization_id " +
-            "LEFT JOIN organization_user ou ON ou.organization_id = o.id " +
             "LEFT JOIN member m ON b.id = m.building_id " +
             "LEFT JOIN subscription s ON s.id = o.subscription_id " +
-            "WHERE s.user_id = :userId OR m.user_id = :userId OR ou.user_id = :userId " +
+            "WHERE s.user_id = :userId OR m.user_id = :userId " +
             "GROUP BY b.id ORDER BY b.id";
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("userId", user.getId());
