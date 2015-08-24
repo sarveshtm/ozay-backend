@@ -118,7 +118,7 @@ angular.module('ozayApp')
 
 	$scope.inviteUser = function(){
 		$scope.inviteButton=false;
-		var result = confirm("Would like to save this user?");
+		var result = confirm("Would like to invite this user?");
 		if(result){
 			OrganizationUser.save({organization:$stateParams.organizationId, method:"invite"}, $scope.organizationUser,
 					function (data) {
@@ -132,6 +132,8 @@ angular.module('ozayApp')
 				$scope.errorTextAlert = "Error! Please try later.";
 				$scope.inviteButton=true;
 			});
+		} else {
+		    $scope.inviteButton=true;
 		}
 	}
 
