@@ -4,6 +4,7 @@ import com.ozay.domain.Authority;
 import com.ozay.domain.User;
 import com.ozay.model.AccountInformation;
 import com.ozay.resultsetextractor.AccountResultSetExtractor;
+import com.ozay.resultsetextractor.AccountWIthoutBuildingIdResultSetExtractor;
 import com.ozay.rowmapper.UserRowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -28,28 +29,50 @@ public class AccountRepository {
 
     public AccountInformation getLoginUserInformation(User user,Long buildingId){
 
-        String query = "SELECT DISTINCT s.id as s_id, s.user_id as s_user_id, o.id as organization_id, rp.name\n" +
+        String query = "SELECT DISTINCT s.id as s_id, s.user_id as s_user_id, o.id as organization_id, rp.name as rp_name, op.name as op_name " +
             "FROM t_user u " +
             "LEFT JOIN subscription s ON s.user_id = u.id " +
             "LEFT JOIN organization o ON o.user_id = s.user_id  " +
             "LEFT JOIN member m ON  u.id =  m.user_id " +
             "LEFT JOIN role_member rm ON rm.member_id = m.id " +
             "LEFT JOIN role_permission rp ON rp.role_id = rm.role_id " +
-            "WHERE u.id = :id AND ((rp.role_id is not null ";
+            "LEFT JOIN organization_permission op ON op.user_id = u.id AND organization_id = (SELECT organization_id from building where id = :buildingId) " +
+            "WHERE u.id = :id AND ((rp.role_id is not null AND m.building_id = :buildingId) OR op.name is not null OR o.id is not null)";
+
+        MapSqlParameterSource params = new MapSqlParameterSource();
+
+        params.addValue("id", user.getId());
+        params.addValue("buildingId", buildingId);
+
+
+        List<AccountInformation> accountInformations = (List<AccountInformation>)namedParameterJdbcTemplate.query(query, params, new AccountResultSetExtractor());
+        AccountInformation accountInformation = null;
+        if(accountInformations.size() > 0){
+            accountInformation = accountInformations.get(0);
+        }
+
+
+////        HashMap<String,Authority> map = new HashMap<String,Authority>();
+//        System.out.println(account);
+
+
+        return accountInformation;
+    }
+
+    public AccountInformation getLoginUserInformation(User user){
+
+        String query = "SELECT DISTINCT s.id as s_id, s.user_id as s_user_id, o.id as organization_id " +
+            "FROM t_user u " +
+            "LEFT JOIN subscription s ON s.user_id = u.id " +
+            "LEFT JOIN organization o ON o.user_id = s.user_id  " +
+            "WHERE u.id = :id AND o.id is not null ";
 
         MapSqlParameterSource params = new MapSqlParameterSource();
 
         params.addValue("id", user.getId());
 
-        if(buildingId != null){
-            query += "AND m.building_id = :buildingId";
-            params.addValue("buildingId", buildingId);
-        }
 
-        query += ") OR o.id is not null)";
-
-
-        List<AccountInformation> accountInformations = (List<AccountInformation>)namedParameterJdbcTemplate.query(query, params, new AccountResultSetExtractor());
+        List<AccountInformation> accountInformations = (List<AccountInformation>)namedParameterJdbcTemplate.query(query, params, new AccountWIthoutBuildingIdResultSetExtractor());
         AccountInformation accountInformation = null;
         if(accountInformations.size() > 0){
             accountInformation = accountInformations.get(0);
@@ -109,9 +132,23 @@ public class AccountRepository {
     }
 
     public void updateInvitedUser(User user){
-        String query = "UPDATE USER SET login=:login, password=:password, activated=true WHERE activation_key = :activationKey";
+        String query = "UPDATE t_user SET login=:login, password=:password, activated=true WHERE activation_key = :activationKey";
         MapSqlParameterSource parameterSource = new MapSqlParameterSource();
         parameterSource.addValue("activationKey", user.getActivationKey());
+        namedParameterJdbcTemplate.update(query, parameterSource);
+    }
+
+    public void updateInvitedOrganizationUser(User user){
+        String query = "UPDATE t_user SET login=:login, password=:password, first_name=:firstName, last_name=:lastName, activated=:activated WHERE id = :id";
+        MapSqlParameterSource parameterSource = new MapSqlParameterSource();
+        parameterSource.addValue("id", user.getId());
+        parameterSource.addValue("login", user.getLogin());
+        parameterSource.addValue("password", user.getPassword());
+        parameterSource.addValue("activated", user.getActivated());
+        parameterSource.addValue("firstName", user.getFirstName());
+        parameterSource.addValue("lastName", user.getLastName());
+
+
         namedParameterJdbcTemplate.update(query, parameterSource);
     }
 

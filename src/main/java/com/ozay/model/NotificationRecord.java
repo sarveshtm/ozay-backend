@@ -1,5 +1,7 @@
 package com.ozay.model;
 
+import java.util.Set;
+
 /**
  * Created by naofumiezaki on 6/9/15.
  */
@@ -11,6 +13,7 @@ public class NotificationRecord {
     private String email;
     private String note;
 
+    private Member member;
 
 
     public Long getMemberId() {
@@ -51,5 +54,13 @@ public class NotificationRecord {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public Member getMember() {
+        return member;
+    }
+
+    public void setMember(Member member) {
+        this.member = member;
     }
 }

@@ -5,7 +5,7 @@
             <div id="page_content_title">
                 GROUPS | LIST
                 <div class="button_group">
-                    <a href="#/management/group/{{organizationId}}/buildings/new"><button class="btn btn-default" type="submit">ADD</button></a>
+                    <a href="#/management/organization/{{organizationId}}/buildings/new"><button class="btn btn-default" type="submit">ADD</button></a>
                 </div>
                 <div class="clear"></div>
             </div>
@@ -23,9 +23,9 @@
                     <tbody>
                     <tr ng-repeat="building in buildings | orderBy:predicate:reverse">
                         <td></td>
-                        <td><a href="#/management/group/{{organizationId}}/buildings/edit/{{building.id}}">{{building.name}}</a></td>
+                        <td><a href="#/management/organization/{{organizationId}}/buildings/edit/{{building.id}}">{{building.name}}</a></td>
                         <td>{{building.totalUnits}}</td>
-                        <td><a href="#/management/group/{{organizationId}}/buildings/{{building.id}}/roles">Roles</a></td>
+                        <td><a href="#/management/organization/{{organizationId}}/buildings/{{building.id}}/roles">Roles</a></td>
                     </tr>
                     </tbody>
                 </table>

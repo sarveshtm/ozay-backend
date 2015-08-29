@@ -75,9 +75,11 @@ public class UserService {
             .orElse(null);
     }
 
+
+// Used for organization invitation
     public User activateInvitedUser(User user){
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        accountRepository.updateInvitedUser(user);
+        accountRepository.updateInvitedOrganizationUser(user);
         return user;
     }
 
@@ -91,7 +93,7 @@ public class UserService {
         //Set password
         if (password.equals("")) password = act_Key + "Ozay";
         String encryptedPassword = passwordEncoder.encode(password);
-        User currentLoginUser = userRepository.findOneByLogin(SecurityUtils.getCurrentLogin()).get();
+
         newUser.setLogin(login);
 
         newUser.setCreatedBy(SecurityUtils.getCurrentLogin());
@@ -130,7 +132,7 @@ public class UserService {
         Authority authority = authorityRepository.findOne("ROLE_USER");
         Set<Authority> authorities = new HashSet<>();
         String encryptedPassword = passwordEncoder.encode(password);
-        User currentLoginUser = userRepository.findOneByLogin(SecurityUtils.getCurrentLogin()).get();
+
         newUser.setLogin(login);
 
         newUser.setCreatedBy(SecurityUtils.getCurrentLogin());
@@ -181,9 +183,14 @@ public class UserService {
     }
 
     private AccountInformation getUserInformation(User user, Long buildingId){
-        System.out.println(user.getId());
-        System.out.println(buildingId);
-        AccountInformation accountInformation = accountRepository.getLoginUserInformation(user, buildingId);
+
+        AccountInformation accountInformation = null;
+        if(buildingId == null){
+            accountInformation = accountRepository.getLoginUserInformation(user);
+        } else {
+            accountInformation = accountRepository.getLoginUserInformation(user, buildingId);
+        }
+
 
         log.debug("Let's check Account: {}", accountInformation);
         if(accountInformation != null && user.getId() == accountInformation.getSubscriberId()){
@@ -191,7 +198,7 @@ public class UserService {
             user.getAuthorities().add(new Authority("ROLE_SUBSCRIBER"));
             user.getAuthorities().add(new Authority("ROLE_MANAGEMENT"));
         }
-        if(accountInformation != null && accountInformation.getAuthorities().size() > 0 ){
+        if(accountInformation != null && accountInformation.getAuthorities() != null && accountInformation.getAuthorities().size() > 0 ){
             for(String authority : accountInformation.getAuthorities()){
                 if(authority != null){
                     user.getAuthorities().add(new Authority(authority));

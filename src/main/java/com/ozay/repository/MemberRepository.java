@@ -29,17 +29,17 @@ public class MemberRepository {
 
 
     public Member findOne(Long id){
-        String query = "SELECT * FROM member WHERE id =:id";
+
         MapSqlParameterSource parameterSource = new MapSqlParameterSource();
         parameterSource.addValue("id", id);
-        List<Member> list = (List<Member>)namedParameterJdbcTemplate.query("SELECT m.*, " +
+        List<Member> list = (List<Member>)namedParameterJdbcTemplate.query("SELECT m.*, u.email as u_email," +
             "r.id as r_id, " +
             "r.name as r_name, " +
             "r.building_id as r_building_id, " +
             "r.sort_order as r_sort_order, " +
             "r.organization_user_role as r_organization_user_role, " +
             "r.belong_to as r_belong_to " +
-            " FROM member m LEFT JOIN role_member rm ON m.id = rm.member_id LEFT JOIN role r ON r.id = rm.role_id WHERE m.id =:id", parameterSource, new MemberResultSetExtractor());
+            " FROM member m LEFT JOIN t_user u ON u.id = m.user_id LEFT JOIN role_member rm ON m.id = rm.member_id LEFT JOIN role r ON r.id = rm.role_id WHERE m.id =:id", parameterSource, new MemberResultSetExtractor());
         if(list.size()  == 1){
             return list.get(0);
         } else {
@@ -47,30 +47,30 @@ public class MemberRepository {
         }
     }
 
-    public List<Member> getAllUsersByBuilding(int buildingId){
+    public List<Member> getAllMembersByBuilding(long buildingId){
         String query = "SELECT m.*,  FROM member WHERE building_id =:buildingId AND deleted = false";
         MapSqlParameterSource parameterSource = new MapSqlParameterSource();
         parameterSource.addValue("buildingId", buildingId);
 
-        List<Member> list = (List<Member>)namedParameterJdbcTemplate.query("SELECT m.*, " +
+        List<Member> list = (List<Member>)namedParameterJdbcTemplate.query("SELECT m.*, u.email as u_email, " +
             "r.id as r_id, " +
             "r.name as r_name, " +
             "r.building_id as r_building_id, " +
             "r.sort_order as r_sort_order, " +
             "r.organization_user_role as r_organization_user_role, " +
             "r.belong_to as r_belong_to " +
-            " FROM member m LEFT JOIN role_member rm ON m.id = rm.member_id LEFT JOIN role r ON r.id = rm.role_id WHERE m.building_id = :buildingId AND m.deleted = false ORDER BY m.id", parameterSource, new MemberResultSetExtractor());
+            "FROM member m LEFT JOIN t_user u ON u.id = m.user_id LEFT JOIN role_member rm ON m.id = rm.member_id LEFT JOIN role r ON r.id = rm.role_id WHERE m.building_id = :buildingId AND m.deleted = false ORDER BY m.id", parameterSource, new MemberResultSetExtractor());
 
 
         return list;
     }
 
-    public Integer countActiveUnits(int buildingId){
-        return jdbcTemplate.queryForObject("SELECT COUNT(DISTINCT unit) FROM member WHERE building_id = ?", Integer.class, new Object[]{buildingId});
+    public Integer countActiveUnits(Long buildingId){
+        return jdbcTemplate.queryForObject("SELECT COUNT(DISTINCT unit) FROM member WHERE building_id = ? and deleted = false", Integer.class, new Object[]{buildingId});
     }
 
-    public List<Member> getUserByBuildingEmailUnit(int buildingId, String email, String unit){
-        return jdbcTemplate.query("Select * FROM member WHERE building_id = ? AND email = ? AND UPPER(unit) = ? AND deleted = false",
+    public List<Member> getUserByBuildingEmailUnit(Long buildingId, String email, String unit){
+        return jdbcTemplate.query("Select m.*, u.email as u_email FROM member m LEFT JOIN t_user u ON u.id = m.user_id WHERE m.building_id = ? AND m.email = ? AND UPPER(m.unit) = ? AND deleted = false",
             new Object[]{buildingId, email, unit}, new MemberRowMapper() {
             });
     }
@@ -79,7 +79,7 @@ public class MemberRepository {
 
     public List<Member> getUserEmailsForNotification(NotificationDTO notificationDTO){
 
-        String query = "Select * FROM member WHERE building_id = :buildingId AND deleted = false AND id IN ( :ids )";
+        String query = "Select m.*, u.email as u_email FROM member m LEFT JOIN t_user u ON u.id = m.user_id WHERE building_id = :buildingId AND deleted = false AND m.id IN ( :ids )";
         StringBuilder sb = new StringBuilder();
 
 
@@ -111,8 +111,8 @@ public class MemberRepository {
             });
     }
 
-    public List<Member> searchUsers(int buildingId, String[] items){
-        String query ="Select * FROM member WHERE building_id =:buildingId ";
+    public List<Member> searchUsers(Long buildingId, String[] items){
+        String query ="Select m.*, u.email as u_email FROM member m LEFT JOIN t_user u ON u.id = m.user_id WHERE deleted = false AND building_id =:buildingId ";
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("buildingId", buildingId);
 
@@ -123,12 +123,12 @@ public class MemberRepository {
             if(i != 0){
                 queryForList += " OR ";
             }
-            queryForList += " LOWER(first_name) LIKE :" + param +
-                " OR LOWER(last_name) LIKE :" + param +
-                " OR LOWER(phone) LIKE :" + param +
-                " OR LOWER(email) LIKE :" + param +
-                " OR LOWER(unit) LIKE :" + param +
-                " OR LOWER(parking) LIKE :" + param;
+            queryForList += " LOWER(m.first_name) LIKE :" + param +
+                " OR LOWER(m.last_name) LIKE :" + param +
+                " OR LOWER(m.phone) LIKE :" + param +
+                " OR LOWER(m.email) LIKE :" + param +
+                " OR LOWER(m.unit) LIKE :" + param +
+                " OR LOWER(m.parking) LIKE :" + param;
         }
         if(items.length > 0){
             query += " AND (";
@@ -150,11 +150,10 @@ public class MemberRepository {
             "phone," +
             "building_id, " +
             "ownership, " +
-            "renter, " +
             "unit, " +
             "expiration_date, " +
             "parking)" +
-            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING id";
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING id";
         Object[] params = new Object[] { member.getLogin(),
             member.getUserId(),
             member.getFirstName(),
@@ -163,7 +162,6 @@ public class MemberRepository {
             member.getPhone(),
             member.getBuildingId(),
             member.getOwnership(),
-            member.isRenter(),
             member.getUnit(),
             member.getExpirationDate(),
             member.getParking()};
@@ -179,7 +177,6 @@ public class MemberRepository {
             "email = ?, " +
             "phone = ?, " +
             "ownership = ?, " +
-            "renter = ?, " +
             "unit = ?, " +
             "expiration_date = ?, " +
             "parking = ?, " +
@@ -194,7 +191,6 @@ public class MemberRepository {
             member.getEmail(),
             member.getPhone(),
             member.getOwnership(),
-            member.isRenter(),
             member.getUnit(),
             member.getExpirationDate(),
             member.getParking(),

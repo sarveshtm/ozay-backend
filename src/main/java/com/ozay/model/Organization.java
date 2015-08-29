@@ -2,9 +2,6 @@ package com.ozay.model;
 
 import org.joda.time.DateTime;
 
-import java.util.Date;
-import java.util.Set;
-
 /**
  * Created by naofumiezaki on 6/13/15.
  */

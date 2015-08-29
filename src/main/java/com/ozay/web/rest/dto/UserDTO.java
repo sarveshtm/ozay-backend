@@ -7,6 +7,8 @@ public class UserDTO {
     public static final int PASSWORD_MIN_LENGTH = 5;
     public static final int PASSWORD_MAX_LENGTH = 100;
 
+    private Long id;
+
     private String login;
 
     private String password;
@@ -24,8 +26,8 @@ public class UserDTO {
     public UserDTO() {
     }
 
-    public UserDTO(String login, String password, String firstName, String lastName, String email, String langKey,
-                   List<String> roles) {
+    public UserDTO(Long id, String login, String password, String firstName, String lastName, String email, String langKey, List<String> roles) {
+        this.id = id;
         this.login = login;
         this.password = password;
         this.firstName = firstName;
@@ -33,6 +35,14 @@ public class UserDTO {
         this.email = email;
         this.langKey = langKey;
         this.roles = roles;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getPassword() {

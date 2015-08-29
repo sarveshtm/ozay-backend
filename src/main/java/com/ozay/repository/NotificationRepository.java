@@ -21,7 +21,7 @@ public class NotificationRepository{
     @Inject
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    public List<Notification> findAllByBuilding(Integer buildingId){
+    public List<Notification> findAllByBuilding(Long buildingId){
         String query = "SELECT * FROM notification where building_id = :buildingId";
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("buildingId", buildingId);
@@ -35,8 +35,25 @@ public class NotificationRepository{
         return (Notification)namedParameterJdbcTemplate.queryForObject(query, params, new NotificationMapper());
     }
 
+    public List<Notification> searchNotificationWithLimit(Long buildingId, Long limit){
 
-    public List<Notification> searchNotification(int buildingId, String[] items){
+        String query = "SELECT * from notification WHERE id in(" +
+            "SELECT MAX(id) " +
+            "from notification " +
+            "WHERE building_id=:buildingId " +
+            "GROUP BY subject " +
+            ") " +
+            "ORDER BY created_date DESC " +
+            "LIMIT :limit " ;
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("buildingId", buildingId);
+        params.addValue("limit", limit);
+
+        return namedParameterJdbcTemplate.query(query, params, new NotificationMapper());
+    };
+
+
+    public List<Notification> searchNotification(Long buildingId, String[] items){
         String query = "SELECT * FROM notification where building_id = :buildingId ";
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("buildingId", buildingId);
@@ -50,15 +67,12 @@ public class NotificationRepository{
             }
             queryForList += " LOWER(notice) LIKE :" + param +
                 " OR LOWER(subject) LIKE :" + param;
-                }
+        }
         if(items.length > 0){
             query += " AND (";
             query += queryForList;
             query += ")";
         }
-
-
-
         return namedParameterJdbcTemplate.query(query, params, new NotificationMapper());
     };
 

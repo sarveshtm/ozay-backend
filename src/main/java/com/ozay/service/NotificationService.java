@@ -1,15 +1,13 @@
 package com.ozay.service;
 
-import com.ozay.model.Notification;
 import com.ozay.domain.User;
 import com.ozay.model.Member;
+import com.ozay.model.Notification;
 import com.ozay.model.NotificationRecord;
 import com.ozay.repository.*;
 import com.ozay.security.SecurityUtils;
 import com.ozay.web.rest.dto.JsonResponse;
 import com.ozay.web.rest.dto.NotificationDTO;
-import com.sendgrid.SendGridException;
-import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -61,7 +59,6 @@ public class NotificationService {
         String buildingName = buildingRepository.getBuilding(notification.getBuildingId()).getName();
         String subject = buildingName + " Notice : " + notificationDto.getSubject();
 
-    /*    notification.setSubject(notificationDto.getSubject()); */
         notification.setSubject(subject);
 
         List<Member>members = memberRepository.getUserEmailsForNotification(notificationDto);
@@ -81,6 +78,8 @@ public class NotificationService {
         if(emailCount == 0){
             return 0;
         }
+        // Set original subject and save
+        notification.setSubject(notificationDto.getSubject());
         Long newId =  notificationRepository.create(notification);
 
         for(NotificationRecord notificationRecord : notificationRecords){

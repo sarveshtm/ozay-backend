@@ -527,6 +527,12 @@ display: block;
     font-weight: bold;
 }
 
+#sidenav-search-btn{
+    padding-left:12px;
+    padding-right:12px;
+}
+
+
 #loading{
     position:fixed;
     width:100%;

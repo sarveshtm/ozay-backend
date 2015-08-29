@@ -4,7 +4,7 @@
 var httpHeaders;
 
 var ozayApp = angular.module('ozayApp', ['http-auth-interceptor', 'tmh.dynamicLocale', 'ngSanitize',
-                                         'ngResource', 'ngRoute', 'ngCookies', 'ozayAppUtils', 'pascalprecht.translate', 'truncate', 'ui.router', 'angularjs-dropdown-multiselect', 'naturalSort','textAngular', 'ui.select']);
+                                         'ngResource', 'ngRoute', 'ngCookies', 'ozayAppUtils', 'pascalprecht.translate', 'truncate', 'ui.router', 'angularjs-dropdown-multiselect', 'naturalSort','textAngular', 'ui.bootstrap']);
 
 ozayApp
 .config(function ($routeProvider, $httpProvider, $translateProvider, tmhDynamicLocaleProvider, $stateProvider, $urlRouterProvider, USER_ROLES) {
@@ -15,6 +15,14 @@ ozayApp
 		url: "/login",
 		templateUrl: "views/login.html",
 		controller: 'LoginController',
+		access: {
+			authorizedRoles: [USER_ROLES.all]
+		}
+	})
+	.state('organization-user-activate', {
+		url: "/organization-user-activate?key=value",
+		templateUrl: "views/organization_user_activate.html",
+		controller: 'OrganizationUserActivateController',
 		access: {
 			authorizedRoles: [USER_ROLES.all]
 		}
@@ -115,6 +123,14 @@ ozayApp
 			authorizedRoles: [USER_ROLES.admin, USER_ROLES.access_notification_archive, USER_ROLES.subscriber]
 		}
 	})
+	.state('home.notification_archive_view', {
+		url: "/notification_archive/view/:notificationId",
+		templateUrl: "/views/notification_archive_view.html",
+		controller: 'NotificationArchiveViewController',
+		access: {
+			authorizedRoles: [USER_ROLES.admin, USER_ROLES.access_notification_archive, USER_ROLES.subscriber]
+		}
+	})
 	.state('home.collaborate_create', {
 		url: "/collaborate_create",
 		templateUrl: "/views/collaborate_create.html",
@@ -130,16 +146,16 @@ ozayApp
 			authorizedRoles: [USER_ROLES.user]
 		}
 	})
-	.state('home.buildings', {
-		url : '/management/group/:organizationId/buildings',
-		templateUrl: 'views/building.html',
-		controller: 'BuildingManageController',
-		access: {
-			authorizedRoles: [USER_ROLES.user]
-		}
-	})
+//	.state('home.buildings', {
+//	url : '/management/organization/:organizationId/buildings',
+//	templateUrl: 'views/building.html',
+//	controller: 'BuildingManageController',
+//	access: {
+//	authorizedRoles: [USER_ROLES.user]
+//	}
+//	})
 	.state('home.building_create', {
-		url: "/management/group/:organizationId/buildings/new",
+		url: "/management/organization/:organizationId/buildings/new",
 		controller:'BuildingController',
 		templateUrl: "/views/building_detail.html",
 		access: {
@@ -148,7 +164,7 @@ ozayApp
 	})
 	.state('home.building_edit', {
 
-		url: "/management/group/:organizationId/buildings/edit/:buildingId",
+		url: "/management/organization/:organizationId/buildings/edit/:buildingId",
 		controller:'BuildingController',
 		templateUrl: "/views/building_detail.html",
 		access: {
@@ -156,8 +172,7 @@ ozayApp
 		}
 	})
 	.state('home.role', {
-
-		url: "/management/group/:organizationId/buildings/:buildingId/roles",
+		url: "/management/organization/:organizationId/buildings/:buildingId/roles",
 		controller:'RoleController',
 		templateUrl: "/views/role.html",
 		access: {
@@ -166,7 +181,7 @@ ozayApp
 	})
 	.state('home.role_create', {
 
-		url: "/management/group/:organizationId/buildings/:buildingId/roles/new",
+		url: "/management/organization/:organizationId/buildings/:buildingId/roles/new",
 		controller:'RoleDetailController',
 		templateUrl: "/views/role_detail.html",
 		access: {
@@ -175,7 +190,7 @@ ozayApp
 	})
 	.state('home.role_edit', {
 
-		url: "/management/group/:organizationId/buildings/:buildingId/roles/edit/:roleId",
+		url: "/management/organization/:organizationId/buildings/:buildingId/roles/edit/:roleId",
 		controller:'RoleDetailController',
 		templateUrl: "/views/role_detail.html",
 		access: {
@@ -222,56 +237,64 @@ ozayApp
 			authorizedRoles: [USER_ROLES.admin,USER_ROLES.access_management, USER_ROLES.subscriber]
 		}
 	})
-	.state('home.group', {
-		url : '/management/group',
-		templateUrl: 'views/group.html',
+	.state('home.organization', {
+		url : '/management/organization',
+		templateUrl: 'views/organization.html',
 		controller: 'OrganizationController',
 		access: {
-			authorizedRoles: [USER_ROLES.access_management]
+			authorizedRoles: [USER_ROLES.admin,USER_ROLES.access_management, USER_ROLES.subscriber]
+		}
+	})
+	.state('home.organization_view', {
+		url : '/management/organization/view/:organizationId',
+		templateUrl: 'views/organization_view.html',
+		controller: 'OrganizationViewController',
+		access: {
+			authorizedRoles: [USER_ROLES.admin,USER_ROLES.access_management, USER_ROLES.subscriber]
 		}
 	})
 
-	.state('home.group_edit', {
-		url : '/management/group/edit/:organizationId',
-		templateUrl: 'views/group_detail.html',
+	.state('home.organization_edit', {
+		url : '/management/organization/edit/:organizationId',
+		templateUrl: 'views/organization_detail.html',
 		controller: 'OrganizationDetailController',
 		access: {
-			authorizedRoles: [USER_ROLES.user]
+			authorizedRoles: [USER_ROLES.admin,USER_ROLES.access_management, USER_ROLES.subscriber]
 		}
 	})
-	.state('home.group_create', {
-		url : '/management/group/new',
-		templateUrl: 'views/group_detail.html',
+	.state('home.organization_create', {
+		url : '/management/organization/new',
+		templateUrl: 'views/organization_detail.html',
 		controller: 'OrganizationDetailController',
 		access: {
-			authorizedRoles: [USER_ROLES.user]
+			authorizedRoles: [USER_ROLES.admin,USER_ROLES.access_management, USER_ROLES.subscriber]
 		}
 	})
-	.state('home.group_users', {
-    		url : '/management/group/:organizationId/users/',
-    		templateUrl: 'views/group_users.html',
-    		controller: 'OrganizationUserController',
-    		access: {
-    			authorizedRoles: [USER_ROLES.user]
-    		}
-    	})
+	.state('home.organization_users', {
+		url : '/management/organization/:organizationId/users/',
+		templateUrl: 'views/organization_users.html',
+		controller: 'OrganizationUserController',
+		access: {
+			authorizedRoles: [USER_ROLES.admin,USER_ROLES.access_management, USER_ROLES.subscriber]
+		}
+	})
 
-    	.state('home.group_users_edit', {
-    		url : '/management/group/:organizationId/users/edit/:userId',
-    		templateUrl: 'views/group_users_detail.html',
-    		controller: 'OrganizationUserDetailController',
-    		access: {
-    			authorizedRoles: [USER_ROLES.user]
-    		}
-    	})
-    	.state('home.group_users_create', {
-    		url : '/management/group/:organizationId/users/new',
-    		templateUrl: 'views/group_users_detail.html',
-    		controller: 'OrganizationUserDetailController',
-    		access: {
-    			authorizedRoles: [USER_ROLES.access_management]
-    		}
-    	})
+	.state('home.organization_users_edit', {
+		url : '/management/organization/:organizationId/users/edit/:userId',
+		templateUrl: 'views/organization_users_detail.html',
+		controller: 'OrganizationUserDetailController',
+		access: {
+			authorizedRoles: [USER_ROLES.admin,USER_ROLES.access_management, USER_ROLES.subscriber]
+		}
+	})
+	.state('home.organization_users_create', {
+		url : '/management/organization/:organizationId/users/new',
+		templateUrl: 'views/organization_users_detail.html',
+		controller: 'OrganizationUserDetailController',
+		access: {
+			authorizedRoles: [USER_ROLES.admin,USER_ROLES.access_management, USER_ROLES.subscriber]
+		}
+	})
 
 
 	.state('home.search', {
@@ -328,9 +351,6 @@ ozayApp
 			return $q.reject(response);
 		}
 	};
-})
-.config(function(uiSelectConfig) {
-  uiSelectConfig.theme = 'select2';
 })
 .run(function($rootScope, $cookieStore, $location, $http, $window, AuthenticationSharedService, Session, USER_ROLES, $state, Building) {
 
@@ -415,6 +435,4 @@ ozayApp
 			$rootScope.getAccountInfo();
 		});
 	}
-
-
 });

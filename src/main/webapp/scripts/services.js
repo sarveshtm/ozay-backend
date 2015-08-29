@@ -42,8 +42,20 @@ ozayApp.factory('Activate', function ($resource) {
 	});
 });
 
+// Member invitation
 ozayApp.factory('InvitationActivation', function ($resource) {
 	return $resource('app/rest/invitation-activate', {}, {
+    	});
+});
+
+// Organization User invitation
+ozayApp.factory('OrganizationUserActivation', function ($resource) {
+	return $resource('app/rest/activate-invited-user', {}, {
+	        'get': { method: 'GET', params: {}, isArray: false},
+	        'activate': { method: 'POST', transformResponse: function (data) {
+                                          console.log(data);
+                                                              return data;
+                                                       }}
     	});
 });
 

@@ -1,10 +1,10 @@
 package com.ozay.rowmapper;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 import com.ozay.model.Building;
 import org.springframework.jdbc.core.RowMapper;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
 /**
  * Created by naofumiezaki on 4/29/15.
  */

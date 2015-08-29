@@ -44,10 +44,6 @@ public class InvitedMemberService {
     @Inject
     private InvitedMemberRepository invitedMemberRepository;
 
-    @Inject
-    private UserBuildingRepository userBuildingRepository;
-
-
 
     public InvitedMember getDataByKey(String key) {
         log.debug("Get invited user by key {}", key);

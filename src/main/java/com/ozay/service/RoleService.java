@@ -1,19 +1,15 @@
 package com.ozay.service;
 
-import com.ozay.model.Member;
 import com.ozay.model.Role;
 import com.ozay.model.RolePermission;
-import com.ozay.repository.MemberRepository;
 import com.ozay.repository.RolePermissionRepository;
 import com.ozay.repository.RoleRepository;
-import com.ozay.web.rest.dto.MemberListDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -34,10 +30,7 @@ public class RoleService {
     @Transactional
     public void create(Role role){
         Long id = roleRepository.create(role);
-        for(RolePermission rolePermission : role.getRolePermissions()){
-            rolePermission.setRoleId(id);
-            rolePermissionRepository.create(rolePermission);
-        }
+        this.createRollPermissions(role);
     }
 
     @Transactional
@@ -48,9 +41,13 @@ public class RoleService {
         for(RolePermission currentRolePermission : rolePermissions){
             rolePermissionRepository.delete(currentRolePermission);
         }
+        this.createRollPermissions(role);
+    }
+
+    private void createRollPermissions(Role role){
         for(RolePermission rolePermission : role.getRolePermissions()){
-                rolePermission.setRoleId(role.getId());
-                rolePermissionRepository.create(rolePermission);
+            rolePermission.setRoleId(role.getId());
+            rolePermissionRepository.create(rolePermission);
         }
     }
 

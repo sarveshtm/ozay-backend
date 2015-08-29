@@ -19,13 +19,15 @@ public class MemberRowMapper implements RowMapper {
         member.setPhone(rs.getString("phone"));
         member.setFirstName(rs.getString("first_name"));
         member.setLastName(rs.getString("last_name"));
-        member.setBuildingId(rs.getInt("building_id"));
+        member.setBuildingId(rs.getLong("building_id"));
         member.setOwnership(rs.getDouble("ownership"));
-        member.setRenter(rs.getBoolean("renter"));
         member.setUnit(rs.getString("unit"));
         member.setParking(rs.getString("parking"));
         member.setDeleted(rs.getBoolean("deleted"));
         member.setUserId(rs.getLong("user_id"));
+        if(rs.getString("u_email") != null){
+            member.setUserEmail(rs.getString("u_email"));
+        }
 
         return member;
     }

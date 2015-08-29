@@ -1,0 +1,37 @@
+<!-- Page Heading -->
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel panel-default page_content">
+            <div id="page_content_title">
+                ORGANIZATION
+                <div class="button_group">
+                    <a href="#/management/organization/new"><button class="btn btn-default" type="submit">ADD</button></a>
+                </div>
+                <div class="clear"></div>
+            </div>
+            <!-- START table-responsive-->
+            <div class="table-responsive page_content_item">
+                <table id="notification_archive_table" class="dataTable">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th><a href="" ng-click="predicate = 'name'; reverse=!reverse">Name</a></th>
+                        <th><a href="" ng-click="predicate = 'name'; reverse=!reverse">Action</a></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="organization in organizations | orderBy:predicate:reverse">
+                            <td></td>
+                            <td>{{organization.name}}</td>
+                            <td><a href="#/management/organization/view/{{organization.id}}">View</a></td>
+
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+<!-- /.row -->
+

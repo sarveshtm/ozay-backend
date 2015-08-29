@@ -14,6 +14,7 @@
                         <th><a href="" ng-click="predicate = 'createdDate'; reverse=!reverse">Date</a></th>
                         <th><a href="" ng-click="predicate = 'subject'; reverse=!reverse">Subject</a></th>
                         <th><a href="" ng-click="predicate = 'notice'; reverse=!reverse">Message</a></th>
+                        <th>Details</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -21,7 +22,8 @@
                         <td></td>
                         <td>{{notification.createdDate | date: "MM/dd/yyyy"}}</td>
                         <td>{{notification.subject}}</td>
-                        <td ng-bind-html="trustAsHtml(notification.notice)">a</td>
+                        <td ng-bind-html="trustAsHtml(notification.notice)"></td>
+                        <td><a href="#/notification_archive/view/{{notification.id}}">View</a></td>
                     </tr>
 
                     </tbody>

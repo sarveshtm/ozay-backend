@@ -6,7 +6,9 @@
                 DIRECTORY
                 <div class="button_group">
                     <button class="btn btn-default" type="button" ng-click="deleteBtnClicked()" ng-show="checkboxModel.deleteBtn" ng-disabled="!button">Delete</button>
-                    <input type="checkbox" ng-model="checkboxModel.deleteBtn">Delete
+                    <span ng-show="isAuthorized(userRoles.access_directory_delete) || isAuthorized(userRoles.admin) || isAuthorized(userRoles.subscriber)">
+                        <input type="checkbox" ng-model="checkboxModel.deleteBtn">Delete
+                    </span>
                 </div>
                 <div class="clear"></div>
             </div>
@@ -48,7 +50,7 @@
                         <td><span ng-if="isResident(member.renter)">Yes</span><span ng-if="!isResident(member.renter)">No</span></td>
                         -->
 
-                        <td>{{member.email}}</td>
+                        <td><span ng-if="member.userId == 0">{{member.email}}</span><span ng-if="member.userId != 0">{{member.userEmail}}</span></td>
                         <td>{{member.phone}}</td>
                         <td ng-show="checkboxModel.deleteBtn"><input ng-model="member.deleted" type="checkbox"></td>
                     </tr>

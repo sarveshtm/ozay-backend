@@ -1,7 +1,6 @@
 package com.ozay.rowmapper;
 
 import com.ozay.model.Permission;
-import com.ozay.model.Role;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;

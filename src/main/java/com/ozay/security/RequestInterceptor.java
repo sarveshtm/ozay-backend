@@ -1,138 +1,175 @@
 package com.ozay.security;
 
-    import javax.servlet.http.HttpServletRequest;
-    import javax.servlet.http.HttpServletResponse;
-    import java.util.*;
-    import javax.sql.DataSource;
+import com.ozay.domain.User;
+import com.ozay.model.AccountInformation;
+import com.ozay.repository.AccountRepository;
+import com.ozay.repository.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
-    import com.ozay.domain.User;
-    import com.ozay.model.Building;
-    import com.ozay.model.Organization;
-    import com.ozay.rowmapper.BuildingRowMapper;
+import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
-    import com.ozay.rowmapper.OrganizationMapper;
-    import org.slf4j.Logger;
-    import org.slf4j.LoggerFactory;
-
-    import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-    import org.springframework.security.core.Authentication;
-    import org.springframework.security.core.GrantedAuthority;
-    import org.springframework.security.core.context.SecurityContext;
-    import org.springframework.security.core.context.SecurityContextHolder;
-    import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
-    import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 public class RequestInterceptor extends HandlerInterceptorAdapter {
 
     private final Logger log = LoggerFactory.getLogger(RequestInterceptor.class);
 
+    @Inject
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    private DataSource dataSource;
+    @Inject
+    private UserRepository userRepository;
+
+    @Inject
+    private AccountRepository accountRepository;
+
+
+    private static String NOTIFICATION_ARCHIVE = "NOTIFICATION_ARCHIVE";
+    private static String NOTIFICATION_CREATE = "NOTIFICATION_CREATE";
+    private static String DIRECTORY_LIST = "DIRECTORY_LIST";
+    private static String DIRECTORY_EDIT = "DIRECTORY_EDIT";
+    private static String DIRECTORY_DELETE = "DIRECTORY_DELETE";
 
     @SuppressWarnings("unchecked")
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        SecurityContext securityContext = SecurityContextHolder.getContext();
+        System.out.println("Interceptor Start");
+        log.debug("Intercepting: " + request.getServletPath());
 
-        if (securityContext.getAuthentication() ==null) return true;
+        User loginUser = userRepository.findOneByLogin(SecurityUtils.getCurrentLogin()).get();
 
-        String userName = SecurityUtils.getCurrentLogin();
-        Authentication authentication = securityContext.getAuthentication();
-
-        if(authentication == null) return true;
-        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-
-        //### 2) CHECK AUTHORITY
-        for (GrantedAuthority auth : authorities){
-          if (auth.getAuthority().equals("ROLE_ADMIN")) return true;
+        if(loginUser == null){
+            log.debug("False Intercepting Login is null: " + request.getServletPath());
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            return false;
         }
 
-        namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
+        //### 2) CHECK AUTHORITY
+        if(SecurityUtils.isUserInRole("ROLE_ADMIN")){
+            return true;
+        }
 
-        //### 3)Organization Role check ####
-//        if (request.getServletPath().contains("group/")){
-//            log.debug("Intercepting: " + request.getServletPath());
-//            if(!isAccessibleGroup(request,userName )){
-//                response.sendRedirect(request.getServerName()+"/#/error");
-//                return false;
-//            }
-//        }
 
-        //### 4) Building Access Check ###
-        if (request.getServletPath().contains("building/")){
-            log.debug("Intercepting: " + request.getServletPath());
-            if(!isAccessibleBrd(request, userName)) {
-                response.sendRedirect(request.getServerName()+"/#/error");
+        boolean result = this.validation(request, response, loginUser);
+        if(result == true){
+            log.debug("True Intercepting: " + request.getServletPath());
+            log.debug("!!!!!!!!!!!!!Interceptor return true!!!!!!!!!!!");
+            return true;
+        } else {
+            log.debug("???????????Interceptor return false???????????????");
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            return false;
+        }
+    }
+
+    private boolean validation(HttpServletRequest request, HttpServletResponse response, User loginUser){
+
+        String method = request.getMethod();
+
+        Long buildingId = this.parseNumber(request.getParameter("building"));
+        Long organizationId = this.parseNumber(request.getParameter("organization"));
+
+
+         // temp
+        if(organizationId != null){
+            return true;
+        }
+
+
+        if((buildingId == null || buildingId == 0) && (organizationId == null || organizationId == 0 )){
+            log.debug("False Intercepting BuildingID is null: " + request.getServletPath());
+            return false;
+        }
+
+        System.out.println("BuildingId is : " + buildingId);
+        System.out.println(method.toUpperCase());
+
+
+        if(buildingId == -1){
+            log.debug("False Intercepting Key is -1: " + request.getServletPath());
+            return false;
+        }
+
+        AccountInformation accountInformation = accountRepository.getLoginUserInformation(loginUser, buildingId);
+
+        // If null this user cannot access to the building
+        if(accountInformation == null) {
+            log.debug("False Intercepting AccountInformation is NULL: " + request.getServletPath());
+            return false;
+        } else {
+            // check if user has access
+            boolean roleAccessCheck = false;
+            if(accountInformation.getSubscriberId() != null){
+                roleAccessCheck = true;
+            }
+
+            if(roleAccessCheck == false && accountInformation.getAuthorities()!=null){
+                roleAccessCheck = this.checkAccessRole(accountInformation, request);
+            }
+
+            if(roleAccessCheck == false){
+                log.debug("False Intercepting Doesn't have role to access: " + request.getServletPath());
                 return false;
             }
         }
+
+
+
+
+        //### 3)Organization Role check ####
+
+
+        //### 4) Building Access Check ###
+
         return true;
+
     }
 
-//    private boolean isAccessibleGroup(HttpServletRequest request, String login) {
-//        Integer key_no = getKeyNo(request, "group");
-//        log.debug("Group Access: Group No.:[" + key_no.toString() + "]/User No:[" + login +"]");
-//        List<Organization> bld = this.getOrgUserCanAccess(login, key_no);
-//        if(bld.size() > 0) return true;
-//        return false;
-//    }
 
-    private boolean isAccessibleBrd(HttpServletRequest request,String login) {
-        Integer key_no = getKeyNo(request, "building");
-        log.debug("Building Access: Building No.:[" + key_no.toString() + "]/User No:[" + login +"]");
-       List<Building> bld = this.getBuildingsUserCanAccess(login,key_no);
-        if(bld.size() > 0) return true;
+    private boolean checkAccessRole(AccountInformation accountInformation, HttpServletRequest request) {
+        if(request.getServletPath().contains("api/notifications")){
+            if(request.getMethod().toUpperCase().equals("GET")== true){
+                return this.findRoleAccess(accountInformation, RequestInterceptor.NOTIFICATION_ARCHIVE);
+            } else {
+                return this.findRoleAccess(accountInformation, RequestInterceptor.NOTIFICATION_CREATE);
+            }
+        } else if(request.getServletPath().contains("api/members")){
+            if(request.getServletPath().contains("api/member/delete")){
+                return this.findRoleAccess(accountInformation, RequestInterceptor.DIRECTORY_DELETE);
+            }
+            if(request.getMethod().toUpperCase().equals("GET")== true){
+                return this.findRoleAccess(accountInformation, RequestInterceptor.DIRECTORY_LIST);
+            } else {
+                return this.findRoleAccess(accountInformation, RequestInterceptor.DIRECTORY_EDIT);
+            }
+        }
         return false;
     }
 
-    private Integer getKeyNo(HttpServletRequest request, String split_wd) {
-        Integer rtnInt = -1;
-        try{
-            String[] tests = request.getServletPath().split(split_wd);
-            String[] tests2 = tests[1].split("/");
-            if (tests2.length>1) rtnInt= Integer.parseInt(tests2[1]);
-        }catch(Exception e){
-            // return -1
+    private boolean findRoleAccess(AccountInformation accountInformation, String rolePermission){
+        boolean result = false;
+        for(String authority : accountInformation.getAuthorities()){
+            if(authority.equals(rolePermission)){
+                result = true;
+                break;
+            }
         }
-        return rtnInt;
+        return result;
     }
 
-//    public List<Organization> getOrgUserCanAccess(String login,Integer org_id){
-//        String query = "SELECT o.* FROM " +
-//            "  organization o ON o.id = b.organization_id " +
-//            " LEFT JOIN organization_user ou ON ou.organization_id = o.id " +
-//            " LEFT JOIN t_user u1 ON ou.user_id= u1.id " +
-//            " LEFT JOIN subscription s ON s.id = o.subscription_id " +
-//            " LEFT JOIN t_user u2 ON s.user_id= u2.id " +
-//            " WHERE (u1.login = :Login OR u2.login = :Login )" +
-//            " AND ou.organization_id =:Org_id";
-//        MapSqlParameterSource params = new MapSqlParameterSource();
-//        params.addValue("Login", login);
-//        params.addValue("Org_id", org_id);
-//        return namedParameterJdbcTemplate.query(query, params, new OrganizationMapper(){
-//        });
-//    }
+    private Long parseNumber(String value){
+        Long temp = null;
+        try {
+            temp = Long.parseLong(value);
 
-    public List<Building> getBuildingsUserCanAccess(String login,Integer build_id){
-        String query = "SELECT b.* FROM building b " +
-            " LEFT JOIN organization o ON o.id = b.organization_id " +
-            " LEFT JOIN organization_user ou ON ou.organization_id = o.id " +
-            " LEFT JOIN t_user u1 ON ou.user_id = u1.id " +
-            " LEFT JOIN member m ON b.id = m.building_id " +
-            " LEFT JOIN subscription s ON s.id = o.subscription_id " +
-            " LEFT JOIN t_user u2 ON s.user_id= u2.id " +
-            " WHERE (m.login = :Login OR u2.login = :Login OR u1.login = :Login )" +
-            " AND b.id =:Build_id";
-        MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("Login", login);
-        params.addValue("Build_id", build_id);
-        return namedParameterJdbcTemplate.query(query, params, new BuildingRowMapper(){
-        });
-    }
+        } catch(Exception e){
 
-    public void set(DataSource pDataSource) {
-        this.dataSource = pDataSource;
+        }
+        return temp;
     }
 
 }

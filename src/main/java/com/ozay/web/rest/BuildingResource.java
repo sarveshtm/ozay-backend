@@ -5,8 +5,10 @@ import com.ozay.domain.Authority;
 import com.ozay.domain.User;
 import com.ozay.model.AccountInformation;
 import com.ozay.model.Building;
-import com.ozay.model.Member;
-import com.ozay.repository.*;
+import com.ozay.repository.AccountRepository;
+import com.ozay.repository.BuildingRepository;
+import com.ozay.repository.MemberRepository;
+import com.ozay.repository.UserRepository;
 import com.ozay.security.SecurityUtils;
 import com.ozay.service.MemberService;
 import com.ozay.service.UserService;
@@ -37,8 +39,6 @@ public class BuildingResource {
     private BuildingRepository buildingRepository;
     @Inject
     private MemberService memberService;
-    @Inject
-    private UserBuildingRepository userBuildingRepository;
     @Inject
     private UserRepository userRepository;
     @Inject

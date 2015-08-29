@@ -2,7 +2,6 @@ package com.ozay.resultsetextractor;
 
 import com.ozay.model.Member;
 import com.ozay.model.Role;
-import com.ozay.model.RolePermission;
 import org.springframework.jdbc.core.ResultSetExtractor;
 
 import java.sql.ResultSet;
@@ -10,7 +9,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by naofumiezaki on 6/12/15.
@@ -34,14 +32,16 @@ public class MemberResultSetExtractor implements ResultSetExtractor {
                 member.setPhone(rs.getString("phone"));
                 member.setFirstName(rs.getString("first_name"));
                 member.setLastName(rs.getString("last_name"));
-                member.setBuildingId(rs.getInt("building_id"));
+                member.setBuildingId(rs.getLong("building_id"));
                 member.setOwnership(rs.getDouble("ownership"));
-                member.setRenter(rs.getBoolean("renter"));
                 member.setUnit(rs.getString("unit"));
                 member.setParking(rs.getString("parking"));
                 member.setDeleted(rs.getBoolean("deleted"));
                 member.setUserId(rs.getLong("user_id"));
                 member.setRoles(new HashSet<Role>());
+                if(rs.getString("u_email") != null){
+                    member.setUserEmail(rs.getString("u_email"));
+                }
             }
             Role role = new Role();
             role.setId(rs.getLong("r_id"));

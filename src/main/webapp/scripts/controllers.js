@@ -23,7 +23,6 @@ ozayApp.controller('MenuController', function ($scope) {
 
 ozayApp.controller('LoginController', function ($scope, $location, AuthenticationSharedService, $cookieStore, $stateParams) {
 	$scope.rememberMe = true;
-	console.log("Login Controller")
 	$scope.login = function () {
 		AuthenticationSharedService.login({
 			username: $scope.username,

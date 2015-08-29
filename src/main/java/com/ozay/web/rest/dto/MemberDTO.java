@@ -12,12 +12,11 @@ public class MemberDTO {
     private double ownership;
     private String email;
     private String unit;
-    private boolean renter;
     private String group;
 
     public MemberDTO(){};
 
-    public MemberDTO(int id, String firstName, String lastName, String phone, double ownership, String email, String unit, boolean renter, String group) {
+    public MemberDTO(int id, String firstName, String lastName, String phone, double ownership, String email, String unit, String group) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -25,7 +24,6 @@ public class MemberDTO {
         this.ownership = ownership;
         this.email = email;
         this.unit = unit;
-        this.renter = renter;
         this.group = group;
     }
 
@@ -93,11 +91,5 @@ public class MemberDTO {
         this.unit = unit;
     }
 
-    public boolean isRenter() {
-        return renter;
-    }
 
-    public void setRenter(boolean renter) {
-        this.renter = renter;
-    }
 }

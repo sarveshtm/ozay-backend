@@ -7,7 +7,7 @@ angular.module('ozayApp')
 	$rootScope.$watch('selectedBuilding', function(){
 		if($rootScope.selectedBuilding !== undefined){
 			var buildingId = $rootScope.selectedBuilding;
-			Dashboard.get({buildingId:buildingId},function(data) {
+			Dashboard.get({building:buildingId},function(data) {
                 $scope.dashboard = data;
 			});
 		}
