@@ -76,7 +76,7 @@ public class RequestInterceptor extends HandlerInterceptorAdapter {
 
          // temp
         if(organizationId != null){
-            return true;
+            //return true;
         }
 
 
