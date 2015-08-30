@@ -357,15 +357,16 @@ public class AccountResource {
                     userDTO.getFirstName(), userDTO.getLastName(), userDTO.getEmail().toLowerCase(),
                     userDTO.getLangKey());
 
+                user.setActivated(true);
+                userRepository.save(user);
+
                 member.setUserId(user.getId());
                 member.setLogin(user.getLogin());
                 memberRepository.update(member);
 
-                user.setActivated(true);
+
                 invitedMember.setActivated(true);
                 invitedMemberRepository.activateInvitedMember(invitedMember);
-
-                userRepository.save(user);
 
                 final Locale locale = Locale.forLanguageTag(user.getLangKey());
                 String content = createInvitedUserRegisteredTemplate(user, locale, request, response);
