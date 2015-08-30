@@ -5,6 +5,7 @@ import com.ozay.model.Role;
 import com.ozay.repository.RoleRepository;
 import com.ozay.service.RoleService;
 import com.ozay.web.rest.dto.JsonResponse;
+import com.ozay.web.rest.dto.form.RoleFormDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -71,9 +72,9 @@ public class RoleResource {
         consumes = "application/json",
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public ResponseEntity<JsonResponse> create(@RequestBody Role role, @RequestParam(value = "building") Long buildingId) {
-        log.debug("REST request to save Role : {}", role);
-        roleService.create(role);
+    public ResponseEntity<JsonResponse> create(@RequestBody RoleFormDTO roleFormDTO, @RequestParam(value = "building") Long buildingId) {
+        log.debug("REST request to save Role : {}", roleFormDTO.getRole());
+        roleService.create(roleFormDTO);
         JsonResponse json = new JsonResponse();
 
         return new ResponseEntity<JsonResponse>(json,  new HttpHeaders(), HttpStatus.CREATED);
@@ -87,10 +88,10 @@ public class RoleResource {
         consumes = "application/json",
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public ResponseEntity<JsonResponse> update(@RequestBody Role role, @RequestParam(value = "building") Long buildingId) {
-        log.debug("REST request to save Role : {}", role);
+    public ResponseEntity<JsonResponse> update(@RequestBody RoleFormDTO roleFormDTO, @RequestParam(value = "building") Long buildingId) {
+        log.debug("REST request to save Role : {}", roleFormDTO.getRole());
 
-        roleService.update(role);
+        roleService.update(roleFormDTO);
         JsonResponse json = new JsonResponse();
         json.setSuccess(true);
         return new ResponseEntity<JsonResponse>(json,  new HttpHeaders(), HttpStatus.OK);

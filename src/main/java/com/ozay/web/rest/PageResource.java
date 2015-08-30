@@ -2,18 +2,18 @@ package com.ozay.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import com.ozay.domain.User;
-import com.ozay.model.AccountInformation;
 import com.ozay.model.Building;
-import com.ozay.model.Organization;
+import com.ozay.model.Member;
 import com.ozay.repository.*;
-import com.ozay.security.SecurityUtils;
 import com.ozay.web.rest.dto.BuildingRoleWrapperDTO;
-import com.ozay.web.rest.dto.JsonResponse;
+import com.ozay.web.rest.dto.OrganizationUserRoleDTO;
 import com.ozay.web.rest.dto.UserDTO;
-import com.ozay.web.rest.dto.page.OrganizationSummary;
+import com.ozay.web.rest.dto.page.OrganizationPage;
+import com.ozay.web.rest.dto.page.RolePage;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * REST controller for managing Notification.
@@ -45,6 +44,15 @@ public class PageResource {
     @Inject
     OrganizationUserRepository organizationUserRepository;
 
+    @Inject
+    PermissionRepository permissionRepository;
+
+    @Inject
+    RoleMemberRepository roleMemberRepository;
+
+    @Inject
+    MemberRepository memberRepository;
+
 
     /**
      * GET  /Organization -> get organizations.
@@ -53,10 +61,10 @@ public class PageResource {
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public ResponseEntity<OrganizationSummary>getOne(@PathVariable long organizationId) {
-        OrganizationSummary organizationSummary = new OrganizationSummary();
-        organizationSummary.setOrganization(organizationRepository.findOne(organizationId));
-        organizationSummary.setBuildingRoleWrapperDTOs(new ArrayList<BuildingRoleWrapperDTO>());
+    public ResponseEntity<OrganizationPage>getOrganizationPage(@PathVariable long organizationId) {
+        OrganizationPage organizationPage = new OrganizationPage();
+        organizationPage.setOrganization(organizationRepository.findOne(organizationId));
+        organizationPage.setBuildingRoleWrapperDTOs(new ArrayList<BuildingRoleWrapperDTO>());
 
         List<Building> buildings = buildingRepository.getBuildingsByOrganization(organizationId);
 
@@ -64,7 +72,7 @@ public class PageResource {
             BuildingRoleWrapperDTO buildingRoleWrapperDTO = new BuildingRoleWrapperDTO();
             buildingRoleWrapperDTO.setBuilding(building);
             buildingRoleWrapperDTO.setRoleList(roleRepository.findAllByBuilding(building.getId()));
-            organizationSummary.getBuildingRoleWrapperDTOs().add(buildingRoleWrapperDTO);
+            organizationPage.getBuildingRoleWrapperDTOs().add(buildingRoleWrapperDTO);
         }
         List<UserDTO> userDTOs = new ArrayList<UserDTO>();
         for(User user : organizationUserRepository.findOrganizationUsers(organizationId)){
@@ -75,13 +83,66 @@ public class PageResource {
             userDTOs.add(userDTO);
         }
 
-        organizationSummary.setUserDTOs(userDTOs);
+        organizationPage.setUserDTOs(userDTOs);
 
 
-        return new ResponseEntity<OrganizationSummary>(organizationSummary, HttpStatus.OK);
+        return new ResponseEntity<OrganizationPage>(organizationPage, HttpStatus.OK);
     }
 
+    /**
+     * GET  management/organization/2/buildings/38/roles/edit/21
+     */
+    @RequestMapping(value = "/role-edit/{roleId}",
+        method = RequestMethod.GET,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    public ResponseEntity<RolePage> roleEdit(@RequestParam(value = "building") Long buildingId, @RequestParam(value = "organization") Long organizationId, @PathVariable Long roleId) {
+        RolePage rolePage = this.findOrganizationUserRoles(organizationId, buildingId, roleId );
+        rolePage.setRole(roleRepository.findOne(roleId));
 
+        return new ResponseEntity<RolePage>(rolePage, HttpStatus.OK);
+    }
 
+    /**
+     * GET  management/organization/2/buildings/38/roles/edit/21
+     */
+    @RequestMapping(value = "/role-new",
+        method = RequestMethod.GET,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    public ResponseEntity<RolePage> roleNew(@RequestParam(value = "building") Long buildingId, @RequestParam(value = "organization") Long organizationId){
+        RolePage rolePage = this.findOrganizationUserRoles(organizationId, buildingId, null);
+
+        return new ResponseEntity<RolePage>(rolePage, HttpStatus.OK);
+
+    }
+    // Role Edit/New page function
+
+    private RolePage findOrganizationUserRoles(Long organizationId, Long buildingId, Long roleId){
+        RolePage rolePage = new RolePage();
+
+        rolePage.setPermissions(permissionRepository.getRolePermissions());
+        rolePage.setRoles(roleRepository.findAllByBuilding(buildingId));
+
+        List<OrganizationUserRoleDTO> organizationUserRoleDTOs = new ArrayList<OrganizationUserRoleDTO>();
+
+        for(User user : organizationUserRepository.findOrganizationUsers(organizationId)){
+            OrganizationUserRoleDTO organizationUserRoleDTO = new OrganizationUserRoleDTO();
+            organizationUserRoleDTO.setUserId(user.getId());
+            organizationUserRoleDTO.setFirstName(user.getFirstName());
+            organizationUserRoleDTO.setLastName(user.getLastName());
+            if(roleId != null){
+                Member member = memberRepository.findOneByUserIdAndBuildingId(user.getId(), buildingId);
+                if(member != null){
+                    organizationUserRoleDTO.setAssigned(roleMemberRepository.hasRole(roleId, member.getId()));
+                }
+            }
+            organizationUserRoleDTOs.add(organizationUserRoleDTO);
+        }
+
+        rolePage.setOrganizationUserRoleDTOs(organizationUserRoleDTOs);
+
+        return rolePage;
+    }
 
 }

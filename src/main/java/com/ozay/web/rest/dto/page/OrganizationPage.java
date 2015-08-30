@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Created by naofumiezaki on 8/18/15.
  */
-public class OrganizationSummary {
+public class OrganizationPage {
     private Organization organization;
     private List<BuildingRoleWrapperDTO> buildingRoleWrapperDTOs;
     private List<UserDTO> userDTOs;

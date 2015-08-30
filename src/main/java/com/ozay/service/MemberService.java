@@ -57,7 +57,7 @@ public class MemberService {
 
     @Transactional
     public void create(Member member){
-        Long id = memberRepository.create(member);
+        memberRepository.create(member);
 
         this.createRoleMemberPermissions(member);
     }

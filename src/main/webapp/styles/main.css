@@ -384,7 +384,7 @@ body, html{
   border: 1px solid #000;
 }
 .page_content_item, .page_content_item div {
-  background-color: #fff;
+
 }
 .page_content_item {
   padding: 20px;
@@ -561,4 +561,33 @@ display: flex; /* add */
     float:right;
 }
 
+
+.div-table{
+  display:table;
+  width:100%;
+  /*border-spacing:5px;cellspacing:poor IE support for  this*/
+}
+.div-table-row{
+  display:table-row;
+  width:100%;
+  clear:both;
+}
+
+.div-table-col{
+  display:table-cell;
+  padding:5px;
+}
+
+.ozay-gray-bg{
+    background-color:#F1F5F4;
+}
+.ozay-gray-white{
+    background-color:white;
+}
+.ozay-gray-white-border-bottom div{
+    border-bottom:20px solid white;
+}
+.font-bold {
+    font-weight: bold;
+}
 

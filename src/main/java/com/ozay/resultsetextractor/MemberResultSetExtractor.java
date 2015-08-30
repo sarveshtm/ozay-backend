@@ -39,6 +39,13 @@ public class MemberResultSetExtractor implements ResultSetExtractor {
                 member.setDeleted(rs.getBoolean("deleted"));
                 member.setUserId(rs.getLong("user_id"));
                 member.setRoles(new HashSet<Role>());
+
+                Long organizationUserId = rs.getLong("organization_user_id");
+
+                if(organizationUserId != null){
+                    member.setOrganizationUser(true);
+                }
+
                 if(rs.getString("u_email") != null){
                     member.setUserEmail(rs.getString("u_email"));
                 }

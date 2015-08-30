@@ -38,8 +38,32 @@ public class MemberRepository {
             "r.building_id as r_building_id, " +
             "r.sort_order as r_sort_order, " +
             "r.organization_user_role as r_organization_user_role, " +
-            "r.belong_to as r_belong_to " +
-            " FROM member m LEFT JOIN t_user u ON u.id = m.user_id LEFT JOIN role_member rm ON m.id = rm.member_id LEFT JOIN role r ON r.id = rm.role_id WHERE m.id =:id", parameterSource, new MemberResultSetExtractor());
+            "r.belong_to as r_belong_to, " +
+            "ou.user_id as organization_user_id " +
+            "FROM member m LEFT JOIN t_user u ON u.id = m.user_id LEFT JOIN role_member rm ON m.id = rm.member_id LEFT JOIN role r ON r.id = rm.role_id INNER JOIN building b ON b.id = m.building_id INNER JOIN organization o ON o.id = b.organization_id LEFT JOIN organization_user ou ON ou.user_id = m.user_id WHERE m.id =:id", parameterSource, new MemberResultSetExtractor());
+        if(list.size()  == 1){
+            return list.get(0);
+        } else {
+            return null;
+        }
+    }
+
+    public Member findOneByUserIdAndBuildingId(Long userId, Long buildingId){
+
+        MapSqlParameterSource parameterSource = new MapSqlParameterSource();
+        parameterSource.addValue("userId", userId);
+        parameterSource.addValue("buildingId", buildingId);
+
+
+        List<Member> list = (List<Member>)namedParameterJdbcTemplate.query("SELECT m.*, u.email as u_email," +
+            "r.id as r_id, " +
+            "r.name as r_name, " +
+            "r.building_id as r_building_id, " +
+            "r.sort_order as r_sort_order, " +
+            "r.organization_user_role as r_organization_user_role, " +
+            "r.belong_to as r_belong_to, " +
+            "ou.user_id as organization_user_id " +
+            "FROM member m LEFT JOIN t_user u ON u.id = m.user_id LEFT JOIN role_member rm ON m.id = rm.member_id LEFT JOIN role r ON r.id = rm.role_id INNER JOIN building b ON b.id = m.building_id INNER JOIN organization o ON o.id = b.organization_id LEFT JOIN organization_user ou ON ou.user_id = m.user_id WHERE m.user_id =:userId AND m.building_id = :buildingId", parameterSource, new MemberResultSetExtractor());
         if(list.size()  == 1){
             return list.get(0);
         } else {
@@ -58,8 +82,9 @@ public class MemberRepository {
             "r.building_id as r_building_id, " +
             "r.sort_order as r_sort_order, " +
             "r.organization_user_role as r_organization_user_role, " +
-            "r.belong_to as r_belong_to " +
-            "FROM member m LEFT JOIN t_user u ON u.id = m.user_id LEFT JOIN role_member rm ON m.id = rm.member_id LEFT JOIN role r ON r.id = rm.role_id WHERE m.building_id = :buildingId AND m.deleted = false ORDER BY m.id", parameterSource, new MemberResultSetExtractor());
+            "r.belong_to as r_belong_to, " +
+            "ou.user_id as organization_user_id " +
+            "FROM member m LEFT JOIN t_user u ON u.id = m.user_id LEFT JOIN role_member rm ON m.id = rm.member_id LEFT JOIN role r ON r.id = rm.role_id INNER JOIN building b ON b.id = m.building_id INNER JOIN organization o ON o.id = b.organization_id LEFT JOIN organization_user ou ON ou.user_id = m.user_id WHERE m.building_id = :buildingId AND m.deleted = false ORDER BY m.id", parameterSource, new MemberResultSetExtractor());
 
 
         return list;
@@ -140,7 +165,9 @@ public class MemberRepository {
         return namedParameterJdbcTemplate.query(query, params, new MemberRowMapper());
     }
 
-    public Long create(Member member){
+    public void create(Member member){
+
+
         String insert = "INSERT INTO member(" +
             "login, " +
             "user_id, " +
@@ -153,54 +180,60 @@ public class MemberRepository {
             "unit, " +
             "expiration_date, " +
             "parking)" +
-            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING id";
-        Object[] params = new Object[] { member.getLogin(),
-            member.getUserId(),
-            member.getFirstName(),
-            member.getLastName(),
-            member.getEmail(),
-            member.getPhone(),
-            member.getBuildingId(),
-            member.getOwnership(),
-            member.getUnit(),
-            member.getExpirationDate(),
-            member.getParking()};
+            "VALUES (:login, :userId, :firstName, :lastName, :email, :phone, :buildingId, :ownership, :unit, :expirationDate, :parking) RETURNING id";
 
-        return jdbcTemplate.queryForObject(insert, params, Long.class);
+        MapSqlParameterSource params = new MapSqlParameterSource();
 
+        params.addValue("login", member.getLogin());
+        params.addValue("userId", member.getUserId());
+        params.addValue("firstName", member.getFirstName());
+        params.addValue("lastName", member.getLastName());
+        params.addValue("email", member.getEmail());
+        params.addValue("phone", member.getPhone());
+        params.addValue("unit", member.getUnit());
+        params.addValue("buildingId", member.getBuildingId());
+        params.addValue("ownership", member.getOwnership());
+        params.addValue("expirationDate", member.getExpirationDate());
+        params.addValue("parking", member.getParking());
+
+
+
+
+        Long id = namedParameterJdbcTemplate.queryForObject(insert, params, Long.class);
+        member.setId(id);
 
     }
     public void update(Member member){
         String update = "UPDATE member SET " +
-            "first_name = ?, " +
-            "last_name = ?, " +
-            "email = ?, " +
-            "phone = ?, " +
-            "ownership = ?, " +
-            "unit = ?, " +
-            "expiration_date = ?, " +
-            "parking = ?, " +
-            "deleted = ?, " +
-            "user_id = ? " +
-            "WHERE building_id = ? " +
-            "AND id = ?";
+            "first_name = :firstName, " +
+            "last_name = :lastName, " +
+            "email = :email, " +
+            "phone = :phone, " +
+            "ownership = :ownership, " +
+            "unit = :unit, " +
+            "expiration_date = :expirationDate, " +
+            "parking = :parking, " +
+            "deleted = :deleted, " +
+            "user_id = :userId " +
+            "WHERE building_id = :buildingId " +
+            "AND id = :id";
 
-        Object[] params = new Object[] {
-            member.getFirstName(),
-            member.getLastName(),
-            member.getEmail(),
-            member.getPhone(),
-            member.getOwnership(),
-            member.getUnit(),
-            member.getExpirationDate(),
-            member.getParking(),
-            member.isDeleted(),
-            member.getUserId(),
-            member.getBuildingId(),
-            member.getId()
-        };
+        MapSqlParameterSource params = new MapSqlParameterSource();
 
-        jdbcTemplate.update(update, params);
+        params.addValue("id", member.getId());
+        params.addValue("userId", member.getUserId());
+        params.addValue("firstName", member.getFirstName());
+        params.addValue("lastName", member.getLastName());
+        params.addValue("email", member.getEmail());
+        params.addValue("phone", member.getPhone());
+        params.addValue("unit", member.getUnit());
+        params.addValue("buildingId", member.getBuildingId());
+        params.addValue("ownership", member.getOwnership());
+        params.addValue("expirationDate", member.getExpirationDate());
+        params.addValue("parking", member.getParking());
+        params.addValue("deleted", member.isDeleted());
+
+        namedParameterJdbcTemplate.update(update, params);
 
     }
 

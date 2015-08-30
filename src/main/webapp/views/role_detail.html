@@ -44,7 +44,14 @@
                                 <div class="form-group" ng-show="showRoles">
                                     <label>Parent</label>
                                     <select class="form-control" ng-model="role.belongTo" ng-options="role.id as role.name for role in roles">
+                                        <option value=""></option>
                                     </select>
+                                </div>
+                                <div class="form-group" ng-show="showRoles">
+                                    <label>Assign</label>
+                                    <div ng-repeat="organizationUser in organizationUserRoleDTOs">
+                                        <label><input ng-model="organizationUser.assigned" type="checkbox"> {{organizationUser.firstName}} {{organizationUser.lastName}}</label>
+                                    </div>
                                 </div>
                             </form>
                         </div>

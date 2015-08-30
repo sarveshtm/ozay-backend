@@ -17,6 +17,7 @@ public class Member implements Comparable<Member> {
     private String parking;
     private String unit;
     private DateTime expirationDate;
+    private boolean organizationUser;
     private boolean deleted;
 
     private Set<Role> roles;
@@ -144,6 +145,14 @@ public class Member implements Comparable<Member> {
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
+    }
+
+    public boolean isOrganizationUser() {
+        return organizationUser;
+    }
+
+    public void setOrganizationUser(boolean organizationUser) {
+        this.organizationUser = organizationUser;
     }
 
     @Override
