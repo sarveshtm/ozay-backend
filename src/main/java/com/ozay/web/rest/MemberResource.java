@@ -61,7 +61,7 @@ public class MemberResource {
     }
 
     /**
-     * GET  /rest/member/building/{buildingId}/{id} -> get the "Building" by bu
+     * GET  /{buildingId}/{id} -> get the "Building" by bu
      */
     @RequestMapping(value = "/member/{id}",
         method = RequestMethod.GET,

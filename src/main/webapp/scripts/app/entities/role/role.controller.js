@@ -134,39 +134,39 @@ angular.module('ozayApp')
 		$scope.role.rolePermissions = [];
 
 		Page.get({building:$stateParams.buildingId, entity:"role-new", id:$stateParams.roleId , organization:$stateParams.organizationId}).$promise.then(function(pageData) {
-        			var roles = pageData.roles;
-        			var permissions = pageData.permissions;
-        			$scope.organizationUsers = pageData.organizationUsers;
+			var roles = pageData.roles;
+			var permissions = pageData.permissions;
+			$scope.organizationUsers = pageData.organizationUsers;
 
-        			$scope.permissions = permissions;
-        			if(permissions.length > 0){
-        				for(var i = 0; i< permissions.length;i++){
-        					$scope.accessList.push({
-        						name: permissions[i].name,
-        						label:permissions[i].label,
-        					});
-        				}
-        				$scope.showPermissions = true;
-        			}
+			$scope.permissions = permissions;
+			if(permissions.length > 0){
+				for(var i = 0; i< permissions.length;i++){
+					$scope.accessList.push({
+						name: permissions[i].name,
+						label:permissions[i].label,
+					});
+				}
+				$scope.showPermissions = true;
+			}
 
-        			var filteredRoles = [];
-        			if(roles.length > 0){
-        				$scope.showRoles = true;
-        			}
+			var filteredRoles = [];
+			if(roles.length > 0){
+				$scope.showRoles = true;
+			}
 
-        			angular.forEach(roles, function(value, key) {
-        				if(value.belongTo == 0){
-        					if($state.current.name == 'home.role_edit' && $stateParams.roleId != value.id){
-        						filteredRoles.push(value);
-        					} else if($state.current.name == 'home.role_create'){
-        						filteredRoles.push(value);
-        					}
-        				}
-        			});
-        			$scope.roles = filteredRoles;
+			angular.forEach(roles, function(value, key) {
+				if(value.belongTo == 0){
+					if($state.current.name == 'home.role_edit' && $stateParams.roleId != value.id){
+						filteredRoles.push(value);
+					} else if($state.current.name == 'home.role_create'){
+						filteredRoles.push(value);
+					}
+				}
+			});
+			$scope.roles = filteredRoles;
 
-        		}, function(error){
-        		});
+		}, function(error){
+		});
 	}
 
 	$scope.rolePermissionsClicked = function(value, modelValue){
@@ -190,10 +190,10 @@ angular.module('ozayApp')
 
 
 		if(confirm){
-		    var form = {};
-            form['role'] = $scope.role;
-            form['organizationUserRoleDTOs'] = $scope.organizationUserRoleDTOs;
-            console.log(form);
+			var form = {};
+			form['role'] = $scope.role;
+			form['organizationUserRoleDTOs'] = $scope.organizationUserRoleDTOs;
+			console.log(form);
 			$scope.role.buildingId = $stateParams.buildingId;
 			if($scope.role.id === undefined || $scope.role.id == 0){
 				Role.save({building:$stateParams.buildingId}, form,

@@ -48,7 +48,7 @@ angular.module('ozayApp')
 	}
 
 })
-.controller('MemberDetailController', function ($scope, $cookieStore, $location, $state, $stateParams, Member, $rootScope, Account, Role) {
+.controller('MemberDetailController', function ($scope, $cookieStore, $location, $state, $stateParams, Member, $rootScope, Account, Role, Page) {
 
 	if($state.current.name != 'home.directory_edit' && $state.current.name != 'home.directory_details_new'){
 		$state.go('error');
@@ -68,7 +68,6 @@ angular.module('ozayApp')
 
 	$scope.unitChange = function(){
 		if($scope.member.unit == ""){
-
 			$scope.form.unit.$setValidity('unitvalidation', false);
 		} else {
 			$scope.form.unit.$setValidity('unitvalidation', true);
@@ -78,33 +77,8 @@ angular.module('ozayApp')
 
 	$scope.submitted = false;
 	$scope.role = [];
-	$scope.member = {};
-	$scope.member.user = {};
-
-	$scope.getMember = function(method, login){
-		Member.getMember({building: $rootScope.selectedBuilding, login:login}, function(result) {
-
-			if(result.unit == null){
-				result.unit = "";
-			}
-			$scope.member = result;
-			$scope.model.radioBox = result.renter;
-
-			if($scope.member.roles.length == 0){
-				$scope.member.roles = [];
-			} else{
-				angular.forEach($scope.member.roles, function(value, key) {
-					var index = value.id;
-					$scope.role[index] = true;
-				});
-
-			}
-		}, function(){
-
-			$state.go("home.directory");
-
-		});
-	}
+	$scope.member = [];
+	$scope.member.user = [];
 
 
 	$scope.invite = function(){
@@ -128,12 +102,9 @@ angular.module('ozayApp')
 			$scope.errorTextAlert = "INVALID OPERATION";
 			$scope.button = true;
 		}
-
 	}
 
-
 	$scope.create = function () {
-
 		$scope.showSuccessAlert = false;
 		$scope.showErrorAlert = false;
 		$scope.button = false;
@@ -170,12 +141,10 @@ angular.module('ozayApp')
 	};
 
 	$scope.memberRoleClicked = function(selectedValue, modelValue, role){
-
 		if(modelValue == true){
 			if($scope.member.roles == null || $scope.member.roles == false || $scope.member.roles == undefined){
 				$scope.member.roles = [];
 			}
-
 			$scope.member.roles.push({id:selectedValue});
 		} else {
 			angular.forEach($scope.member.roles, function(value, key) {
@@ -186,25 +155,47 @@ angular.module('ozayApp')
 		}
 	}
 
+	$scope.getPageContents = function(){
+		if($state.current.name == 'home.directory_edit'){
+			Page.get({building:$rootScope.selectedBuilding, entity:"member", id:$stateParams.memberId }).$promise.then(function(pageData) {
+
+                $scope.roleList = pageData.roles;
+
+                $scope.member = pageData.member;
+                if($scope.member.unit == null){
+                    $scope.member.unit = "";
+                }
+                if($scope.member.roles.length == 0){
+                    $scope.member.roles = [];
+                } else{
+                    angular.forEach($scope.member.roles, function(value, key) {
+                        var index = value.id;
+                        $scope.role[index] = true;
+                    });
+                }
+			}, function(error){
+			    $state.go("home.directory");
+			});
+
+
+		} else if($state.current.name == 'home.directory_details_new'){
+			Role.query({building:$rootScope.selectedBuilding}).$promise.then(function(roles) {
+				$scope.roleList = roles;
+			}, function(error){
+
+			});
+		}
+	}
+
 	if($rootScope.selectedBuilding === undefined || $rootScope.selectedBuilding == 0){
 		$rootScope.$watch('selectedBuilding', function(){
 			if($rootScope.selectedBuilding !== undefined){
-				$scope.getRoles();
-				if($state.current.name == 'home.directory_edit'){
-					$scope.getMember('member', $stateParams.memberId);
-				}
+				$scope.getPageContents();
 			}
 		});
 	} else {
-		$scope.getRoles();
-		if($state.current.name == 'home.directory_edit'){
-			$scope.getMember('member', $stateParams.memberId);
-		}
-
+		$scope.getPageContents();
 	}
-
-
-
 
 	if($state.current.name == 'home.directory_edit'){
 		$scope.type = 'EDIT';
@@ -216,27 +207,25 @@ angular.module('ozayApp')
 
 	$scope.button = true;
 
+//	$scope.cancel = function(){
+//	$state.go("home.directory");
+//	}
 
-	$scope.renterList = [
-	                     {
-	                    	 value:true,
-	                    	 label : 'Yes'
-	                     },{
-	                    	 value:false,
-	                    	 label : 'No'
-	                     }];
+//	$scope.renterList = [
+//	{
+//	value:true,
+//	label : 'Yes'
+//	},{
+//	value:false,
+//	label : 'No'
+//	}];
+//	$scope.model = {
+//	name: 'renter',
+//	radioBox:undefined
+//	};
 
-
-	$scope.cancel = function(){
-		$state.go("home.directory");
-	}
-	$scope.model = {
-			name: 'renter',
-			radioBox:undefined
-	};
-
-	$scope.changeRadio = function(obj){
-		$scope.model = obj;
-	};
+//	$scope.changeRadio = function(obj){
+//	$scope.model = obj;
+//	};
 
 });

@@ -8,6 +8,7 @@ import com.ozay.repository.*;
 import com.ozay.web.rest.dto.BuildingRoleWrapperDTO;
 import com.ozay.web.rest.dto.OrganizationUserRoleDTO;
 import com.ozay.web.rest.dto.UserDTO;
+import com.ozay.web.rest.dto.page.MemberDetailPage;
 import com.ozay.web.rest.dto.page.OrganizationPage;
 import com.ozay.web.rest.dto.page.RolePage;
 import org.json.JSONException;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * REST controller for managing Notification.
@@ -84,10 +86,30 @@ public class PageResource {
         }
 
         organizationPage.setUserDTOs(userDTOs);
-
-
         return new ResponseEntity<OrganizationPage>(organizationPage, HttpStatus.OK);
     }
+
+
+    /**
+     * GET  /{buildingId}/{id} -> get the "Building" by bu
+     */
+    @RequestMapping(value = "/member/{memberId}",
+        method = RequestMethod.GET,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    public ResponseEntity<?> getMemberDetailEdit(@RequestParam(value = "building") Long buildingId, @PathVariable Long memberId) {
+        log.debug("REST request to get Member ID : {}", memberId);
+
+        Member member = memberRepository.findOne(memberId);
+        if(member == null){
+            return new ResponseEntity<>("Member doee not exist", HttpStatus.BAD_REQUEST);
+        }
+        MemberDetailPage memberDetailPage = new MemberDetailPage();
+        memberDetailPage.setMember(member);
+        memberDetailPage.setRoles(roleRepository.findAllByBuilding(buildingId));
+        return new ResponseEntity<MemberDetailPage>(memberDetailPage, HttpStatus.OK);
+    }
+
 
     /**
      * GET  management/organization/2/buildings/38/roles/edit/21
