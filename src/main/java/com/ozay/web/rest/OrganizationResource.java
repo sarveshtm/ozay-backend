@@ -72,7 +72,7 @@ public class OrganizationResource {
     public ResponseEntity<JsonResponse> create(@RequestBody Organization organization) {
         log.debug("REST request to create an organization, {}", organization);
         User user = userRepository.findOneByLogin(SecurityUtils.getCurrentLogin()).get();
-        AccountInformation accountInformation = accountRepository.getLoginUserInformation(user, null);
+        AccountInformation accountInformation = accountRepository.getLoginUserInformation(user, null, null);
         organization.setSubscriptionId(accountInformation.getSubscriptionId());
         organization.setCreatedBy(user.getId());
         organizationRepository.create(organization);
@@ -91,7 +91,7 @@ public class OrganizationResource {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         User user = userRepository.findOneByLogin(SecurityUtils.getCurrentLogin()).get();
-        AccountInformation accountInformation = accountRepository.getLoginUserInformation(user, null);
+        AccountInformation accountInformation = accountRepository.getLoginUserInformation(user, null, null);
         organization.setSubscriptionId(accountInformation.getSubscriptionId());
         organization.setModifiedBy(user.getId());
         organizationRepository.update(organization);

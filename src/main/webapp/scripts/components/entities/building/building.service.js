@@ -2,7 +2,7 @@
 
 angular.module('ozayApp')
 .factory('Building', function ($resource) {
-	return $resource('api/building/:method/:id', {}, {
+	return $resource('api/buildings/:method/:id', {}, {
 		'query': { method: 'GET', isArray: true},
 		'get': { method: 'GET'},
 		'update': { method: 'PUT'}

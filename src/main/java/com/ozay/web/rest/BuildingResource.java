@@ -52,7 +52,7 @@ public class BuildingResource {
     /**
      * GET  /rest/building/:login -> get the "Building" ID
      */
-    @RequestMapping(value = "/building",
+    @RequestMapping(value = "/buildings",
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
@@ -83,7 +83,7 @@ public class BuildingResource {
     /**
      * GET  /rest/building/:login -> get the "Building" ID
      */
-    @RequestMapping(value = "/building/organization/{id}",
+    @RequestMapping(value = "/buildings/organization/{id}",
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
@@ -96,7 +96,7 @@ public class BuildingResource {
     /**
      * GET  /rest/building/:id -> get the "Building" ID
      */
-    @RequestMapping(value = "/building/{id}",
+    @RequestMapping(value = "/buildings/{id}",
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
@@ -111,7 +111,7 @@ public class BuildingResource {
     /**
      * POST  /notifications -> Create a new building.
      */
-    @RequestMapping(value = "/building",
+    @RequestMapping(value = "/buildings",
         method = RequestMethod.POST,
         consumes = "application/json",
         produces = MediaType.APPLICATION_JSON_VALUE)
@@ -121,7 +121,7 @@ public class BuildingResource {
         User user = userRepository.findOneByLogin(SecurityUtils.getCurrentLogin()).get();
         building.setCreatedBy(user.getId());
         building.setLastModifiedBy(user.getId());
-        AccountInformation accountInformation = accountRepository.getLoginUserInformation(user, null);
+        AccountInformation accountInformation = accountRepository.getLoginUserInformation(user, null, null);
         building.setOrganizationId(accountInformation.getOrganizationId());
         Integer insertedId = buildingRepository.create(building);
         log.debug("REST request : Building insertedId " + insertedId);
@@ -144,7 +144,7 @@ public class BuildingResource {
     /**
      * PUT  / building -> update building.
      */
-    @RequestMapping(value = "/building",
+    @RequestMapping(value = "/buildings",
         method = RequestMethod.PUT,
         consumes = "application/json",
         produces = MediaType.APPLICATION_JSON_VALUE)

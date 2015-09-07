@@ -182,15 +182,14 @@ public class UserService {
         log.debug("Changed password for User: {}", currentUser);
     }
 
-    private AccountInformation getUserInformation(User user, Long buildingId){
+    private AccountInformation getUserInformation(User user, Long buildingId, Long organizationId){
 
         AccountInformation accountInformation = null;
-        if(buildingId == null){
+        if(buildingId == null && organizationId == null){
             accountInformation = accountRepository.getLoginUserInformation(user);
         } else {
-            accountInformation = accountRepository.getLoginUserInformation(user, buildingId);
+            accountInformation = accountRepository.getLoginUserInformation(user, buildingId, organizationId);
         }
-
 
         log.debug("Let's check Account: {}", accountInformation);
         if(accountInformation != null && user.getId() == accountInformation.getSubscriberId()){
@@ -214,13 +213,13 @@ public class UserService {
         User currentUser = userRepository.findOneByLogin(SecurityUtils.getCurrentLogin()).get();
         currentUser.getAuthorities().size(); // eagerly load the association
 
-        AccountInformation accountInformation = this.getUserInformation(currentUser, null);
+        AccountInformation accountInformation = this.getUserInformation(currentUser, null, null);
 
         return currentUser;
     }
 
     @Transactional(readOnly = true)
-    public User getUserWithAuthorities(Long buildingId) {
+    public User getUserWithAuthorities(Long buildingId, Long organizationId) {
         User currentUser = userRepository.findOneByLogin(SecurityUtils.getCurrentLogin()).get();
         currentUser.getAuthorities().size(); // eagerly load the association
 
@@ -232,19 +231,8 @@ public class UserService {
             }
         }
         if(isAdmin == false) {
-            AccountInformation accountInformation = this.getUserInformation(currentUser, buildingId);
-            try {
-//                Member member = memberRepository.getMemberDetailByBuildingAndUserId(currentUser.getId(), buildingId);
-//
-//                if (member.isManagement() == true) {
-//                    currentUser.getAuthorities().add(new Authority("ACCESS_DIRECTORY"));
-//                    currentUser.getAuthorities().add(new Authority("ACCESS_NOTIFICATION"));
-//                } else if (member.isStaff() == true || member.isBoard()) {
-//                    currentUser.getAuthorities().add(new Authority("ACCESS_NOTIFICATION"));
-//                }
-            } catch (Exception e) {
-                log.debug("UserService getUserWithAuthoritiesAddMoreAuthrities no user detail found {}", currentUser.getLogin());
-            }
+            AccountInformation accountInformation = this.getUserInformation(currentUser, buildingId, organizationId);
+
         }
 
         return currentUser;

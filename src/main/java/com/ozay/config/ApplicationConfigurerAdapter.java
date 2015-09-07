@@ -44,10 +44,9 @@ public class ApplicationConfigurerAdapter extends WebMvcConfigurerAdapter implem
             .addPathPatterns("/**")
             .excludePathPatterns("/")
             .excludePathPatterns("/app/**")
-            .excludePathPatterns("/api/building")
+            .excludePathPatterns("/api/organization-user/key")
             .excludePathPatterns("/api/organization")
-            .excludePathPatterns("/api/building/organization/**")
-            .excludePathPatterns("/api/permission/**")
+            .excludePathPatterns("/api/search/**")
             .excludePathPatterns("/oauth/**")
             .excludePathPatterns("/error");
 

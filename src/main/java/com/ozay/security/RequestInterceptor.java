@@ -34,11 +34,26 @@ public class RequestInterceptor extends HandlerInterceptorAdapter {
     private static String DIRECTORY_EDIT = "DIRECTORY_EDIT";
     private static String DIRECTORY_DELETE = "DIRECTORY_DELETE";
 
+    private static String ORGANIZATION_BUILDING_DELETE = "ORGANIZATION_BUILDING_DELETE";
+    private static String ORGANIZATION_BUILDING_EDIT = "ORGANIZATION_BUILDING_EDIT";
+    private static String ORGANIZATION_ROLE_DELETE = "ORGANIZATION_ROLE_DELETE";
+    private static String ORGANIZATION_ROLE_EDIT = "ORGANIZATION_ROLE_EDIT";
+    private static String ORGANIZATION_USER_DELETE = "ORGANIZATION_USER_DELETE";
+    private static String ORGANIZATION_USER_EDIT = "ORGANIZATION_USER_EDIT";
+
+
+
     @SuppressWarnings("unchecked")
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        if(request.getServletPath().equals("/api/buildings") && request.getMethod().toUpperCase().equals("GET")== true){
+            return true;
+        }
+
         System.out.println("Interceptor Start");
         log.debug("Intercepting: " + request.getServletPath());
+
+
 
         User loginUser = userRepository.findOneByLogin(SecurityUtils.getCurrentLogin()).get();
 
@@ -75,10 +90,9 @@ public class RequestInterceptor extends HandlerInterceptorAdapter {
 
 
          // temp
-        if(organizationId != null){
-            //return true;
-        }
-
+//        if(organizationId != null){
+//            return true;
+//        }
 
         if((buildingId == null || buildingId == 0) && (organizationId == null || organizationId == 0 )){
             log.debug("False Intercepting BuildingID is null: " + request.getServletPath());
@@ -89,12 +103,7 @@ public class RequestInterceptor extends HandlerInterceptorAdapter {
         System.out.println(method.toUpperCase());
 
 
-        if(buildingId == -1){
-            log.debug("False Intercepting Key is -1: " + request.getServletPath());
-            return false;
-        }
-
-        AccountInformation accountInformation = accountRepository.getLoginUserInformation(loginUser, buildingId);
+        AccountInformation accountInformation = accountRepository.getLoginUserInformation(loginUser, buildingId, organizationId);
 
         // If null this user cannot access to the building
         if(accountInformation == null) {
@@ -102,21 +111,20 @@ public class RequestInterceptor extends HandlerInterceptorAdapter {
             return false;
         } else {
             // check if user has access
-            boolean roleAccessCheck = false;
+            boolean accessCheck = false;
             if(accountInformation.getSubscriberId() != null){
-                roleAccessCheck = true;
+                accessCheck = true;
             }
 
-            if(roleAccessCheck == false && accountInformation.getAuthorities()!=null){
-                roleAccessCheck = this.checkAccessRole(accountInformation, request);
+            if(accessCheck == false && accountInformation.getAuthorities() != null){
+                accessCheck = this.checkAccessRole(accountInformation, request);
             }
 
-            if(roleAccessCheck == false){
+            if(accessCheck == false){
                 log.debug("False Intercepting Doesn't have role to access: " + request.getServletPath());
                 return false;
             }
         }
-
 
 
 
@@ -129,28 +137,49 @@ public class RequestInterceptor extends HandlerInterceptorAdapter {
 
     }
 
+    private boolean checkOrganizationRole(AccountInformation accountInformation, HttpServletRequest request){
+        return true;
+    }
+
 
     private boolean checkAccessRole(AccountInformation accountInformation, HttpServletRequest request) {
-        if(request.getServletPath().contains("api/notifications")){
+
+
+        if(request.getServletPath().contains("api/notifications")){ // Notification
             if(request.getMethod().toUpperCase().equals("GET")== true){
-                return this.findRoleAccess(accountInformation, RequestInterceptor.NOTIFICATION_ARCHIVE);
+                return this.checkAccess(accountInformation, RequestInterceptor.NOTIFICATION_ARCHIVE);
             } else {
-                return this.findRoleAccess(accountInformation, RequestInterceptor.NOTIFICATION_CREATE);
+                return this.checkAccess(accountInformation, RequestInterceptor.NOTIFICATION_CREATE);
             }
-        } else if(request.getServletPath().contains("api/members")){
+        } else if(request.getServletPath().contains("api/members")){ // Directory
             if(request.getServletPath().contains("api/member/delete")){
-                return this.findRoleAccess(accountInformation, RequestInterceptor.DIRECTORY_DELETE);
+                return this.checkAccess(accountInformation, RequestInterceptor.DIRECTORY_DELETE);
             }
             if(request.getMethod().toUpperCase().equals("GET")== true){
-                return this.findRoleAccess(accountInformation, RequestInterceptor.DIRECTORY_LIST);
+                return this.checkAccess(accountInformation, RequestInterceptor.DIRECTORY_LIST);
             } else {
-                return this.findRoleAccess(accountInformation, RequestInterceptor.DIRECTORY_EDIT);
+                return this.checkAccess(accountInformation, RequestInterceptor.DIRECTORY_EDIT);
             }
+        } else if(request.getServletPath().contains("api/buildings")){ // buildings
+            return this.checkAccess(accountInformation, RequestInterceptor.ORGANIZATION_BUILDING_EDIT);
         }
+        else if(request.getServletPath().contains("api/roles")){ // role
+            return this.checkAccess(accountInformation, RequestInterceptor.ORGANIZATION_ROLE_EDIT);
+        }
+        else if(request.getServletPath().contains("api/organization-user")){ // Organization User
+//            if(request.getMethod().toUpperCase().equals("POST")== true || request.getMethod().toUpperCase().equals("PUT")== true){
+//                return this.checkAccess(accountInformation, RequestInterceptor.ORGANIZATION_ROLE_EDIT);
+//            }
+            return this.checkAccess(accountInformation, RequestInterceptor.ORGANIZATION_ROLE_EDIT);
+        }
+
+
+
+
         return false;
     }
 
-    private boolean findRoleAccess(AccountInformation accountInformation, String rolePermission){
+    private boolean checkAccess(AccountInformation accountInformation, String rolePermission){
         boolean result = false;
         for(String authority : accountInformation.getAuthorities()){
             if(authority.equals(rolePermission)){

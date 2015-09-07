@@ -23,27 +23,27 @@ import java.util.List;
 @RequestMapping("/api")
 public class PermissionResource {
 
-    private final Logger log = LoggerFactory.getLogger(PermissionResource.class);
-
-    @Inject
-    PermissionRepository permissionRepository;
+//    private final Logger log = LoggerFactory.getLogger(PermissionResource.class);
+//
+//    @Inject
+//    PermissionRepository permissionRepository;
 
     /**
      * GET  //permission/{method} -> get Permissions
      * 2 types. Organization or Role
      */
-    @RequestMapping(value = "/permission/{method}",
-        method = RequestMethod.GET,
-        produces = MediaType.APPLICATION_JSON_VALUE)
-    @Timed
-    public ResponseEntity<List<Permission>> getOrganizationPermissions(@PathVariable String method) {
-        log.debug("REST request to get All permissions type {}", method);
-        if(method.equals("organization")){
-            return new ResponseEntity<>(permissionRepository.getOrganizationPermissions(), HttpStatus.OK);
-        } else if(method.equals("role")) {
-            return new ResponseEntity<>(permissionRepository.getRolePermissions(), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
+//    @RequestMapping(value = "/permission/{method}",
+//        method = RequestMethod.GET,
+//        produces = MediaType.APPLICATION_JSON_VALUE)
+//    @Timed
+//    public ResponseEntity<List<Permission>> getOrganizationPermissions(@PathVariable String method) {
+//        log.debug("REST request to get All permissions type {}", method);
+//        if(method.equals("organization")){
+//            return new ResponseEntity<>(permissionRepository.getOrganizationPermissions(), HttpStatus.OK);
+//        } else if(method.equals("role")) {
+//            return new ResponseEntity<>(permissionRepository.getRolePermissions(), HttpStatus.OK);
+//        } else {
+//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//        }
+//    }
 }

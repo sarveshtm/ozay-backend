@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('ozayApp')
-.controller('RoleController', function ($rootScope, $scope, $cookieStore, Session, $state, $location, $stateParams, Role) {
+.controller('RoleController', function ($rootScope, $scope, $cookieStore, $state, $location, $stateParams, Role) {
 	Role.query({building:$stateParams.buildingId}).$promise.then(function(roles) {
 		var index = 1;
 		$scope.sortDropDown = [];
@@ -64,7 +64,7 @@ angular.module('ozayApp')
 	$scope.organizationId =$stateParams.organizationId
 	$scope.buildingId = $stateParams.buildingId;
 })
-.controller('RoleDetailController', function ($rootScope, $scope, $cookieStore, Session, $state, $stateParams, Permission, Role, Page) {
+.controller('RoleDetailController', function ($rootScope, $scope, $cookieStore, $state, $stateParams, Role, Page) {
 
 	if($state.current.name != 'home.role_edit' && $state.current.name != 'home.role_create'){
 		$state.go('error');

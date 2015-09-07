@@ -166,7 +166,7 @@ ozayApp.factory('Session', function () {
 	return this;
 });
 
-ozayApp.factory('AuthenticationSharedService', function ($rootScope, $http, authService, Session, Account, Building, Base64Service, AccessToken, $location, $cookieStore) {
+ozayApp.factory('AuthenticationSharedService', function ($rootScope, $http, authService, Session, Account, Building, Base64Service, AccessToken, $location, $cookieStore, $stateParams) {
 	return {
 		login: function (param) {
 			$rootScope.authenticationError = false;
@@ -226,8 +226,12 @@ ozayApp.factory('AuthenticationSharedService', function ($rootScope, $http, auth
                         } else {
                             method = 'building';
                         }
+                        var organization = 0;
+                        if($stateParams.organizationId !== undefined){
+                            organization = $stateParams.organizationId
+                        }
 
-                        Account.get({method: method, buildingId:buildingId},function(data) {
+                        Account.get({method: method, buildingId:buildingId, organization:organization},function(data) {
                             Session.create(data.login, data.firstName, data.lastName, data.email, data.roles);
                             $rootScope.account = Session;
                             if (!$rootScope.isAuthorized(authorizedRoles)) {

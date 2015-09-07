@@ -35,9 +35,9 @@ public class RoleResource {
     RoleRepository roleRepository;
 
     /**
-     * GET  /role/{buildingId} -> get all the roles by building.
+     * GET  /roles/{buildingId} -> get all the roles by building.
      */
-    @RequestMapping(value = "/role",
+    @RequestMapping(value = "/roles",
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
@@ -47,9 +47,9 @@ public class RoleResource {
     }
 
     /**
-     * GET  /role/:id -> get the "id" notification.
+     * GET  /roles/:id -> get the "id" notification.
      */
-    @RequestMapping(value = "/role/{id}",
+    @RequestMapping(value = "/roles/{id}",
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
@@ -67,7 +67,7 @@ public class RoleResource {
     /**
      * POST  /notifications -> Create a new notification.
      */
-    @RequestMapping(value = "/role",
+    @RequestMapping(value = "/roles",
         method = RequestMethod.POST,
         consumes = "application/json",
         produces = MediaType.APPLICATION_JSON_VALUE)
@@ -83,7 +83,7 @@ public class RoleResource {
     /**
      * PUT  /notifications -> Update a new notification.
      */
-    @RequestMapping(value = "/role",
+    @RequestMapping(value = "/roles",
         method = RequestMethod.PUT,
         consumes = "application/json",
         produces = MediaType.APPLICATION_JSON_VALUE)
@@ -98,9 +98,9 @@ public class RoleResource {
     }
 
     /**
-     * PUT  /roles/multi -> Update multiple roles
+     * PUT  /roless/multi -> Update multiple roles
      */
-    @RequestMapping(value = "/role/multi",
+    @RequestMapping(value = "/roles/multi",
         method = RequestMethod.PUT,
         consumes = "application/json",
         produces = MediaType.APPLICATION_JSON_VALUE)
@@ -120,7 +120,7 @@ public class RoleResource {
     /**
      * POST  /notifications -> Create a new notification.
      */
-    @RequestMapping(value = "/role/delete",
+    @RequestMapping(value = "/roles/delete",
         method = RequestMethod.PUT,
         consumes = "application/json",
         produces = MediaType.APPLICATION_JSON_VALUE)
