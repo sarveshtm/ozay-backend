@@ -28,7 +28,7 @@
         },
         "form": {
             "username": "Username",
-            "username.placeholder": "Your Username",
+            "username.placeholder": "Your Username / Email",
             "newpassword": "New password",
             "newpassword.placeholder": "New password",
             "confirmpassword": "New password confirmation",
