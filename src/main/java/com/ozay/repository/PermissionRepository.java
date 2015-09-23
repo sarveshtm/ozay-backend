@@ -22,12 +22,12 @@ public class PermissionRepository {
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     public List<Permission> getOrganizationPermissions(){
-        String query = "SELECT * FROM permission where type=1 Order by sort_order";
+        String query = "SELECT * FROM permission where type=1";
         return namedParameterJdbcTemplate.query(query, new PermissionMapper());
     }
 
     public List<Permission> getRolePermissions(){
-        String query = "SELECT * FROM permission where type=2 Order by sort_order";
+        String query = "SELECT * FROM permission where type=2";
         return namedParameterJdbcTemplate.query(query, new PermissionMapper());
     }
 
