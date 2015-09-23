@@ -27,7 +27,12 @@ public class AccountRepository {
         return null;
     }
 
-    public AccountInformation getLoginUserInformation(User user,Long buildingId){
+    public AccountInformation getLoginUserInformation(User user, Long buildingId, Long organizationId){
+
+        MapSqlParameterSource params = new MapSqlParameterSource();
+
+        params.addValue("id", user.getId());
+
 
         String query = "SELECT DISTINCT s.id as s_id, s.user_id as s_user_id, o.id as organization_id, rp.name as rp_name, op.name as op_name " +
             "FROM t_user u " +
@@ -36,13 +41,22 @@ public class AccountRepository {
             "LEFT JOIN member m ON  u.id =  m.user_id " +
             "LEFT JOIN role_member rm ON rm.member_id = m.id " +
             "LEFT JOIN role_permission rp ON rp.role_id = rm.role_id " +
-            "LEFT JOIN organization_permission op ON op.user_id = u.id AND organization_id = (SELECT organization_id from building where id = :buildingId) " +
-            "WHERE u.id = :id AND ((rp.role_id is not null AND m.building_id = :buildingId) OR op.name is not null OR o.id is not null)";
+            "LEFT JOIN organization_permission op ON op.user_id = u.id AND organization_id = ";
 
-        MapSqlParameterSource params = new MapSqlParameterSource();
+             if(organizationId != null){
+                query += " :organizationId ";
+                params.addValue("organizationId", organizationId);
 
-        params.addValue("id", user.getId());
-        params.addValue("buildingId", buildingId);
+                query +=
+                    "WHERE u.id = :id AND ((rp.role_id is not null) OR op.name is not null OR o.id is not null)";
+            }
+            else if(buildingId != null){
+                query += " (SELECT organization_id from building where id = :buildingId) ";
+                params.addValue("buildingId", buildingId);
+                query +=
+                    "WHERE u.id = :id AND ((rp.role_id is not null AND m.building_id = :buildingId) OR op.name is not null OR o.id is not null)";
+            }
+
 
 
         List<AccountInformation> accountInformations = (List<AccountInformation>)namedParameterJdbcTemplate.query(query, params, new AccountResultSetExtractor());

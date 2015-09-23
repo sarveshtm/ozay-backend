@@ -169,33 +169,6 @@ public class AccountResource {
                 return new ResponseEntity<>(HttpStatus.CREATED);});
     }
 
-//    @RequestMapping(value = "/rest/register/organization-user",
-//        method = RequestMethod.POST,
-//        produces = MediaType.APPLICATION_JSON_VALUE)
-//    @Timed
-//    public ResponseEntity<?> registerOrganizationUser(@RequestBody UserDTO userDTO, HttpServletRequest request,
-//                                             HttpServletResponse response) {
-//
-//        return userRepository.findOneByEmail(userDTO.getEmail())
-//            .map(user -> new ResponseEntity<>("login already in use", HttpStatus.BAD_REQUEST))
-//            .orElseGet(() -> {
-//
-//                if (userRepository.findOneByEmail(userDTO.getEmail()) != null) {
-//                    return new ResponseEntity<>("e-mail address already in use", HttpStatus.BAD_REQUEST);
-//                }
-//                User user = userService.createUserInformation(userDTO.getLogin(), userDTO.getPassword(),
-//                    userDTO.getFirstName(), userDTO.getLastName(), userDTO.getEmail().toLowerCase(),
-//                    userDTO.getLangKey());
-//                final Locale locale = Locale.forLanguageTag(user.getLangKey());
-//                String content = createHtmlContentFromTemplate(user, locale, request, response);
-//                String baseUrl = request.getScheme() +
-//                    "://" +
-//                    request.getServerName() +
-//                    ":" +
-//                    request.getServerPort();
-//                mailService.sendInvitedUserRegisterEmail(user, baseUrl);
-//                return new ResponseEntity<>(HttpStatus.CREATED);});
-//    }
 
     /**
      * GET  organization-user
@@ -338,12 +311,12 @@ public class AccountResource {
         return userRepository.findOneByLogin(userDTO.getLogin())
             .map(user -> new ResponseEntity<>("login already in use", HttpStatus.BAD_REQUEST))
             .orElseGet(() -> {
-                if(key == null){
+                if (key == null) {
                     return new ResponseEntity<>("Key is not set", HttpStatus.BAD_REQUEST);
                 }
                 InvitedMember invitedMember = invitedMemberService.getDataByKey(key);
                 Member member = memberRepository.findOne(invitedMember.getMemberId());
-                log.debug("User detail info {}", member );
+                log.debug("User detail info {}", member);
                 userDTO.setEmail(member.getEmail());
                 userDTO.setFirstName(member.getFirstName());
                 userDTO.setLastName(member.getLastName());
@@ -371,7 +344,8 @@ public class AccountResource {
                 final Locale locale = Locale.forLanguageTag(user.getLangKey());
                 String content = createInvitedUserRegisteredTemplate(user, locale, request, response);
                 mailService.sendActivationInvitationEmail(user.getEmail(), content, locale);
-                return new ResponseEntity<>(HttpStatus.CREATED);});
+                return new ResponseEntity<>(HttpStatus.CREATED);
+            });
     }
 
 
@@ -418,9 +392,12 @@ public class AccountResource {
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public ResponseEntity<UserDTO> getAccountWithBuildingId(@PathVariable Long buildingId) {
+    public ResponseEntity<UserDTO> getAccountWithBuildingId(@PathVariable Long buildingId, @RequestParam(value = "organization") Long organizationId ) {
 
-        return Optional.ofNullable(userService.getUserWithAuthorities(buildingId))
+        if(organizationId == 0){
+            organizationId = null;
+        }
+        return Optional.ofNullable(userService.getUserWithAuthorities(buildingId, organizationId))
             .map(user -> new ResponseEntity<>(
                 new UserDTO(
                     user.getId(),
