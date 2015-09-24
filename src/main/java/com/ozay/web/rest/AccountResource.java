@@ -96,23 +96,25 @@ public class AccountResource {
         method = RequestMethod.POST,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
+
     public ResponseEntity<?> registerAccount(@RequestBody UserDTO userDTO, HttpServletRequest request,
                                              HttpServletResponse response) {
-
         return userRepository.findOneByLogin(userDTO.getLogin())
             .map(user -> new ResponseEntity<>("login already in use", HttpStatus.BAD_REQUEST))
-            .orElseGet(() -> {
-                if (userRepository.findOneByEmail(userDTO.getEmail()) != null) {
-                    return new ResponseEntity<>("e-mail address already in use", HttpStatus.BAD_REQUEST);
-                }
-                User user = userService.createUserInformation(userDTO.getLogin(), userDTO.getPassword(),
-                    userDTO.getFirstName(), userDTO.getLastName(), userDTO.getEmail().toLowerCase(),
-                    userDTO.getLangKey());
-                final Locale locale = Locale.forLanguageTag(user.getLangKey());
-                String content = createHtmlContentFromTemplate(user, locale, request, response);
-                mailService.sendActivationEmail(user.getEmail(), content, locale);
-                return new ResponseEntity<>(HttpStatus.CREATED);});
+            .orElseGet(() -> userRepository.findOneByEmail(userDTO.getEmail())
+                    .map(user -> new ResponseEntity<>("e-mail address already in use", HttpStatus.BAD_REQUEST))
+                    .orElseGet(() -> {
+                        User user = userService.createUserInformation(userDTO.getLogin(), userDTO.getPassword(),
+                            userDTO.getFirstName(), userDTO.getLastName(), userDTO.getEmail().toLowerCase(),
+                            userDTO.getLangKey());
+                        final Locale locale = Locale.forLanguageTag(user.getLangKey());
+                        String content = createHtmlContentFromTemplate(user, locale, request, response);
+                        mailService.sendActivationEmail(user.getEmail(), content, locale);
+                        return new ResponseEntity<>(HttpStatus.CREATED);
+                    })
+            );
     }
+
 
     /**
      * GET  /rest/activate -> activate the registered user.
