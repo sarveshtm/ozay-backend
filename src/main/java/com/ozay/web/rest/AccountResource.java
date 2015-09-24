@@ -126,9 +126,9 @@ public class AccountResource {
     public ResponseEntity<String> activateAccount(@RequestParam(value = "key") String key) {
 
         // check if this user is invited user
-        if(accountRepository.isInvitedUser(key) == true){
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+//        if(accountRepository.isInvitedUser(key) == true){
+//            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
         return Optional.ofNullable(userService.activateRegistration(key))
             .map(user -> new ResponseEntity<String>(HttpStatus.OK))
             .orElse(new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
