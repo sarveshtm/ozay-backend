@@ -57,7 +57,7 @@ angular.module('ozayApp')
 
 
 })
-.controller('OrganizationUserDetailController', function ($rootScope, $scope, $stateParams, $state, OrganizationUser, Permission) {
+.controller('OrganizationUserDetailController', function ($rootScope, $scope, $stateParams, $state, OrganizationUser) {
 
 	if($state.current.name != 'home.organization_users_create' && $state.current.name != 'home.organization_users_edit'){
 		$state.go('error');
@@ -68,22 +68,22 @@ angular.module('ozayApp')
 	$scope.access = [];
 	$scope.accessList = [];
 	$scope.organizationId = $stateParams.organizationId;
-
-	//Permission list
-	Permission.query({method:"organization"}).$promise.then(function(permissions) {
-		$scope.permissions = permissions;
-		if(permissions.length > 0){
-			for(var i = 0; i< permissions.length;i++){
-				$scope.accessList.push({
-					name: permissions[i].name,
-					label:permissions[i].label,
-				});
-			}
-			$scope.showPermissions = true;
-		}
-	}, function(error){
-		$state.go('error');
-	});
+//
+//	//Permission list
+//	Permission.query({method:"organization"}).$promise.then(function(permissions) {
+//		$scope.permissions = permissions;
+//		if(permissions.length > 0){
+//			for(var i = 0; i< permissions.length;i++){
+//				$scope.accessList.push({
+//					name: permissions[i].name,
+//					label:permissions[i].label,
+//				});
+//			}
+//			$scope.showPermissions = true;
+//		}
+//	}, function(error){
+//		$state.go('error');
+//	});
 
 	if($state.current.name == 'home.organization_users_edit'){
 		OrganizationUser.get({organizationId:$stateParams.organizationId , organization:$stateParams.organizationId ,id:$stateParams.userId}).$promise.then(function(result) {

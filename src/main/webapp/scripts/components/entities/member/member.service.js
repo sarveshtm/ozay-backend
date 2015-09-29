@@ -5,13 +5,9 @@ angular.module('ozayApp')
 	return $resource('api/member/:method/:id/:login', {}, {
 		'query': { method: 'GET', isArray: true},
 		'get': {
-			method: 'GET',
-			isArray: true
+			method: 'GET'
 		},
 		'count': {
-			method: 'GET',
-		},
-		'getMember' : {
 			method: 'GET',
 		},
 		'invite' : {
