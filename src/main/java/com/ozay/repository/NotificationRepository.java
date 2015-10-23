@@ -22,7 +22,7 @@ public class NotificationRepository{
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     public List<Notification> findAllByBuilding(Long buildingId){
-        String query = "SELECT * FROM notification where building_id = :buildingId";
+        String query = "select S.*, D.emailCount from notification S, (select notification_id, count(*) as emailCount from notification_record group by notification_id) D where S.id = D.notification_id";
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("buildingId", buildingId);
         return namedParameterJdbcTemplate.query(query, params, new NotificationMapper());

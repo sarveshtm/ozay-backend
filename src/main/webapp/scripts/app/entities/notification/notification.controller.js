@@ -293,15 +293,16 @@ angular.module('ozayApp')
 	$scope.predicate = '-createdDate';
 	$scope.notifications = [];
 	$scope.loadAll = function() {
-
 		Notification.query({ building:$rootScope.selectedBuilding}, function(result) {
 			$scope.notifications = result;
+
 		});
 	};
+
 	$rootScope.$watch('selectedBuilding', function() {
 		if($rootScope.selectedBuilding !== undefined){
 			$scope.loadAll();
-		}
+      		}
 	});
 })
 .controller('NotificationArchiveViewController', function ($scope, $rootScope, $stateParams, Notification, $sce) {
@@ -319,6 +320,8 @@ angular.module('ozayApp')
 			//$state.go('home.home');
 		});
 	}
+
+
 
 	if($rootScope.selectedBuilding !== undefined){
 		$scope.getNotification();
